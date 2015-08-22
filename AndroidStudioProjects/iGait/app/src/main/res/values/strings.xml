@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">iGait</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="patient_image">Patient image.</string>
+    <string name="box">■</string>
+    <string name="pie_empty">○</string>
+    <string name="pie_fourth">◔</string>
+    <string name="pie_half">◑</string>
+    <string name="pie_three_fourths">◕</string>
+    <string name="pie_full">●</string>
+    <string name="info_left">Info left</string>
+    <string name="info_right">Info right</string>
+    <string name="separator">-</string>
+</resources>
