@@ -1,9 +1,12 @@
 package com.igaitapp.virtualmd.igait;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -11,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    public final static String EXTRA_PATIENT = " com.igaitapp.virtualmd.igait.PATIENT";
+
     private List<Patient> patientList = new ArrayList<Patient>();
 
     private ListView view;
@@ -22,39 +27,58 @@ public class MainActivity extends AppCompatActivity {
 
         populatePatientList();
         populateListViewPatients();
+        registerPatientTap();
     }
 
-    private void populatePatientList()
-    {
-        // Hard coded gait health integers.
+    private void populatePatientList() {
         List<Integer> bw = new ArrayList<Integer>();
+        List<Integer> ck = new ArrayList<Integer>();
+        List<Integer> pp = new ArrayList<Integer>();
+
         bw.add(2);
         bw.add(1);
         bw.add(3);
+        bw.add(3);
 
-        List<Integer> ck = new ArrayList<Integer>();
+        ck.add(3);
         ck.add(3);
         ck.add(1);
         ck.add(2);
 
-        List<Integer> pp = new ArrayList<Integer>();
         pp.add(3);
         pp.add(2);
         pp.add(2);
+        pp.add(1);
 
-        // Hard coded patients.
         patientList.add(new Patient(143256790, "Wayne", "Bruce", 26, bw));
         patientList.add(new Patient(887832468, "Kent", "Clark", 30, ck));
         patientList.add(new Patient(246804525, "Parker", "Peter", 20, pp));
     }
 
-    private void populateListViewPatients()
-    {
+    private void populateListViewPatients() {
         PatientListAdapter adapter;
 
         view = (ListView) findViewById(R.id.listViewPatients);
         adapter = new PatientListAdapter(this, patientList);
         view.setAdapter(adapter);
+    }
+
+    private void registerPatientTap() {
+        view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                Patient tappedPatient;
+                Intent intent;
+
+                tappedPatient = patientList.get(position);
+
+                intent = new Intent(MainActivity.this, CalendarActivity.class);
+
+                intent.putExtra(EXTRA_PATIENT, tappedPatient);
+
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

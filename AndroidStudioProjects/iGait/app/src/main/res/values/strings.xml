@@ -14,4 +14,5 @@
     <string name="info_left">Info left</string>
     <string name="info_right">Info right</string>
     <string name="separator">-</string>
+    <string name="title_activity_calendar">CalendarActivity</string>
 </resources>

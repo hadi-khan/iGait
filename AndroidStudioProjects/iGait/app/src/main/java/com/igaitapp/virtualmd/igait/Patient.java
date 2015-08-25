@@ -1,12 +1,13 @@
 package com.igaitapp.virtualmd.igait;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by jesus on 8/21/15.
  */
-public class Patient {
+public class Patient implements Serializable {
     private long idNumber;
     List<Integer> gaitHealth = new ArrayList<Integer>();
     private String lastName, firstName;

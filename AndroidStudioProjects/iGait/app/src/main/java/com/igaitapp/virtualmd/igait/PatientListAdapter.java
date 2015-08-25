@@ -2,6 +2,7 @@ package com.igaitapp.virtualmd.igait;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,18 +52,37 @@ public class PatientListAdapter extends BaseAdapter {
         LayoutInflater inflater;
         View view;
         Patient patient;
-        TextView textViewPatientName, textViewPatientAge;
+        List gaitHealth;
+        TextView[] textViewG = new TextView[4];
+        TextView textViewInfoLeft, textViewInfoRight;
 
         inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.patient_item, null);
 
         patient = getItem(position);
 
-        textViewPatientName = (TextView) view.findViewById(R.id.textViewInfoLeft);
-        textViewPatientAge = (TextView) view.findViewById(R.id.textViewInfoRight);
+        textViewG[0]=  (TextView) view.findViewById(R.id.textViewG1);
+        textViewG[1] =  (TextView) view.findViewById(R.id.textViewG2);
+        textViewG[2] =  (TextView) view.findViewById(R.id.textViewG3);
+        textViewG[3] =  (TextView) view.findViewById(R.id.textViewG4);
+        textViewInfoLeft = (TextView) view.findViewById(R.id.textViewInfoLeft);
+        textViewInfoRight = (TextView) view.findViewById(R.id.textViewInfoRight);
 
-        textViewPatientName.setText(patient.getFirstName().substring(0, 1) + ". " + patient.getLastName());
-        textViewPatientAge.setText("" + patient.getAge());
+        textViewInfoLeft.setText(patient.getFirstName().substring(0, 1) + ". " + patient.getLastName());
+        textViewInfoRight.setText("" + patient.getAge());
+
+        gaitHealth = patient.getGaitHealth();
+        for (int i = 0; i < gaitHealth.size(); i++) {
+            if ((int) gaitHealth.get(i) == 1) {
+                textViewG[i].setTextColor(Color.parseColor("#ffed3b3b"));
+            }
+            else if((int) gaitHealth.get(i) == 2) {
+                textViewG[i].setTextColor(Color.parseColor("#ffef6c00"));
+            }
+            else {
+                textViewG[i].setTextColor(Color.parseColor("#ff689f38"));
+            }
+        }
 
         return view;
     }
