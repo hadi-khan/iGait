@@ -1,0 +1,15 @@
+{
+  "name": "igait_server",
+  "version": "1.0.0",
+  "description": "Server application that acts as a middleware for the database. Built with REST so it can service all devices.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Ross Walker",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.3"
+  }
+}
