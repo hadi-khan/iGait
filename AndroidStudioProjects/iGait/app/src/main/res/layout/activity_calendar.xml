@@ -11,17 +11,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
-        android:id="@+id/LinearLayoutPatient">
+        android:id="@+id/LinearLayoutCalendar">
 
         <ListView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/listViewPatient" />
+            android:id="@+id/listViewPatientCalendar" />
 
         <CalendarView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:id="@+id/calendarView" />
+            android:id="@+id/calendarViewHealth" />
     </LinearLayout>
 
 </RelativeLayout>

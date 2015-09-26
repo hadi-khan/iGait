@@ -2,6 +2,7 @@ package com.igaitapp.virtualmd.igait;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -9,18 +10,21 @@ import java.util.List;
  */
 public class Patient implements Serializable {
     private long idNumber;
-    List<Integer> gaitHealth = new ArrayList<Integer>();
     private String lastName, firstName;
-    private int age;
+    private Date birthday, expected;
+    private List<GaitHealth> gaitHealth = new ArrayList<GaitHealth>();
+    private boolean priority;
 
-    public Patient(long idNumber, String lastName, String firstName, int age, List<Integer> gaitHealth) {
+    public Patient(long idNumber, String lastName, String firstName, Date birthday,  Date expected, List<GaitHealth> gaitHealth, boolean priority) {
         super();
 
         this.idNumber = idNumber;
         this.lastName = lastName;
         this.firstName = firstName;
-        this.age = age;
+        this.birthday = birthday;
+        this.expected = expected;
         this.gaitHealth = gaitHealth;
+        this.priority = priority;
     }
 
     public long getIdNumber() {
@@ -29,14 +33,6 @@ public class Patient implements Serializable {
 
     public void setIdNumber(long idNumber) {
         this.idNumber = idNumber;
-    }
-
-    public List<Integer> getGaitHealth() {
-        return gaitHealth;
-    }
-
-    public void setGaitHealth(List<Integer> gaitHealth) {
-        this.gaitHealth = gaitHealth;
     }
 
     public String getLastName() {
@@ -55,11 +51,35 @@ public class Patient implements Serializable {
         this.firstName = firstName;
     }
 
-    public int getAge() {
-        return age;
+    public Date getBirthday() {
+        return birthday;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
+
+    public Date getExpected() {
+        return expected;
+    }
+
+    public void setExpected(Date expected) {
+        this.expected = expected;
+    }
+
+    public List<GaitHealth> getGaitHealth() {
+        return gaitHealth;
+    }
+
+    public void setGaitHealth(List<GaitHealth> gaitHealth) {
+        this.gaitHealth = gaitHealth;
+    }
+
+    public boolean isPriority() {
+        return priority;
+    }
+
+    public void setPriority(boolean priority) {
+        this.priority = priority;
     }
 }

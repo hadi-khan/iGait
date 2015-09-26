@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -51,15 +53,20 @@ public class PatientListAdapter extends BaseAdapter {
     {
         LayoutInflater inflater;
         View view;
-        Patient patient;
-        List gaitHealth;
+
         TextView[] textViewG = new TextView[4];
         TextView textViewInfoLeft, textViewInfoRight;
 
+        Patient patient;
+        Date birthday;
+        List<GaitHealth> gaitHealthList;
+        GaitHealth gaitHealth;
+        Calendar weekPrev = Calendar.getInstance(), weekCurrent = Calendar.getInstance();
+        int gaitHealthSum = 0, gaitHealthCount = 0;
+        String color[] = {"#ffb7b7b7", "#ffb7b7b7", "#ffb7b7b7", "#ffb7b7b7"};
+
         inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.patient_item, null);
-
-        patient = getItem(position);
 
         textViewG[0]=  (TextView) view.findViewById(R.id.textViewG1);
         textViewG[1] =  (TextView) view.findViewById(R.id.textViewG2);
@@ -68,21 +75,53 @@ public class PatientListAdapter extends BaseAdapter {
         textViewInfoLeft = (TextView) view.findViewById(R.id.textViewInfoLeft);
         textViewInfoRight = (TextView) view.findViewById(R.id.textViewInfoRight);
 
-        textViewInfoLeft.setText(patient.getFirstName().substring(0, 1) + ". " + patient.getLastName());
-        textViewInfoRight.setText("" + patient.getAge());
+        patient = (Patient) getItem(position);
 
-        gaitHealth = patient.getGaitHealth();
-        for (int i = 0; i < gaitHealth.size(); i++) {
-            if ((int) gaitHealth.get(i) == 1) {
-                textViewG[i].setTextColor(Color.parseColor("#ffed3b3b"));
+        gaitHealthList = patient.getGaitHealth();
+        gaitHealth = (GaitHealth) gaitHealthList.get(0);
+        weekPrev.setTime(gaitHealth.getStartTime());
+
+        for (int i = 0; i < gaitHealthList.size(); i++) {
+            gaitHealth = gaitHealthList.get(i);
+            weekCurrent.setTime(gaitHealth.getStartTime());
+
+            if (weekPrev.get(Calendar.WEEK_OF_YEAR) != weekCurrent.get(Calendar.WEEK_OF_YEAR) || (i + 1) == gaitHealthList.size()) {
+                weekPrev.setTime(gaitHealth.getStartTime());
+
+                for (int o = 0; o < 3; o++) {
+                    color[o] = color[o + 1];
+                }
+
+                if (Math.round(gaitHealthSum / gaitHealthCount) == 3) {
+                    color[3] = "#ff689f38";
+                }
+                else if(Math.round(gaitHealthSum / gaitHealthCount) == 2) {
+                    color[3] = "#ffef6c00";
+                }
+                else if (Math.round(gaitHealthSum / gaitHealthCount) == 1) {
+                    color[3] = "#ffed3b3b";
+                }
+                else if ((gaitHealthSum / gaitHealthCount) > 0) {
+                    color[3] = "#ffed3b3b";
+                }
+                else {
+                    color[3] = "#ff000000";
+                }
+
+                gaitHealthSum = 0;
+                gaitHealthCount = 0;
             }
-            else if((int) gaitHealth.get(i) == 2) {
-                textViewG[i].setTextColor(Color.parseColor("#ffef6c00"));
-            }
-            else {
-                textViewG[i].setTextColor(Color.parseColor("#ff689f38"));
-            }
+
+            gaitHealthSum += gaitHealth.getHealth();
+            gaitHealthCount += 1;
         }
+
+        for (int i = 0; i < 4; i++) {
+            textViewG[i].setTextColor(Color.parseColor(color[i]));
+        }
+
+        textViewInfoLeft.setText(patient.getFirstName().substring(0, 1) + ". " + patient.getLastName());
+        textViewInfoRight.setText("" + ((new Date().getTime() - patient.getBirthday().getTime()) / 1000 / 60 / 60 / 24 / 365));
 
         return view;
     }

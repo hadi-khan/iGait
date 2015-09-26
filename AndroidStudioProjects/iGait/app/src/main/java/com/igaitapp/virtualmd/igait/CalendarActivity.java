@@ -1,41 +1,71 @@
 package com.igaitapp.virtualmd.igait;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CalendarView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CalendarActivity extends AppCompatActivity {
+    public final static String EXTRA_PATIENT_CALENDAR = " com.igaitapp.virtualmd.igait.PATIENT_CALENDAR";
+    public final static String EXTRA_SELECTED_DATE_CALENDAR = " com.igaitapp.virtualmd.igait.SELECTED_DATE_CALENDAR";
+
+    private Patient patient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
 
-        Intent intent;
-        Patient patient;
+        Intent intent = getIntent();
 
-        intent = getIntent();
-        patient = (Patient) intent.getSerializableExtra(MainActivity.EXTRA_PATIENT);
+        patient = (Patient) intent.getSerializableExtra(MainActivity.EXTRA_PATIENT_MAIN);
 
-        populateLinearLayoutPatient(patient);
+        populateListViewPatient();
+        populateCalendarViewHealth();
     }
 
-    private void populateLinearLayoutPatient(Patient patient) {
-        ListView view;
+    private void populateListViewPatient () {
+        ListView list;
         PatientListAdapter adapter;
-        List<Patient> patientList = new ArrayList<Patient>();
+        List<Patient> patientList = new ArrayList<>();
 
         patientList.add(patient);
 
-        view = (ListView) findViewById(R.id.listViewPatient);
+        list = (ListView) findViewById(R.id.listViewPatientCalendar);
         adapter = new PatientListAdapter(this, patientList);
-        view.setAdapter(adapter);
+        list.setAdapter(adapter);
+    }
+
+    private void populateCalendarViewHealth() {
+        CalendarView calendar;
+
+        calendar = (CalendarView) findViewById(R.id.calendarViewHealth);
+
+        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+
+            @Override
+            public void onSelectedDayChange(CalendarView view, int year, int month, int day) {
+                Intent intent;
+                String selectedDate;
+
+                intent = new Intent(CalendarActivity.this, EventActivity.class);
+
+                selectedDate = day + " " + (month + 1) + " " + year;
+
+                intent.putExtra(EXTRA_PATIENT_CALENDAR, patient);
+                intent.putExtra(EXTRA_SELECTED_DATE_CALENDAR, selectedDate);
+
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

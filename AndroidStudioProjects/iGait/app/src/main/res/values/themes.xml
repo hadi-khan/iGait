@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="BookBlue">#ff039be5</color>
-
     <!-- the theme applied to the application or activity -->
     <style name="BookBlueActionBarTheme"
         parent="@style/Theme.AppCompat.Light.DarkActionBar">
