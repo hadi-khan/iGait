@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.Calendar;
@@ -56,6 +57,7 @@ public class PatientListAdapter extends BaseAdapter {
 
         TextView[] textViewG = new TextView[4];
         TextView textViewInfoLeft, textViewInfoRight;
+        ImageView imageViewPriorityNotif;
 
         Patient patient;
         Date birthday;
@@ -74,6 +76,8 @@ public class PatientListAdapter extends BaseAdapter {
         textViewG[3] =  (TextView) view.findViewById(R.id.textViewG4);
         textViewInfoLeft = (TextView) view.findViewById(R.id.textViewInfoLeft);
         textViewInfoRight = (TextView) view.findViewById(R.id.textViewInfoRight);
+        imageViewPriorityNotif = (ImageView) view.findViewById(R.id.imageViewPriorityNotif);
+
 
         patient = (Patient) getItem(position);
 
@@ -118,6 +122,13 @@ public class PatientListAdapter extends BaseAdapter {
 
         for (int i = 0; i < 4; i++) {
             textViewG[i].setTextColor(Color.parseColor(color[i]));
+        }
+
+        if (!patient.isPriority()) {
+            imageViewPriorityNotif.setVisibility(View.INVISIBLE);
+        }
+        else {
+            imageViewPriorityNotif.setVisibility(View.VISIBLE);
         }
 
         textViewInfoLeft.setText(patient.getFirstName().substring(0, 1) + ". " + patient.getLastName());

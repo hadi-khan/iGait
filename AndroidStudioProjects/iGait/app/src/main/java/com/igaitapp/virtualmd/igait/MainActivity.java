@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-    public final static String EXTRA_PATIENT_MAIN = " com.igaitapp.virtualmd.igait.PATIENT_MAIN";
+    public final static String EXTRA_PATIENT_MAIN = "com.igaitapp.virtualmd.igait.PATIENT_MAIN";
 
     private List<Patient> patientList = new ArrayList<>();
 
@@ -41,22 +41,22 @@ public class MainActivity extends AppCompatActivity {
         DateFormat ex = new SimpleDateFormat("kk:mm:ss", Locale.US);
 
         try {
-            bw.add(new GaitHealth(3, df.parse("Wed Sep 2 08:10:00 CST 2015"), df.parse("Wed Sep 2 08:11:00 CST 2015")));
-            bw.add(new GaitHealth(3, df.parse("Wed Sep 2 12:20:00 CST 2015"), df.parse("Wed Sep 2 12:25:00 CST 2015")));
-            bw.add(new GaitHealth(3, df.parse("Thu Sep 3 08:09:00 CST 2015"), df.parse("Thu Sep 3 08:10:00 CST 2015")));
-            bw.add(new GaitHealth(2, df.parse("Thu Sep 3 15:00:00 CST 2015"), df.parse("Thu Sep 3 15:03:00 CST 2015")));
-            bw.add(new GaitHealth(2, df.parse("Fri Sep 4 08:10:00 CST 2015"), df.parse("Fri Sep 4 08:14:00 CST 2015")));
-            bw.add(new GaitHealth(1, df.parse("Fri Sep 4 12:10:00 CST 2015"), df.parse("Fri Sep 4 12:16:00 CST 2015")));
-            bw.add(new GaitHealth(1, df.parse("Fri Sep 4 15:10:00 CST 2015"), df.parse("Fri Sep 4 15:12:00 CST 2015")));
-            bw.add(new GaitHealth(1, df.parse("Sat Sep 5 08:10:00 CST 2015"), df.parse("Sat Sep 5 08:18:00 CST 2015")));
-            bw.add(new GaitHealth(2, df.parse("Sat Sep 5 12:10:00 CST 2015"), df.parse("Sat Sep 5 12:19:00 CST 2015")));
-            bw.add(new GaitHealth(3, df.parse("Sun Sep 6 08:10:00 CST 2015"), df.parse("Sun Sep 6 08:12:00 CST 2015")));
-            bw.add(new GaitHealth(3, df.parse("Sun Sep 6 13:10:00 CST 2015"), df.parse("Sun Sep 6 13:14:00 CST 2015")));
-            bw.add(new GaitHealth(3, df.parse("Sun Sep 6 15:10:00 CST 2015"), df.parse("Sun Sep 6 15:15:00 CST 2015")));
-            bw.add(new GaitHealth(0, df.parse("Mon Sep 7 08:10:00 CST 2015"), df.parse("Mon Sep 7 08:11:00 CST 2015")));
-            bw.add(new GaitHealth(0, df.parse("Mon Sep 7 13:10:00 CST 2015"), df.parse("Mon Sep 7 13:18:00 CST 2015")));
+            bw.add(new GaitHealth(3, df.parse("Wed Sep 2 08:10:00 CST 2015"), df.parse("Wed Sep 2 08:11:00 CST 2015"), true));
+            bw.add(new GaitHealth(3, df.parse("Wed Sep 2 12:20:00 CST 2015"), df.parse("Wed Sep 2 12:25:00 CST 2015"), false));
+            bw.add(new GaitHealth(3, df.parse("Thu Sep 3 08:09:00 CST 2015"), df.parse("Thu Sep 3 08:10:00 CST 2015"), false));
+            bw.add(new GaitHealth(2, df.parse("Thu Sep 3 15:00:00 CST 2015"), df.parse("Thu Sep 3 15:03:00 CST 2015"), true));
+            bw.add(new GaitHealth(2, df.parse("Fri Sep 4 08:10:00 CST 2015"), df.parse("Fri Sep 4 08:14:00 CST 2015"), false));
+            bw.add(new GaitHealth(1, df.parse("Fri Sep 4 12:10:00 CST 2015"), df.parse("Fri Sep 4 12:16:00 CST 2015"), true));
+            bw.add(new GaitHealth(1, df.parse("Fri Sep 4 15:10:00 CST 2015"), df.parse("Fri Sep 4 15:12:00 CST 2015"), false));
+            bw.add(new GaitHealth(1, df.parse("Sat Sep 5 08:10:00 CST 2015"), df.parse("Sat Sep 5 08:18:00 CST 2015"), false));
+            bw.add(new GaitHealth(2, df.parse("Sat Sep 5 12:10:00 CST 2015"), df.parse("Sat Sep 5 12:19:00 CST 2015"), true));
+            bw.add(new GaitHealth(3, df.parse("Sun Sep 6 08:10:00 CST 2015"), df.parse("Sun Sep 6 08:12:00 CST 2015"), false));
+            bw.add(new GaitHealth(3, df.parse("Sun Sep 6 13:10:00 CST 2015"), df.parse("Sun Sep 6 13:14:00 CST 2015"), false));
+            bw.add(new GaitHealth(3, df.parse("Sun Sep 6 15:10:00 CST 2015"), df.parse("Sun Sep 6 15:15:00 CST 2015"), false));
+            bw.add(new GaitHealth(0, df.parse("Mon Sep 7 08:10:00 CST 2015"), df.parse("Mon Sep 7 08:11:00 CST 2015"), true));
+            bw.add(new GaitHealth(0, df.parse("Mon Sep 7 13:10:00 CST 2015"), df.parse("Mon Sep 7 13:18:00 CST 2015"), true));
 
-            patientList.add(new Patient(143256790, "Wayne", "Bruce", df.parse("Fri Feb 03 07:00:00 CST 1989"), ex.parse("00:03:00"), bw, true));
+            patientList.add(new Patient(143256790, "Wayne", "Bruce", df.parse("Fri Feb 03 07:00:00 CST 1989"), 'm', new ContactInfo("dark_knight@bmail.com", "2312 Bat Cave St.", "Gotham", "NY", 56931, "145-432-6035"), ex.parse("00:03:00"), bw, true));
         }
         catch (ParseException pe) {
             pe.printStackTrace();
@@ -103,7 +103,10 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_search) {
+            return true;
+        }
+        else if (id == R.id.action_settings) {
             return true;
         }
 

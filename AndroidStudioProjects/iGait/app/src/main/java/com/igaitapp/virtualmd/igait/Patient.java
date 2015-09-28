@@ -11,18 +11,22 @@ import java.util.List;
 public class Patient implements Serializable {
     private long idNumber;
     private String lastName, firstName;
-    private Date birthday, expected;
+    private Date birthday, expectedWalkTime;;
+    private char sex;
+    private ContactInfo contactInfo;
     private List<GaitHealth> gaitHealth = new ArrayList<GaitHealth>();
     private boolean priority;
 
-    public Patient(long idNumber, String lastName, String firstName, Date birthday,  Date expected, List<GaitHealth> gaitHealth, boolean priority) {
+    public Patient(long idNumber, String lastName, String firstName, Date birthday, char sex, ContactInfo contactInfo, Date expectedWalkTime, List<GaitHealth> gaitHealth, boolean priority) {
         super();
 
         this.idNumber = idNumber;
         this.lastName = lastName;
         this.firstName = firstName;
         this.birthday = birthday;
-        this.expected = expected;
+        this.sex = sex;
+        this.contactInfo = contactInfo;
+        this.expectedWalkTime = expectedWalkTime;
         this.gaitHealth = gaitHealth;
         this.priority = priority;
     }
@@ -59,12 +63,28 @@ public class Patient implements Serializable {
         this.birthday = birthday;
     }
 
-    public Date getExpected() {
-        return expected;
+    public Date getExpectedWalkTime() {
+        return expectedWalkTime;
     }
 
-    public void setExpected(Date expected) {
-        this.expected = expected;
+    public void setExpectedWalkTime(Date expectedWalkTime) {
+        this.expectedWalkTime = expectedWalkTime;
+    }
+
+    public char getSex() {
+        return sex;
+    }
+
+    public void setSex(char sex) {
+        this.sex = sex;
+    }
+
+    public ContactInfo getContactInfo() {
+        return contactInfo;
+    }
+
+    public void setContactInfo(ContactInfo contactInfo) {
+        this.contactInfo = contactInfo;
     }
 
     public List<GaitHealth> getGaitHealth() {
