@@ -22,13 +22,12 @@ app.get('/', function(req, res){
   res.send('iGait API server!');
 });
 
-// AUTHENTICATION ROUTES------------------
-app.use('/authentication', function(req, res){
-  res.send('Here is your token');
-});
-
 // API ROUTES-----------------------------
 var routes = express.Router();
+
+routes.post('/authentication', function(req, res){
+  res.send('Here is your token');
+});
 
 // Token verification before allowing use of API resources.
 routes.use(function(req, res, next){
