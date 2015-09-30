@@ -1,0 +1,13 @@
+
+use igatedb;
+
+
+db.doctor.insert({_id:"1",firstname:"hadi", lastname:"khan", email:"hadi.khan@mavs.uta.edu", mobilenumber:"2146494367", officeaddress:"701 S Nedderman Dr", password:"hadipassword", patientids:["1"]});
+db.doctor.find();
+
+
+db.patient.insert({_id:"1", firstname:"kevin", lastname:"kocian", birthday:"12/22/1991", gaithealth:"3", confidence:"95", priority:"10", walkingtime:"8:00am", address:"1001 S Harrison st", phonenumber:"2546449059", email:"kevin.kocian@mavs.uta.edu", password:"kevinpassword", gender:"m", doctoremail:"hadi.khan@mavs.uta.edu"});
+db.patient.find(); 
+
+
+db.dropDatabase();
