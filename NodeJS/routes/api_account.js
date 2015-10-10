@@ -5,20 +5,24 @@ var
   app = express();
 
 module.exports = (function(){
-  app.route('/authentication')
+  let router = express.Router();
+
+  router.route('/authentication')
     .post(function(req, res){
       res.send('Here is your token');
     });
 
-  app.route('/recovery')
+  router.route('/recovery')
     .post(function(req, res){
 
     });
 
-  app.route('/register')
+  router.route('/register')
     .post(function(req, res){
 
     });
+
+  app.use('/account', router);  
 
   return app;
 })();
