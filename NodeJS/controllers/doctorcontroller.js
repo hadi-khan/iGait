@@ -51,7 +51,7 @@ module.exports = {
     },
 	
 	//adds kevin to the database
-	addkevin: function(req, res) {
+	addkevin: function() {
         var saveDoctor = function() {
 			var newDoctor = new Models.Doctors({
 				email: 'kevin.kocian@mavs.uta.edu',
@@ -90,11 +90,10 @@ module.exports = {
 			}
 		  }
 		});
-		res.redirect('/');
     },
 	
 	//removes kevin from database
-	removekevin: function(req, res) {
+	removekevin: function() {
         var removeDoctor = function(docObj) {
 			docObj.remove();
         };
@@ -116,7 +115,6 @@ module.exports = {
 			console.log('Didnt need to querry anything. Finish');
 		  }
 		});
-		res.redirect('/');
     },
 	
 	//for kevin testing purpose - dont touch

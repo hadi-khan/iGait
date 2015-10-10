@@ -34,12 +34,12 @@ module.exports = (function(){
 	//adds Kevin to the doctor database
 	router.route('/adk')
 		.get(function(req, res){
-			doctors.addkevin
+			doctors.addkevin();
     });
 	//removes Kevin from the doctor database
 	router.route('/rmk')
 		.get(function(req, res){
-			doctors.removekevin
+			doctors.removekevin();
     });
 	//for kevin's testing purposes - dont touch
 	router.route('/a')

@@ -21,3 +21,4 @@ console.log('Mongoose connected.');
 // SERVER START---------------------------
 var server = app.listen(app.get('port'), function() {
     console.log('Listening for connections on: http://localhost:' + app.get('port'));
+});
