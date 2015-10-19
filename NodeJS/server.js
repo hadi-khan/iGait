@@ -12,10 +12,14 @@ app.set('port', process.env.PORT || 80);
 //load configure
 app = config(app);
 
+
 //connecting to mongodb with mongoose
 mongoose.connect('mongodb://localhost:27017/mongotest');
 mongoose.connection.on('open', function() {
-console.log('Mongoose connected.');
+  console.log('Mongoose connected.');
+});
+mongoose.connection.on('error', function(){
+  console.log('error logged');
 });
 
 // SERVER START---------------------------

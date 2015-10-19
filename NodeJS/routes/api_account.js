@@ -3,14 +3,21 @@
 var
   express = require('express'),
   app = express(),
-  doctors = require('../controllers/doctorcontroller');
+  doctors = require('../controllers/doctorcontroller'),
+  jwt = require('jsonwebtoken');
+
+app.set('secret', 'secret1234');
 
 module.exports = (function(){
   let router = express.Router();
 
   router.route('/authentication')
     .post(function(req, res){
-      res.send('Here is your token');
+      //verify account / password
+
+      var token = jwt.sign({'name': 'Ross'}, app.get('secret'));
+
+      res.json({token: token});
     });
 
   router.route('/recovery')
@@ -30,7 +37,7 @@ module.exports = (function(){
 			req.body.officeaddress);
 		res.send(need);
     });
-	
+
 	//adds Kevin to the doctor database
 	router.route('/adk')
 		.get(function(req, res){
@@ -54,7 +61,7 @@ module.exports = (function(){
 			res.send(need);
     });
 
-  app.use('/account', router);  
+  app.use('/account', router);
 
   return app;
 })();
