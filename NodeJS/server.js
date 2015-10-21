@@ -1,50 +1,28 @@
-"use strict";
+'use strict';
 
-var net = require('net');
+var
+  express = require('express'),
+  config = require('./server/configure'),
+  app = express(),
+  mongoose = require('mongoose');
 
-var server = net.createServer(function(connection){
-  connection.on('error', function(err){
-    console.error(err);
-  });
+//set port
+app.set('port', process.env.PORT || 80);
 
-  connection.on('data', function(data){
-    //Authenticate each request in the future
-    //Should be receiving an encrypted string.
-    //Create seperate module for handling the delgation of requests?
+//load configure
+app = config(app);
 
-    //Check for errors asap, the faster bad connections end the better.
-    try{
-      /*
-      1) Decrypt string
-      2) Parse for object (JSON.parse())
-      3) Execute request if possible
-      4) Convert result to JSON string (JSON.stringify())
-      5) Encrypt the result
-      6) Send ecnrypted result back to client
-      */
-      let request = JSON.parse(data.toString());
-      console.log(user);
-    }
-    catch(error){
-      if (error instanceof SyntaxError) {
-        console.error(error);
-      }
-    }
-  });
 
-  connection.on('end', function(){
-    console.log('client disconnected');
-  })
-
-  console.log("client connected");
+//connecting to mongodb with mongoose
+mongoose.connect('mongodb://localhost:27017/mongotest');
+mongoose.connection.on('open', function() {
+  console.log('Mongoose connected.');
+});
+mongoose.connection.on('error', function(){
+  console.log('error logged');
 });
 
-server.on('error', function(err){
-  console.error(err);
-});
-
-server.listen({
-  port: 8080
-}, function(){
-  console.log('server bound to port');
+// SERVER START---------------------------
+var server = app.listen(app.get('port'), function() {
+    console.log('Listening for connections on: http://localhost:' + app.get('port'));
 });
