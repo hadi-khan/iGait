@@ -15,10 +15,30 @@ module.exports = (function(){
   router.route('/authentication')
     .post(function(req, res){
       //verify account / password
-
+/*
       var token = jwt.sign({'name': 'Ross'}, app.get('secret'));
 
-      res.json({token: token});
+      res.json({token: token});*/
+
+      let credentials = req.body;
+
+      Doctor.findOne({email: credentials.email}, function(err, doctor){
+        if (err) throw err;
+
+        if (!doctor){
+          res.json({message: 'rejected'});          
+        }
+        else if (doctor){
+          if (doctor.password != credentials.password){
+            res.json({message: 'wrong password'});
+          }
+          else{
+            let token = jwt.sign(doctor, app.get('secret'));
+
+            res.json({token: token});
+          }
+        }
+      });
     });
 
   router.route('/recovery')
@@ -28,7 +48,18 @@ module.exports = (function(){
 
   router.route('/register')
     .post(function(req, res){
+      console.log(req.body.doctor);
 
+      let doctor = Doctor(req.body.doctor);
+      doctor.save(function(err){
+        if (err){
+          console.error(err);
+          res.send(err);
+        }
+        else{
+          res.send('Doctor saved!');
+        }
+      });
     });
 
   app.use('/account', router);
