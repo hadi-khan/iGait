@@ -18,7 +18,7 @@ module.exports = (function(){
         return res.json({success: false});
       }
       else{
-        res.json({decoded: decoded});
+        next();
       }
     });
   });
