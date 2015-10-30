@@ -28,6 +28,7 @@ module.exports = (function(){
             res.json({success: 'false', message: 'Wrong password.'});
           }
           else{
+            doctor.accessToken = null;
             let token = jwt.sign(doctor, app.get('secret'));
 
             doctor.accessToken = token;
