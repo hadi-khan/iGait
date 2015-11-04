@@ -28,9 +28,18 @@ module.exports = (function(){
             res.json({success: 'false', message: 'Wrong password.'});
           }
           else{
+            doctor.accessToken = null;
             let token = jwt.sign(doctor, app.get('secret'));
 
-            res.json({token: token});
+            doctor.accessToken = token;
+            doctor.save(function(err){
+              if(err){
+                console.error(err);
+                res.json({success: 'false', message: err});
+              }
+            });
+
+            res.json({success: 'true', message: token});
           }
         }
       });
@@ -50,10 +59,10 @@ module.exports = (function(){
       doctor.save(function(err){
         if (err){
           console.error(err);
-          res.send(err);
+          res.json({success: 'false', message: err});
         }
         else{
-          res.send('Doctor saved!');
+          res.json({success: 'true', message: 'Account created'});
         }
       });
     });
