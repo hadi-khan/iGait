@@ -4,61 +4,67 @@ var
   express = require('express'),
   app = express(),
   doctors = require('../controllers/doctorcontroller'),
-  jwt = require('jsonwebtoken');
+  jwt = require('jsonwebtoken'),
+  Doctor = require('../models/doctors');
 
 app.set('secret', 'secret1234');
 
 module.exports = (function(){
   let router = express.Router();
 
+// Log in with an email / password combination and receive a token.
   router.route('/authentication')
     .post(function(req, res){
-      //verify account / password
+      let credentials = req.body;
 
-      var token = jwt.sign({'name': 'Ross'}, app.get('secret'));
+      Doctor.findOne({email: credentials.email}, function(err, doctor){
+        if (err) throw err;
 
-      res.json({token: token});
+        if (!doctor){
+          res.json({success: 'false', message: 'Account does not exist.'});
+        }
+        else if (doctor){
+          if (doctor.password != credentials.password){
+            res.json({success: 'false', message: 'Wrong password.'});
+          }
+          else{
+            doctor.accessToken = null;
+            let token = jwt.sign(doctor, app.get('secret'));
+
+            doctor.accessToken = token;
+            doctor.save(function(err){
+              if(err){
+                console.error(err);
+                res.json({success: 'false', message: err});
+              }
+            });
+
+            res.json({success: 'true', message: token});
+          }
+        }
+      });
     });
 
+// Allows a user to change their password.
   router.route('/recovery')
     .post(function(req, res){
 
     });
-
+// Register a new user with the system, will be a doctor.
   router.route('/register')
     .post(function(req, res){
-		var need = doctors.register(
-			req.body.email,
-			req.body.password,
-			req.body.firstname,
-			req.body.lastname,
-			req.body.mobilenumber,
-			req.body.officenumber,
-			req.body.officeaddress);
-		res.send(need);
-    });
+      console.log(req.body.doctor);
 
-	//adds Kevin to the doctor database
-	router.route('/adk')
-		.get(function(req, res){
-			doctors.addkevin();
-    });
-	//removes Kevin from the doctor database
-	router.route('/rmk')
-		.get(function(req, res){
-			doctors.removekevin();
-    });
-	//for kevin's testing purposes - dont touch
-	router.route('/a')
-		.post(function(req, res){
-			var need = doctors.c(req.body.email);
-			res.send(need);
-    });
-	//for kevin's testing purposes - dont touch
-	router.route('/b')
-		.post(function(req, res){
-			var need = doctors.c(req.body);
-			res.send(need);
+      let doctor = Doctor(req.body.doctor);
+      doctor.save(function(err){
+        if (err){
+          console.error(err);
+          res.json({success: 'false', message: err});
+        }
+        else{
+          res.json({success: 'true', message: 'Account created'});
+        }
+      });
     });
 
   app.use('/account', router);

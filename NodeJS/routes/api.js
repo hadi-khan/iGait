@@ -15,10 +15,10 @@ module.exports = (function(){
     let token = req.body.token;
     jwt.verify(token, apiAccount.get('secret'), function(err, decoded){
       if (err){
-        return res.json({success: false});
+        return res.json({success: false, message: err});
       }
       else{
-        res.json({decoded: decoded});
+        next();
       }
     });
   });

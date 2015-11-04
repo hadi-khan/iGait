@@ -4,13 +4,15 @@ var
   express = require('express'),
   config = require('./server/configure'),
   app = express(),
-  mongoose = require('mongoose');
+  mongoose = require('mongoose'),
+  morgan = require('morgan');
 
 //set port
 app.set('port', process.env.PORT || 80);
 
 //load configure
 app = config(app);
+app.use(morgan('combined'));
 
 
 //connecting to mongodb with mongoose
