@@ -62,31 +62,23 @@ dbMgrBridge.prototype = {
     // Function "exported" by the Abstraction:
     // for each one of these, add to implmentation 1 and implementation 2
     // Public Methods
-    addKevin: function(callback)
-    {
-        // Check if any implementor is bound and has the required method:
-        if(this._impl && this._impl.addKevin)
-            this._impl.addKevin(callback);     // Forward request to implementor
-    },
-    removeKevin: function(callback)
-    {
-        // Check if any implementor is bound and has the required method:
-        if(this._impl && this._impl.removeKevin)
-            this._impl.removeKevin(callback);     // Forward request to implementor
-    },
     getDoctorByEmail: function(reqEmail, callback)
     {
         // Check if any implementor is bound and has the required method:
         if(this._impl && this._impl.getDoctorByEmail)
             this._impl.getDoctorByEmail(reqEmail, callback);     // Forward request to implementor
     },
-    createDoctor: function(
-        reqEmail,reqPassword, reqFirstName, reqLastName, reqMobileNumber, reqOfficeNumber, reqOfficeAddress, callback)
+    createDoctor: function(reqDocObj, callback)
     {
         // Check if any implementor is bound and has the required method:
         if(this._impl && this._impl.createDoctor)
-            this._impl.createDoctor(
-                reqEmail,reqPassword, reqFirstName, reqLastName, reqMobileNumber, reqOfficeNumber, reqOfficeAddress, callback);     // Forward request to implementor
+            this._impl.createDoctor(reqDocObj, callback);     // Forward request to implementor
+    },
+    removeDoctor: function(reqDocObj, callback)
+    {
+        // Check if any implementor is bound and has the required method:
+        if(this._impl && this._impl.removeDoctor)
+            this._impl.removeDoctor(reqDocObj, callback);     // Forward request to implementor
     },
     connectDB: function()
     {
@@ -170,26 +162,10 @@ ImplementationMongoose.prototype = {
             }
         });
     },
-    createDoctor: function(
-        reqEmail,reqPassword, reqFirstName, reqLastName, reqMobileNumber, reqOfficeNumber, reqOfficeAddress, callback){
-        //Doctors refers to the var in /models/index.js that saves the path to the doctors.js file
-        var newDoctor = new Models.Doctors({
-            email: reqEmail,
-            password: reqPassword,
-            name: {
-                first: reqFirstName,
-                last: reqLastName
-            },
-            contact: {
-                mobilenumber: reqMobileNumber,
-                officenumber: reqOfficeNumber,
-                officeaddress: reqOfficeAddress
-            }
-        });
-        //doctors refers to the filename that contains the model for doctors
-        newDoctor.save(function(err, doc){
+    createDoctor: function(reqDocObj, callback){
+        reqDocObj.save(function(err, doc){
             if(err){
-                console.log("Error in db.createDoctor: " + err);
+                //console.log("Error in db.createDoctor: " + err);
                 callback({success: 'false_error', function: 'db.createDoctor', message: err});
             }
             else{
@@ -197,30 +173,22 @@ ImplementationMongoose.prototype = {
             }
         });
     },
-    addKevin: function(callback){
-        //Doctors refers to the var in /models/index.js that saves the path to the doctors.js file
-        var newDoctor = new Models.Doctors({
-            email: 'kevin.kocian@mavs.uta.edu',
-            password: 'password',
-            name: {
-                first: 'kevin',
-                last: 'kocian'
-            },
-            contact: {
-                mobilenumber: '25464449059',
-                officenumber: '12345678910',
-                officeaddress: '1100greek'
+    removeDoctor: function(reqEmail, callback){
+        Models.Doctors.remove({email: reqEmail}, function(err, doc){
+            if(doc.result.n === 1){
+                callback({success: 'true', function: 'db.removeDoctor', message: 'Successfully Removed Doctor'});
             }
-        });
-        //doctors refers to the filename that contains the model for doctors
-        newDoctor.save(function(err, doc){
-            if(err){
-                console.log("Error in db.createDoctor: \n" + err);
-                callback({success: 'false_error', function: 'db.addKevin', message: err});
+            else if(doc.result.n === 0){
+                callback({success: 'false', function: 'db.removeDoctor', message: 'Doctor Does Not Exist'});
+            }
+            else if(err){
+                console.log("Error in db.removeDoctor: \n" + err);
+                callback({success: 'false_error', function: 'db.removeDoctor', message: err});
             }
             else{
-                callback({success: 'true', function: 'db.addKevin', message: doc});
+                callback({success: 'false_wrong', function: 'db.removeDoctor', message: 'This shouldnt have happen. Something went very wrong'});
             }
+
         });
     }
 // ...
