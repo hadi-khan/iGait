@@ -2,28 +2,28 @@
 
 var
   express = require('express'),
-  app = express(),
   apiAccount = require('./api_account.js'),
   apiPatient = require('./api_patient.js'),
   jwt = require('jsonwebtoken');
 
-module.exports = (function(){
-  app.use('/api', apiAccount);
+let router = express.Router();
 
-  //Test function for verification of request
-  app.use('/api', function(req, res, next){
+router.use('/api', apiAccount);
+router.use('/api', verify);
+router.use('/api', apiPatient);
+
+function verify(req, res, next){
     let token = req.body.token;
+
     jwt.verify(token, apiAccount.get('secret'), function(err, decoded){
-      if (err){
-        return res.json({success: false, message: err});
-      }
-      else{
-        next();
-      }
+        if(err){
+            //res.send(err);
+            return res.json({success: false, message: err});
+        }
+        else{
+            next();
+        }
     });
-  });
+}
 
-  app.use('/api', apiPatient);
-
-  return app;
-})();
+module.exports = router;
