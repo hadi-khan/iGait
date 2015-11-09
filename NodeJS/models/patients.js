@@ -14,6 +14,7 @@ var patientsSchema = new Schema({
 	},
 	dateOfBirth: {type: Date},
 	admissionsDate: {type: Date, required: true},
+	priority: {type: Boolean, required: true},
 	address: {type: String, required: true}
 });
 
