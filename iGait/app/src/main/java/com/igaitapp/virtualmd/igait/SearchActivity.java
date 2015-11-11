@@ -1,11 +1,9 @@
 package com.igaitapp.virtualmd.igait;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -22,7 +20,7 @@ import java.util.List;
 public class SearchActivity extends AppCompatActivity {
     private HashMap<String, List<Patient>> patientMap = new HashMap<>();
     private List<Patient> patientList = new ArrayList<>(), patientResultList = new ArrayList<>();
-    private String lName = "Last Name", fName = "First Name", age = "Age", selectedFilter;
+    private String lastName = "Last Name", firstName = "First Name", age = "Age", selectedFilter = lastName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +29,6 @@ public class SearchActivity extends AppCompatActivity {
 
         patientList = (List<Patient>) getIntent().getSerializableExtra(MainActivity.EXTRA_PATIENT_LIST);
 
-        selectedFilter = lName;
         hashifyLastName();
 
         populateSpinnerFilter();
@@ -44,8 +41,8 @@ public class SearchActivity extends AppCompatActivity {
 
         spinner = (Spinner) findViewById(R.id.spinnerFilter);
 
-        filters.add(lName);
-        filters.add(fName);
+        filters.add(lastName);
+        filters.add(firstName);
         filters.add(age);
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, filters);
@@ -57,16 +54,15 @@ public class SearchActivity extends AppCompatActivity {
                 String newFilter = parent.getItemAtPosition(position).toString();
 
                 if (!selectedFilter.equals(newFilter)) {
-                    if (newFilter.equals(lName)) {
+                    if (newFilter.equals(lastName)) {
                         hashifyLastName();
                     }
-                    else if (newFilter.equals(fName)) {
+                    else if (newFilter.equals(firstName)) {
                         hashifyFirstName();
                     }
                     else if (newFilter.equals(age)) {
                         hashifyAge();
                     }
-
                 }
 
                 selectedFilter = newFilter;
@@ -74,7 +70,7 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                selectedFilter = lName;
+                selectedFilter = lastName;
                 hashifyLastName();
             }
         });
@@ -83,15 +79,14 @@ public class SearchActivity extends AppCompatActivity {
     public void performSearch(View v) {
         EditText editTextSearch;
         String query, queryKey;
-        List<Patient> topList = new ArrayList<>();
-        Patient patient;
+        Patient patient = new Patient();
         int exactCount = 0;
 
         editTextSearch = (EditText) findViewById(R.id.editTextSearch);
         query = editTextSearch.getText().toString().trim().toLowerCase();
 
-        if (query.length() > 0) {
-            if (selectedFilter.equals(lName)) {
+        if (InputCheck.searchQuery(query)) {
+            if (selectedFilter.equals(lastName)) {
                 query = removeRepeats(query);
                 queryKey = convertToKey(query);
 
@@ -114,7 +109,7 @@ public class SearchActivity extends AppCompatActivity {
                     hideListViewPatientsSearch();
                 }
             }
-            else if (selectedFilter.equals(fName)) {
+            else if (selectedFilter.equals(firstName)) {
                 query = removeRepeats(query);
                 queryKey = convertToKey(query);
 
@@ -151,14 +146,14 @@ public class SearchActivity extends AppCompatActivity {
             }
         }
         else {
-            Toast.makeText(getApplicationContext(), getString(R.string.query_empty), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getString(R.string.invalid_query), Toast.LENGTH_SHORT).show();
         }
     }
 
     private void hashifyLastName() {
         String patientKey;
         List<Patient> patientValueList;
-        Patient patient;
+        Patient patient = new Patient();
 
         patientMap = new HashMap<>();
         patientResultList = new ArrayList<>();
@@ -190,7 +185,7 @@ public class SearchActivity extends AppCompatActivity {
     private void hashifyFirstName() {
         String patientKey;
         List<Patient> patientValueList;
-        Patient patient;
+        Patient patient = new Patient();
 
         patientMap = new HashMap<>();
         patientResultList = new ArrayList<>();
@@ -221,7 +216,7 @@ public class SearchActivity extends AppCompatActivity {
     private void hashifyAge() {
         String patientKey;
         List<Patient> patientValueList;
-        Patient patient;
+        Patient patient = new Patient();
         Date currentDate = new Date();
 
         patientMap = new HashMap<>();
@@ -272,9 +267,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private String convertToKey(String key) {
-        if (key.length() >= 1) {
-            key = key.substring(0, 1).toLowerCase();
-        }
+        key = key.substring(0, 1).toLowerCase();
 
         return key;
     }
@@ -286,8 +279,10 @@ public class SearchActivity extends AppCompatActivity {
 
         list = (ListView) findViewById(R.id.listViewPatientsSearch);
         list.setVisibility(View.VISIBLE);
+
         notFound = (TextView) findViewById(R.id.textViewNotFound);
-        notFound.setVisibility(View.INVISIBLE);
+        notFound.setVisibility(View.GONE);
+
         adapter = new PatientListSearchAdapter(this, patientResultList);
         list.setAdapter(adapter);
 
@@ -296,9 +291,6 @@ public class SearchActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 Patient tappedPatient;
                 Intent intent;
-
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
                 tappedPatient = patientResultList.get(position);
                 intent = new Intent(SearchActivity.this, CalendarActivity.class);
@@ -315,7 +307,7 @@ public class SearchActivity extends AppCompatActivity {
         TextView notFound;
 
         list = (ListView) findViewById(R.id.listViewPatientsSearch);
-        list.setVisibility(View.INVISIBLE);
+        list.setVisibility(View.GONE);
 
         notFound = (TextView) findViewById(R.id.textViewNotFound);
         notFound.setVisibility(View.VISIBLE);

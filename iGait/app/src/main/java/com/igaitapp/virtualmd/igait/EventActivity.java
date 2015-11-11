@@ -1,13 +1,11 @@
 package com.igaitapp.virtualmd.igait;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ListView;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,13 +20,13 @@ public class EventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
-        DateFormat dateFormatString = new SimpleDateFormat("EEE, MMM dd yyyy");
+        DateFormat df = new SimpleDateFormat("EEE, MMM dd yyyy");
         String dateString;
 
         patient = (Patient) getIntent().getSerializableExtra(CalendarActivity.EXTRA_PATIENT_CALENDAR);
         selectedDate = (Date) getIntent().getSerializableExtra(CalendarActivity.EXTRA_SELECTED_DATE_CALENDAR);
 
-        dateString = dateFormatString.format(selectedDate);
+        dateString = df.format(selectedDate);
         setTitle(dateString);
 
         populateListViewPatient();
@@ -51,17 +49,25 @@ public class EventActivity extends AppCompatActivity {
         ListView list;
         EventListAdapter adapter;
         List<GaitHealth> gaitHealthList, eventList = new ArrayList<>();
-        GaitHealth gaitHealth;
+        GaitHealth gaitHealth = new GaitHealth();
         Date currentDate;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MM yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("MM dd yyyy");
 
         gaitHealthList = patient.getGaitHealth();
 
         for (int i = 0; i < gaitHealthList.size(); i++) {
-            gaitHealth = (GaitHealth) gaitHealthList.get(i);
+            gaitHealth = gaitHealthList.get(i);
             currentDate = gaitHealth.getStartTime();
 
-            if (dateFormat.format(currentDate).equals(dateFormat.format(selectedDate))) {
+            try {
+                currentDate = df.parse(df.format(currentDate));
+                selectedDate = df.parse(df.format(selectedDate));
+            }
+            catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            if (currentDate.equals(selectedDate)) {
                 eventList.add(gaitHealth);
             }
         }

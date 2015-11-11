@@ -24,8 +24,8 @@ public class CalendarActivity extends AppCompatActivity {
     public final static String EXTRA_PATIENT_CALENDAR = " com.igaitapp.virtualmd.igait.PATIENT_CALENDAR";
     public final static String EXTRA_SELECTED_DATE_CALENDAR = " com.igaitapp.virtualmd.igait.SELECTED_DATE_CALENDAR";
 
-    private Patient patient;
-    CaldroidFragment caldroidFragment = new CaldroidFragment();
+    private Patient patient = new Patient();
+    private CaldroidFragment caldroidFragment = new CaldroidFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,7 @@ public class CalendarActivity extends AppCompatActivity {
 
         patientList.add(patient);
 
-        list = (ListView) findViewById(R.id.listViewPatientCalendar);
+        list = (ListView) findViewById(R.id.listViewPatient);
         adapter = new PatientListAdapter(this, patientList);
         list.setAdapter(adapter);
     }
@@ -71,9 +71,9 @@ public class CalendarActivity extends AppCompatActivity {
         t.replace(R.id.calendarViewHealth, caldroidFragment);
         t.commit();
 
-        DateFormat dateFormat = new SimpleDateFormat("dd MM yyyy");
+        DateFormat df = new SimpleDateFormat("MM dd yyyy");
         List<GaitHealth> gaitHealthList;
-        GaitHealth gaitHealth;
+        GaitHealth gaitHealth = new GaitHealth();
         Date prevDay, currentDay;
         String prevDayString, currentDayString;
         int gaitHealthSum = 0, gaitHealthCount = 0;
@@ -86,8 +86,8 @@ public class CalendarActivity extends AppCompatActivity {
             gaitHealth = gaitHealthList.get(i);
             currentDay = gaitHealth.getStartTime();
 
-            prevDayString = dateFormat.format(prevDay);
-            currentDayString = dateFormat.format(currentDay);
+            prevDayString = df.format(prevDay);
+            currentDayString = df.format(currentDay);
 
             if (!(currentDayString.equals(prevDayString)) || (i + 1) == gaitHealthList.size()) {
                 if (Math.round(gaitHealthSum / gaitHealthCount) == 3) {
@@ -125,9 +125,9 @@ public class CalendarActivity extends AppCompatActivity {
             @Override
             public void onSelectDate(Date date, View view) {
                 Intent intent;
-                List<GaitHealth> gaitHealthList;
+                List<GaitHealth> gaitHealthList = new ArrayList<>();
                 Date firstDate, lastDate, selectedDate;
-                DateFormat dateFormat = new SimpleDateFormat("dd MM yyyy");
+                DateFormat df = new SimpleDateFormat("MM dd yyyy");
 
                 gaitHealthList = patient.getGaitHealth();
                 firstDate = gaitHealthList.get(0).getStartTime();
@@ -135,9 +135,9 @@ public class CalendarActivity extends AppCompatActivity {
                 selectedDate = date;
 
                 try {
-                    firstDate = dateFormat.parse(dateFormat.format(firstDate));
-                    lastDate = dateFormat.parse(dateFormat.format(lastDate));
-                    selectedDate = dateFormat.parse(dateFormat.format(selectedDate));
+                    firstDate = df.parse(df.format(firstDate));
+                    lastDate = df.parse(df.format(lastDate));
+                    selectedDate = df.parse(df.format(selectedDate));
                 }
                 catch (ParseException e) {
                     e.printStackTrace();
@@ -172,15 +172,15 @@ public class CalendarActivity extends AppCompatActivity {
     }
 
     private Intent getParentActivityIntentImpl() {
-        Intent i = null;
+        Intent intent = null;
 
         if ((boolean) getIntent().getSerializableExtra(MainActivity.EXTRA_SEARCH_ID)) {
-            i = new Intent(this, SearchActivity.class);
+            intent = new Intent(this, SearchActivity.class);
         } else {
-            i = new Intent(this, MainActivity.class);
+            intent = new Intent(this, MainActivity.class);
         }
 
-        return i;
+        return intent;
     }
 
     @Override

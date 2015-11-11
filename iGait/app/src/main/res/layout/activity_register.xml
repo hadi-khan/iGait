@@ -11,87 +11,196 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/rel1">
+        android:id="@+id/RelativeLayout01">
 
-        <TextView
-            android:id="@+id/signUptextView"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/enter_info"
-            android:textSize="40sp"
-            android:gravity="center_horizontal"
-            android:textStyle="bold"
-            android:textColor="@color/EasyGrey" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/LinearLayout01"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin" >
 
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:layout_below="@+id/signUptextView"
-            android:hint="@string/name"
-            android:id="@+id/nameEditText"
-            android:layout_margin="16dp" />
+            <TextView
+                android:id="@+id/registerTextView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/enter_info_register"
+                android:textSize="40sp"
+                android:gravity="center_horizontal"
+                android:textStyle="bold"
+                android:textColor="@color/EasyGrey" />
 
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/last_name"
+                android:id="@+id/textViewLastNameCatg"
+                android:layout_marginTop="@dimen/activity_vertical_margin" />
 
-            android:hint="@string/email"
-            android:id="@+id/emailEditText"
-            android:layout_below="@+id/nameEditText"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp" />
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="@string/last_name"
+                android:id="@+id/editTextLastName"
+                android:singleLine="true" />
 
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:layout_below="@+id/emailEditText"
-            android:hint="@string/mobile"
-            android:id="@+id/mobileEditText"
-            android:layout_margin="16dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/first_name"
+                android:id="@+id/textViewFirstNameCatg"
+                android:layout_marginTop="@dimen/activity_vertical_margin" />
 
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:layout_below="@+id/mobileEditText"
-            android:hint="@string/office_address"
-            android:id="@+id/addressEditText"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp" />
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="@string/first_name"
+                android:id="@+id/editTextFirstName"
+                android:singleLine="true" />
 
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:layout_below="@+id/addressEditText"
-            android:hint="@string/password"
-            android:id="@+id/passwordRegisterEditText"
-            android:layout_margin="16dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/email"
+                android:id="@+id/textViewEmailCatg"
+                android:layout_marginTop="@dimen/activity_vertical_margin" />
 
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="text"
-            android:layout_below="@+id/passwordRegisterEditText"
-            android:hint="@string/re_password"
-            android:id="@+id/reenterPasswordRegisterEditText"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"  />
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="@string/email"
+                android:id="@+id/editTextEmail"
+                android:singleLine="true" />
 
-        <Button
-            android:id="@+id/btnRegisterSubmit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/submit"
-            android:layout_below="@+id/reenterPasswordRegisterEditText"
-            android:textColor="#fff"
-            android:textSize="13dp"
-            android:layout_centerHorizontal="true"
-            android:background="@color/GameGreen"
-            android:layout_margin="16dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/office_phone_number"
+                android:id="@+id/textViewOfficePhoneNumberCatg"
+                android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:hint="@string/office_phone_number"
+                android:id="@+id/editTextOfficePhoneNumber"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/office_address"
+                android:id="@+id/textViewOfficeAddressCatg"
+                android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="@string/office_address"
+                android:id="@+id/editTextOfficeAddress"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/city"
+                android:id="@+id/textViewOfficeCityCatg"
+                android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="@string/city"
+                android:id="@+id/editTextOfficeCity"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/state"
+                android:id="@+id/textViewOfficeStateCatg"
+                android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="@string/state"
+                android:id="@+id/editTextOfficeState"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/zip_code"
+                android:id="@+id/textViewOfficeZipCodeCatg"
+                android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:hint="@string/zip_code"
+                android:id="@+id/editTextOfficeZipCode"
+                android:singleLine="true"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/password"
+                android:id="@+id/textViewPasswordCatg"
+                android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password"
+                android:id="@+id/editTextPassword"
+                android:singleLine="true"
+                android:inputType="textPassword" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="@string/re_password"
+                android:id="@+id/textViewRePasswordCatg"
+                android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+            <EditText
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text|textPassword"
+                android:hint="@string/re_password"
+                android:id="@+id/editTextRePassword"
+                android:singleLine="true" />
+
+            <Button
+                android:id="@+id/submitButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/submit"
+                android:textColor="#fff"
+                android:textSize="13sp"
+                android:background="@color/GameGreen"
+                android:layout_marginTop="@dimen/activity_vertical_margin" />
+        </LinearLayout>
     </RelativeLayout>
 </ScrollView>

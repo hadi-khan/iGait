@@ -23,7 +23,7 @@
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.igaitapp.virtualmd.igait.MainActivity"/>
+                android:value="com.igaitapp.virtualmd.igait.MainActivity" />
         </activity>
         <activity
             android:name=".EventActivity"
@@ -52,7 +52,7 @@
                 android:value="com.igaitapp.virtualmd.igait.LoginActivity" />
         </activity>
         <activity
-            android:name=".ForgotPassword"
+            android:name=".ForgotPasswordActivity"
             android:label="@string/title_activity_forgot_password"
             android:parentActivityName=".LoginActivity" >
             <meta-data
@@ -62,11 +62,33 @@
         <activity
             android:name=".SearchActivity"
             android:label="@string/title_activity_search"
-            android:parentActivityName=".MainActivity"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.igaitapp.virtualmd.igait.MainActivity" />
         </activity>
+        <activity
+            android:name=".UserProfileActivity"
+            android:label="@string/title_activity_user_profile"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.igaitapp.virtualmd.igait.MainActivity" />
+        </activity>
+        <activity
+            android:name=".NewPatientActivity"
+            android:label="@string/title_activity_new_patient"
+            android:parentActivityName=".UserProfileActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.igaitapp.virtualmd.igait.UserProfileActivity" />
+        </activity>
+        <activity
+            android:name=".PatientProfileActivity"
+            android:label="@string/title_activity_patient_profile" >
+        </activity>
     </application>
+
 </manifest>

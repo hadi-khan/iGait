@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/home/jesus/Android/AndroidStudioProjects/iGait/caldroid/build/intermediates/bundles/debug/res/values/values.xml -->
+    <!-- From: file:/home/jesus/Android/AndroidStudioProjects/iGait/iGait/caldroid/build/intermediates/bundles/debug/res/values/values.xml -->
     <eat-comment/>
     <attr format="reference" name="styleCaldroidGridView"/>
     <attr format="reference" name="styleCaldroidLeftArrow"/>

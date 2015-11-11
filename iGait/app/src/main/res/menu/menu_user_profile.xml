@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.igaitapp.virtualmd.igait.UserProfileActivity">
+
+    <item android:id="@+id/action_edit_profile"
+        android:icon="@drawable/ic_edit_white_48dp"
+        android:title="@string/action_edit"
+        android:hint="@string/action_edit_hint"
+        app:showAsAction="always"  />
+
+    <item android:id="@+id/action_logout"
+        android:icon="@drawable/ic_exit_to_app_white_48dp"
+        android:title="@string/action_logout"
+        android:hint="@string/action_logout_hint"
+        app:showAsAction="always"  />
+
+</menu>

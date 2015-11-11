@@ -14,9 +14,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by jesus on 10/25/15.
- */
 public class PatientListSearchAdapter extends BaseAdapter {
     private Context mContext;
     private Resources mResource;

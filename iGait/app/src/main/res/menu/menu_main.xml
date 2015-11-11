@@ -2,6 +2,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity" >
 
+    <item android:id="@+id/action_add_patient"
+        android:icon="@drawable/ic_add_white_48dp"
+        android:title="@string/action_new_patient"
+        android:hint="@string/action_new_patient_hint"
+        app:showAsAction="always"  />
+
     <item android:id="@+id/action_search"
         android:icon="@drawable/ic_search_white_48dp"
         android:title="@string/action_search"
@@ -10,8 +16,8 @@
 
     <item android:id="@+id/action_account"
         android:icon="@drawable/ic_account_circle_white_48dp"
-        android:title="@string/action_account"
-        android:hint="@string/action_account_hint"
+        android:title="@string/action_user_profile"
+        android:hint="@string/action_user_profile"
         app:showAsAction="always"  />
 
 </menu>

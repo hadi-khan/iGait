@@ -2,20 +2,21 @@ package com.igaitapp.virtualmd.igait;
 
 import java.io.Serializable;
 
-/**
- * Created by jesus on 9/27/15.
- */
 public class ContactInfo implements Serializable {
-    private String email, address, city, state, mobile;
-    private double zipCode;
+    private String email, address, city, state;
+    private long phoneNumber, zipCode;
 
-    public ContactInfo(String email, String address, String city, String state, double zipCode, String mobile) {
+    public ContactInfo() {
+
+    }
+
+    public ContactInfo(long phoneNumber, String email, String address, String city, String state, long zipCode) {
+        this.phoneNumber = phoneNumber;
         this.email = email;
         this.address = address;
         this.city = city;
         this.state = state;
         this.zipCode = zipCode;
-        this.mobile = mobile;
     }
 
     public String getEmail() {
@@ -34,11 +35,35 @@ public class ContactInfo implements Serializable {
         this.address = address;
     }
 
-    public String getMobile() {
-        return mobile;
+    public String getCity() {
+        return city;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public Long getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(Long phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public long getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(long zipCode) {
+        this.zipCode = zipCode;
     }
 }

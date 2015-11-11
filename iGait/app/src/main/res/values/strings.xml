@@ -7,12 +7,31 @@
     <string name="title_activity_register">Register</string>
     <string name="title_activity_forgot_password">Forgot Password</string>
     <string name="title_activity_search">Search</string>
+    <string name="title_activity_user_profile">User Profile</string>
+    <string name="title_activity_user_profile_edit">User Profile - Edit</string>
+    <string name="title_activity_new_patient">New Patient</string>
+    <string name="title_activity_patient_profile">Patient Profile</string>
+    <string name="title_activity_patient_profile_edit">Patient Profile - Edit</string>
 
     <!-- action bar -->
-    <string name="action_search">Search</string>
+    <string name="action_search">Search Patients</string>
     <string name="action_search_hint">Search for patients.</string>
-    <string name="action_account">Account</string>
-    <string name="action_account_hint">Visit the doctor\'s account.</string>
+    <string name="action_user_profile">User Profile</string>
+    <string name="action_user_hint">Visit the user profile.</string>
+    <string name="action_new_patient">Add New Patient</string>
+    <string name="action_new_patient_hint">Add a new patient.</string>
+    <string name="action_edit">Edit Profile</string>
+    <string name="action_edit_hint">Edit profile.</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_logout_hint">Logout.</string>
+    <string name="action_save">Save</string>
+    <string name="action_save_hint">Save changes.</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_cancel_hint">Cancel changes.</string>
+    <string name="action_delete_patient">Delete Patient</string>
+    <string name="action_delete_patient_hint">Delete patient.</string>
+    <string name="action_change_priority">Change Priority Status</string>
+    <string name="action_change_priority_hint">Change priority status.</string>
 
     <!-- default strings -->
     <string name="hello_world">Hello world!</string>
@@ -37,22 +56,36 @@
     <string name="video">video</string>
 
     <!-- standard strings -->
+    <string name="id_number">ID Number</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
     <string name="email">E-mail</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="birthday">Birthday</string>
+    <string name="sex">Sex</string>
+    <string name="address">Address</string>
+    <string name="expected_walk_time">Expected Walk Time</string>
+    <string name="office_phone_number">Office Phone Number</string>
+    <string name="office_address">Office Address</string>
+    <string name="city">City</string>
+    <string name="state">State</string>
+    <string name="zip_code">Zip Code</string>
     <string name="password">Password</string>
+    <string name="hidden_password">**********</string>
     <string name="re_password">Re-enter Password</string>
     <string name="show_password">Show Password</string>
-    <string name="name">Name</string>
-    <string name="mobile">Mobile Number</string>
-    <string name="office_address">Office Address</string>
-    <string name="query_empty">Search query cannot be empty.</string>
+
+    <!-- errors -->
+    <string name="invalid_query">Invalid search query.</string>
     <string name="query_not_found">Search query cannot be found.</string>
 
-    <!-- login activities -->
+    <!-- info activities -->
     <string name="welcome">Welcome to\nthe iGait App</string>
-    <string name="retrieve_password">Enter E-mail to\nRetrieve Password</string>
-    <string name="enter_info">Enter Information\n to Register</string>
+    <string name="recover_password">Enter E-mail to\nRecover Password</string>
+    <string name="enter_info_register">Enter Information\nto Register</string>
     <string name="submit">Submit</string>
     <string name="register">Register</string>
     <string name="forgot_password">Forgot Password</string>
+    <string name="enter_info_new_patient">Enter Information\nfor New Patient</string>
 
 </resources>

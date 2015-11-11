@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.igaitapp.virtualmd.igait.PatientProfileActivity">
+
+    <item android:id="@+id/action_change_priority"
+        android:icon="@drawable/ic_edit_white_48dp"
+        android:title="@string/action_change_priority"
+        android:hint="@string/action_change_priority_hint"
+        app:showAsAction="always"  />
+
+    <item android:id="@+id/action_edit_profile"
+        android:icon="@drawable/ic_edit_white_48dp"
+        android:title="@string/action_edit"
+        android:hint="@string/action_edit_hint"
+        app:showAsAction="always"  />
+
+    <item android:id="@+id/action_delete_profile"
+        android:icon="@drawable/ic_delete_white_48dp"
+        android:title="@string/action_delete_patient"
+        android:hint="@string/action_delete_patient_hint"
+        app:showAsAction="always"  />
+
+</menu>

@@ -1,8 +1,11 @@
 package com.igaitapp.virtualmd.igait;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.provider.SyncStateContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,10 +17,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by jesus on 8/21/15.
- */
 public class PatientListAdapter extends BaseAdapter {
+    public final static String EXTRA_PATIENT_LA = "com.igaitapp.virtualmd.igait.PATIENT_LA";
+
     private Context mContext;
     private Resources mResource;
 
@@ -57,10 +59,9 @@ public class PatientListAdapter extends BaseAdapter {
 
         TextView[] textViewG = new TextView[4];
         TextView textViewInfoLeft, textViewInfoRight;
-        ImageView imageViewPriorityNotif;
+        ImageView imageViewPatientImage, imageViewPriorityNotif;
 
-        Patient patient;
-        Date birthday;
+        final Patient patient;
         List<GaitHealth> gaitHealthList;
         GaitHealth gaitHealth;
         Calendar weekPrev = Calendar.getInstance(), weekCurrent = Calendar.getInstance();
@@ -81,7 +82,7 @@ public class PatientListAdapter extends BaseAdapter {
         patient = (Patient) getItem(position);
 
         gaitHealthList = patient.getGaitHealth();
-        gaitHealth = (GaitHealth) gaitHealthList.get(0);
+        gaitHealth = gaitHealthList.get(0);
         weekPrev.setTime(gaitHealth.getStartTime());
 
         for (int i = 0; i < gaitHealthList.size(); i++) {
@@ -132,6 +133,23 @@ public class PatientListAdapter extends BaseAdapter {
 
         textViewInfoLeft.setText(patient.getFirstName().substring(0, 1) + ". " + patient.getLastName());
         textViewInfoRight.setText("" + ((new Date().getTime() - patient.getBirthday().getTime()) / 1000 / 60 / 60 / 24 / 365));
+
+        imageViewPatientImage = (ImageView) view.findViewById(R.id.imageViewPatientImage);
+
+        imageViewPatientImage.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent intent;
+                Patient patientCopy = new Patient();
+
+                intent = new Intent(mContext, PatientProfileActivity.class);
+
+                intent.putExtra(MainActivity.EXTRA_PATIENT, (Patient) patientCopy);
+
+                mContext.startActivity(intent);
+            }
+        });
 
         return view;
     }

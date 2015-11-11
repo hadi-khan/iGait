@@ -1,0 +1,18 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.igaitapp.virtualmd.igait.UserProfileActivity">
+
+    <item android:id="@+id/action_save_edit_profile"
+        android:icon="@drawable/ic_save_white_48dp"
+        android:title="@string/action_save"
+        android:hint="@string/action_save_hint"
+        app:showAsAction="always" />
+
+    <item android:id="@+id/action_cancel_edit_profile"
+        android:icon="@drawable/ic_cancel_white_48dp"
+        android:title="@string/action_cancel"
+        android:hint="@string/action_cancel_hint"
+        app:showAsAction="always" />
+
+</menu>

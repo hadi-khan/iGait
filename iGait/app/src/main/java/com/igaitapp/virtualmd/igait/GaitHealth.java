@@ -3,13 +3,14 @@ package com.igaitapp.virtualmd.igait;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Created by jesus on 8/29/15.
- */
 public class GaitHealth implements Serializable {
     private int health;
     private Date startTime, endTime;
     boolean video;
+
+    public GaitHealth() {
+
+    }
 
     public GaitHealth(int health, Date startTime, Date endTime, boolean video) {
         super();
