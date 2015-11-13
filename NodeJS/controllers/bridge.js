@@ -3,7 +3,7 @@
  * Created by kevin on 11/7/2015.
  */
 
-var mongoose = require('mongoose');
+var mongoose = require('mongoose'),
     path = require('path'),
     Models = require('../models'),
     Schema = mongoose.Schema,
@@ -36,11 +36,12 @@ dbMgrBridge.prototype = {
     // browser/feature/object detection code.
     _EstablishImplementor: function(whichdb)
     {
-        if(whichdb == 1)//change later!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if(whichdb === 1) {//change later!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             return new ImplementationMongoose();//mongoose / mongodb
-
-        else if(false)
+        }
+        else if(false) {
             return new ImplementationTwo();
+        }
         // ...
         return null;
     },
@@ -142,7 +143,7 @@ ImplementationMongoose.prototype = {
             mongoose.connection.close(function () {
                 console.log('moongose default connection disconnected through app termination');
                 process.exit(0);
-            })
+            });
         });
     },
     disconnectDB: function()
@@ -151,7 +152,7 @@ ImplementationMongoose.prototype = {
             mongoose.connection.close(function () {
                 console.log('moongose default connection disconnected through app termination');
                 process.exit(0);
-            })
+            });
         });
         mongoose.connection.close();
     },
