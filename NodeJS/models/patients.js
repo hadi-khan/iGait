@@ -14,8 +14,9 @@ var patientsSchema = new Schema({
 	},
 	dateOfBirth: {type: Date},
 	admissionsDate: {type: Date, required: true},
+	address: {type: String, required: true},
 	priority: {type: Boolean, required: true},
-	address: {type: String, required: true}
+	doctor: { type : ObjectId, ref: 'Doctors' }
 });
 
 module.exports = mongoose.model('Patients', patientsSchema);
