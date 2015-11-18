@@ -1,17 +1,54 @@
 'use strict';
 
-var
-  express = require('express'),
-  app = express(),
-  Patient = require('../models/patients');
+let express = require('express');
+let dbmgr = require('../controllers/bridge');
+let Models = require('../models');
+let db = dbmgr.bridge(1);
+let router = express.Router();
 
-module.exports = (function(){
-  app.route('/patient')
+router.route('/patient')
+    .get(function(req, res){
+        let authorization = req.header('Authorization');
+        let username = authorization.username;
+
+        db.getDoctorByEmail(username, searchPatients);
+
+        function searchPatients(err, doctor){
+            if(err){
+                res.json({success: 'false', message: err});
+            }else if(doctor) {
+                db.getDoctorPatients(doctor.objectId, reply);
+            }
+        }
+
+        function reply(err, patients){
+            if(err){
+                res.json({success: 'false', message: err});
+            } else if(patients){
+                res.json({success: 'true', message: patients});
+            }
+        }
+    })
     .post(function(req, res){
-      let patients = Patient.find();
+        let newPatient = Models.Patients(req.body);
 
-      res.json(patients);
+        newPatient.save(reply);
+
+        function reply(err, patient){
+            if(err){
+                res.json({success: 'false', message: err});
+            } else if(patient){
+                res.json({success: 'true', message: patient});
+            }
+        }
     });
 
-  return app;
-})();
+router.route('/patient/:ObjectId')
+    .put(function(req, res){
+
+    })
+    .delete(function(req,res){
+
+    });
+
+module.exports = router;
