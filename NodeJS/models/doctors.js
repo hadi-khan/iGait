@@ -13,7 +13,10 @@ var doctorsSchema = new Schema({
 	contact: { 
 		mobilenumber: { type: Number },
 		officenumber: { type: Number },
-		officeaddress: { type: String }
+		officeaddress: { type: String },
+		state: {type: String, required: true},
+		city: {type: String, required: true},
+		zipcode: {type: Number, required: true}
 	},
 	accessToken: { type: String } // Used for Remember Me
 });
