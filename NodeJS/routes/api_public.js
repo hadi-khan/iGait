@@ -19,7 +19,7 @@ router.route('/authentication')
     .post(function(req, res){
         let credentials = req.body;
 
-        db.getDoctorByEmail(function(err, doctor){
+        db.getDoctorByEmail(credentials.email, function(err, doctor){
             if(err){
                 res.json({success: 'false', message: err});
             }
@@ -29,7 +29,6 @@ router.route('/authentication')
             }else if(doctor){
                 if(Security.verifyPassword(credentials.password, doctor.password)){
                     let token = Security.sign(doctor);
-
                     res.json({success: 'true', message: token});
                 }else{
                     res.json({success: 'false', message: 'wrong password'});
