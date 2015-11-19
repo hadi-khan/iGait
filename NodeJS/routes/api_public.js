@@ -19,7 +19,7 @@ router.route('/authentication')
     .post(function(req, res){
         let credentials = req.body;
 
-        db.getDoctorByEmail(function(err, doctor){
+        db.getDoctorByEmail(credentials.email, function(err, doctor){
             if(err){
                 res.json({success: 'false', message: err});
             }
