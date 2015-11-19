@@ -29,8 +29,8 @@ router.route('/authentication')
             }else if(doctor){
                 if(Security.verifyPassword(credentials.password, doctor.password)){
                     let token = Security.sign(doctor);
-
-                    res.json({success: 'true', message: token});
+                    res.header('Authorzation', token);
+                    res.json({success: 'true', message: doctor});
                 }else{
                     res.json({success: 'false', message: 'wrong password'});
                 }
