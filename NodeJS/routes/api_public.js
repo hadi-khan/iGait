@@ -52,9 +52,9 @@ router.route('/register')
     .post(function(req, res){
         //Doctors refers to the var in /models/index.js that saves the path to the doctors.js file
         let newDoctor = Models.Doctors(req.body);
+        newDoctor.password = Security.hashPassword(newDoctor.password);
 
         db.createDoctor(newDoctor, reply);
-
         function reply(err, doctor){
             if(err){
                 res.json({success: 'false', message: err});
