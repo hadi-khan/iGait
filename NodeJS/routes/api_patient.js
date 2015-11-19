@@ -7,7 +7,7 @@ let db = dbmgr.bridge(1);
 let router = express.Router();
 
 const PATIENT_DELETE_MESSAGE = 'patient deleted';
-
+//TODO implement the new db function for finding a patient
 router.route('/patient')
     .get(function(req, res){
         let authorization = req.header('Authorization');
@@ -54,37 +54,16 @@ router.route('/patient')
         }
     });
 
-router.route('/patient/:email')
+router.route('/patient/:id')
     .put(function(req, res){
-        let email = req.params.email;
+        let id = req.params.id;
 
-        db.getPatientByEmail(email, modify);
+        db.getPatientByEmail(id, modify);
         function modify(err, patient){
             if(err){
                 res.json({success: 'false', message: err});
             }
-            //
-            //if(req.body.email){
-            //    patient.email = req.body.email;
-            //}
-            //if(req.body.password){
-            //    patient.password = req.body.password;
-            //}
-            //if(req.body.name){
-            //    patient.name = req.body.name;
-            //}
-            //if(req.body.dateOfBirth){
-            //    patient.dateOfBirth = req.body.dateOfBirth;
-            //}
-            //if(req.body.admissionsDate){
-            //    patient.admissionsDate = req.body.admissionsDate;
-            //}
-            //if(req.body.address){
-            //    patient.address = req.body.address;
-            //}
-            //if(req.body.priority){
-            //    patient.priority = req.body.priority;
-            //}
+
             let updates = req.body;
             db.updatePatient(email, updates, reply);
             function reply(err, patient){
@@ -97,7 +76,7 @@ router.route('/patient/:email')
         }
     })
     .delete(function(req,res){
-        let id = req.params.email;
+        let id = req.params.id;
         db.removePatient(id, reply);
 
         function reply(err, pat){

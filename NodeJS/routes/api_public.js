@@ -6,6 +6,7 @@
 let express = require('express');
 let Security = require('../class/Security');
 let dbmgr = require('../controllers/bridge');
+let Models = require('../models');
 
 let db = dbmgr.bridge(1);
 let router = express.Router();
