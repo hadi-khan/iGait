@@ -54,10 +54,10 @@ dbMgrBridge.prototype = {
         if(this._impl && this._impl.getDoctorByEmail)
             this._impl.getDoctorByEmail(reqEmail, callback);     // Forward request to implementor
     },
-    getPatientByEmail: function(reqEmail, callback){
+    getPatientByObjectID: function(reqObjectID, callback){
         // Check if any implementor is bound and has the required method:
-        if(this._impl && this._impl.getPatientByEmail)
-            this._impl.getPatientByEmail(reqEmail, callback);     // Forward request to implementor
+        if(this._impl && this._impl.getPatientByObjectID)
+            this._impl.getPatientByObjectID(reqObjectID, callback);     // Forward request to implementor
     },
     getDoctorPatients: function(reqObjectID, callback){
         // Check if any implementor is bound and has the required method:
@@ -161,8 +161,8 @@ ImplementationMongoose.prototype = {
             callback(err,doc);
         });
     },
-    getPatientByEmail: function(reqEmail, callback){
-        Models.Doctors.findOne({email:reqEmail}, function(err,pat){
+    getPatientByObjectID: function(reqObjectID, callback){
+        Models.Doctors.findOne({_id:reqObjectID}, function(err,pat){
             callback(err,pat);
         });
     },
