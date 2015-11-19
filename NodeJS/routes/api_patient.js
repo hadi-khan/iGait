@@ -38,6 +38,9 @@ router.route('/patient')
         db.getDoctorByEmail(email, assignPatient);
 
         function assignPatient(err, doctor){
+            if(err){
+                res.json({success: 'false', message:err});
+            }
             newPatient.doctor = doctor.objectId;
 
             db.createPatient(newPatient, reply);
@@ -60,30 +63,30 @@ router.route('/patient/:email')
             if(err){
                 res.json({success: 'false', message: err});
             }
-            // TODO: this section needs to be wrapped inside a utility
-            if(req.body.email){
-                patient.email = req.body.email;
-            }
-            if(req.body.password){
-                patient.password = req.body.password;
-            }
-            if(req.body.name){
-                patient.name = req.body.name;
-            }
-            if(req.body.dateOfBirth){
-                patient.dateOfBirth = req.body.dateOfBirth;
-            }
-            if(req.body.admissionsDate){
-                patient.admissionsDate = req.body.admissionsDate;
-            }
-            if(req.body.address){
-                patient.address = req.body.address;
-            }
-            if(req.body.priority){
-                patient.priority = req.body.priority;
-            }
-
-            db.updatePatient(email, patient, reply);
+            //
+            //if(req.body.email){
+            //    patient.email = req.body.email;
+            //}
+            //if(req.body.password){
+            //    patient.password = req.body.password;
+            //}
+            //if(req.body.name){
+            //    patient.name = req.body.name;
+            //}
+            //if(req.body.dateOfBirth){
+            //    patient.dateOfBirth = req.body.dateOfBirth;
+            //}
+            //if(req.body.admissionsDate){
+            //    patient.admissionsDate = req.body.admissionsDate;
+            //}
+            //if(req.body.address){
+            //    patient.address = req.body.address;
+            //}
+            //if(req.body.priority){
+            //    patient.priority = req.body.priority;
+            //}
+            let updates = req.body;
+            db.updatePatient(email, updates, reply);
             function reply(err, patient){
                 if(err){
                     res.json({success: 'false', message: err});
