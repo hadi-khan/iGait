@@ -12,7 +12,8 @@ var patientsSchema = new Schema({
 		first: { type: String, required: true, trim: true},
 		last: { type: String, required: true, trim: true}
 	},
-	dateOfBirth: {type: Date},
+	dateOfBirth: {type: Date, required: true},
+	gender: {type: String, required: true},
 	admissionsDate: {type: Date, required: true},
 	address: {type: String, required: true},
 	priority: {type: Boolean, required: true},
@@ -20,4 +21,7 @@ var patientsSchema = new Schema({
 });
 
 module.exports = mongoose.model('Patients', patientsSchema);
+
+
+
 
