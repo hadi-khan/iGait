@@ -37,11 +37,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="bridge.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="bridge.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/controllers/bridge.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="163" column="51" selection-start-line="163" selection-start-column="51" selection-end-line="163" selection-end-column="51" />
+            <state vertical-scroll-proportion="0.5659026">
+              <caret line="174" column="6" selection-start-line="174" selection-start-column="6" selection-end-line="174" selection-end-column="6" />
               <folding>
                 <element signature="e#1#42#0" expanded="false" />
                 <element signature="n#!!block;n#dbMgrBridge#0" expanded="false" />
@@ -83,24 +83,24 @@
                 <element signature="e#6384#6591#0" expanded="false" />
                 <element signature="e#6394#6421#0" expanded="false" />
                 <element signature="e#6541#6583#0" expanded="false" />
-                <element signature="e#6642#6735#0" expanded="false" />
-                <element signature="e#6685#6727#0" expanded="false" />
-                <element signature="e#6784#6877#0" expanded="false" />
-                <element signature="e#6827#6869#0" expanded="false" />
-                <element signature="e#6936#7077#0" expanded="false" />
-                <element signature="e#7137#7279#0" expanded="false" />
-                <element signature="e#7229#7271#0" expanded="false" />
-                <element signature="e#7327#7456#0" expanded="false" />
-                <element signature="e#7406#7448#0" expanded="false" />
-                <element signature="e#7505#7636#0" expanded="false" />
-                <element signature="e#7585#7628#0" expanded="false" />
-                <element signature="e#7640#7669#0" expanded="false" />
+                <element signature="e#6641#6734#0" expanded="false" />
+                <element signature="e#6684#6726#0" expanded="false" />
+                <element signature="e#6783#6876#0" expanded="false" />
+                <element signature="e#6826#6868#0" expanded="false" />
+                <element signature="e#6935#7076#0" expanded="false" />
+                <element signature="e#7136#7278#0" expanded="false" />
+                <element signature="e#7228#7270#0" expanded="false" />
+                <element signature="e#7326#7455#0" expanded="false" />
+                <element signature="e#7405#7447#0" expanded="false" />
+                <element signature="e#7504#7635#0" expanded="false" />
+                <element signature="e#7584#7627#0" expanded="false" />
+                <element signature="e#7639#7668#0" expanded="false" />
                 <element signature="n#!!block;n#ImplementationTwo#0" expanded="false" />
-                <element signature="e#7846#7929#0" expanded="false" />
-                <element signature="e#7878#7885#0" expanded="false" />
-                <element signature="e#7920#7927#0" expanded="false" />
-                <element signature="e#7947#8028#0" expanded="false" />
-                <element signature="e#7978#8026#0" expanded="false" />
+                <element signature="e#7845#7928#0" expanded="false" />
+                <element signature="e#7877#7884#0" expanded="false" />
+                <element signature="e#7919#7926#0" expanded="false" />
+                <element signature="e#7946#8027#0" expanded="false" />
+                <element signature="e#7977#8025#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -126,10 +126,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="patients.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="patients.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/models/patients.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.63338304">
+            <state vertical-scroll-proportion="-15.740741">
               <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
               <folding />
             </state>
@@ -186,8 +186,8 @@
         <option value="$PROJECT_DIR$/routes/api.js" />
         <option value="$PROJECT_DIR$/routes/api_account.js" />
         <option value="$PROJECT_DIR$/models/doctors.js" />
-        <option value="$PROJECT_DIR$/controllers/bridge.js" />
         <option value="$PROJECT_DIR$/models/patients.js" />
+        <option value="$PROJECT_DIR$/controllers/bridge.js" />
       </list>
     </option>
   </component>
@@ -921,12 +921,12 @@
       <workItem from="1446917419965" duration="5280000" />
       <workItem from="1447074555316" duration="6237000" />
       <workItem from="1447442545465" duration="4681000" />
-      <workItem from="1447621362501" duration="2488000" />
+      <workItem from="1447621362501" duration="3092000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="18686000" />
+    <option name="totallyTimeSpent" value="19290000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1616" height="835" extended-state="6" />
@@ -1028,24 +1028,24 @@
             <element signature="e#6384#6591#0" expanded="false" />
             <element signature="e#6394#6421#0" expanded="false" />
             <element signature="e#6541#6583#0" expanded="false" />
-            <element signature="e#6642#6735#0" expanded="false" />
-            <element signature="e#6685#6727#0" expanded="false" />
-            <element signature="e#6784#6877#0" expanded="false" />
-            <element signature="e#6827#6869#0" expanded="false" />
-            <element signature="e#6936#7077#0" expanded="false" />
-            <element signature="e#7137#7279#0" expanded="false" />
-            <element signature="e#7229#7271#0" expanded="false" />
-            <element signature="e#7327#7456#0" expanded="false" />
-            <element signature="e#7406#7448#0" expanded="false" />
-            <element signature="e#7505#7636#0" expanded="false" />
-            <element signature="e#7585#7628#0" expanded="false" />
-            <element signature="e#7640#7669#0" expanded="false" />
+            <element signature="e#6641#6734#0" expanded="false" />
+            <element signature="e#6684#6726#0" expanded="false" />
+            <element signature="e#6783#6876#0" expanded="false" />
+            <element signature="e#6826#6868#0" expanded="false" />
+            <element signature="e#6935#7076#0" expanded="false" />
+            <element signature="e#7136#7278#0" expanded="false" />
+            <element signature="e#7228#7270#0" expanded="false" />
+            <element signature="e#7326#7455#0" expanded="false" />
+            <element signature="e#7405#7447#0" expanded="false" />
+            <element signature="e#7504#7635#0" expanded="false" />
+            <element signature="e#7584#7627#0" expanded="false" />
+            <element signature="e#7639#7668#0" expanded="false" />
             <element signature="n#!!block;n#ImplementationTwo#0" expanded="false" />
-            <element signature="e#7846#7929#0" expanded="false" />
-            <element signature="e#7878#7885#0" expanded="false" />
-            <element signature="e#7920#7927#0" expanded="false" />
-            <element signature="e#7947#8028#0" expanded="false" />
-            <element signature="e#7978#8026#0" expanded="false" />
+            <element signature="e#7845#7928#0" expanded="false" />
+            <element signature="e#7877#7884#0" expanded="false" />
+            <element signature="e#7919#7926#0" expanded="false" />
+            <element signature="e#7946#8027#0" expanded="false" />
+            <element signature="e#7977#8025#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1127,24 +1127,24 @@
             <element signature="e#6384#6591#0" expanded="false" />
             <element signature="e#6394#6421#0" expanded="false" />
             <element signature="e#6541#6583#0" expanded="false" />
-            <element signature="e#6642#6735#0" expanded="false" />
-            <element signature="e#6685#6727#0" expanded="false" />
-            <element signature="e#6784#6877#0" expanded="false" />
-            <element signature="e#6827#6869#0" expanded="false" />
-            <element signature="e#6936#7077#0" expanded="false" />
-            <element signature="e#7137#7279#0" expanded="false" />
-            <element signature="e#7229#7271#0" expanded="false" />
-            <element signature="e#7327#7456#0" expanded="false" />
-            <element signature="e#7406#7448#0" expanded="false" />
-            <element signature="e#7505#7636#0" expanded="false" />
-            <element signature="e#7585#7628#0" expanded="false" />
-            <element signature="e#7640#7669#0" expanded="false" />
+            <element signature="e#6641#6734#0" expanded="false" />
+            <element signature="e#6684#6726#0" expanded="false" />
+            <element signature="e#6783#6876#0" expanded="false" />
+            <element signature="e#6826#6868#0" expanded="false" />
+            <element signature="e#6935#7076#0" expanded="false" />
+            <element signature="e#7136#7278#0" expanded="false" />
+            <element signature="e#7228#7270#0" expanded="false" />
+            <element signature="e#7326#7455#0" expanded="false" />
+            <element signature="e#7405#7447#0" expanded="false" />
+            <element signature="e#7504#7635#0" expanded="false" />
+            <element signature="e#7584#7627#0" expanded="false" />
+            <element signature="e#7639#7668#0" expanded="false" />
             <element signature="n#!!block;n#ImplementationTwo#0" expanded="false" />
-            <element signature="e#7846#7929#0" expanded="false" />
-            <element signature="e#7878#7885#0" expanded="false" />
-            <element signature="e#7920#7927#0" expanded="false" />
-            <element signature="e#7947#8028#0" expanded="false" />
-            <element signature="e#7978#8026#0" expanded="false" />
+            <element signature="e#7845#7928#0" expanded="false" />
+            <element signature="e#7877#7884#0" expanded="false" />
+            <element signature="e#7919#7926#0" expanded="false" />
+            <element signature="e#7946#8027#0" expanded="false" />
+            <element signature="e#7977#8025#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1273,10 +1273,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/bridge.js">
+    <entry file="file://$PROJECT_DIR$/models/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="163" column="51" selection-start-line="163" selection-start-column="51" selection-end-line="163" selection-end-column="51" />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/doctors.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/patients.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.740741">
+          <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/bridge.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5659026">
+          <caret line="174" column="6" selection-start-line="174" selection-start-column="6" selection-end-line="174" selection-end-column="6" />
           <folding>
             <element signature="e#1#42#0" expanded="false" />
             <element signature="n#!!block;n#dbMgrBridge#0" expanded="false" />
@@ -1318,49 +1342,25 @@
             <element signature="e#6384#6591#0" expanded="false" />
             <element signature="e#6394#6421#0" expanded="false" />
             <element signature="e#6541#6583#0" expanded="false" />
-            <element signature="e#6642#6735#0" expanded="false" />
-            <element signature="e#6685#6727#0" expanded="false" />
-            <element signature="e#6784#6877#0" expanded="false" />
-            <element signature="e#6827#6869#0" expanded="false" />
-            <element signature="e#6936#7077#0" expanded="false" />
-            <element signature="e#7137#7279#0" expanded="false" />
-            <element signature="e#7229#7271#0" expanded="false" />
-            <element signature="e#7327#7456#0" expanded="false" />
-            <element signature="e#7406#7448#0" expanded="false" />
-            <element signature="e#7505#7636#0" expanded="false" />
-            <element signature="e#7585#7628#0" expanded="false" />
-            <element signature="e#7640#7669#0" expanded="false" />
+            <element signature="e#6641#6734#0" expanded="false" />
+            <element signature="e#6684#6726#0" expanded="false" />
+            <element signature="e#6783#6876#0" expanded="false" />
+            <element signature="e#6826#6868#0" expanded="false" />
+            <element signature="e#6935#7076#0" expanded="false" />
+            <element signature="e#7136#7278#0" expanded="false" />
+            <element signature="e#7228#7270#0" expanded="false" />
+            <element signature="e#7326#7455#0" expanded="false" />
+            <element signature="e#7405#7447#0" expanded="false" />
+            <element signature="e#7504#7635#0" expanded="false" />
+            <element signature="e#7584#7627#0" expanded="false" />
+            <element signature="e#7639#7668#0" expanded="false" />
             <element signature="n#!!block;n#ImplementationTwo#0" expanded="false" />
-            <element signature="e#7846#7929#0" expanded="false" />
-            <element signature="e#7878#7885#0" expanded="false" />
-            <element signature="e#7920#7927#0" expanded="false" />
-            <element signature="e#7947#8028#0" expanded="false" />
-            <element signature="e#7978#8026#0" expanded="false" />
+            <element signature="e#7845#7928#0" expanded="false" />
+            <element signature="e#7877#7884#0" expanded="false" />
+            <element signature="e#7919#7926#0" expanded="false" />
+            <element signature="e#7946#8027#0" expanded="false" />
+            <element signature="e#7977#8025#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/doctors.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/patients.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.63338304">
-          <caret line="25" column="0" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>

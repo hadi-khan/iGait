@@ -172,7 +172,7 @@ ImplementationMongoose.prototype = {
         Models.Patients.find({doctor:reqObjectID}, function(err,pat){
             callback(err,pat);
         });
-    },-
+    },
     createPatient: function(reqPatObj, callback){
         reqPatObj.save(function(err, pat){
             callback(err,pat);
