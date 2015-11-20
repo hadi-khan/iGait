@@ -6,17 +6,25 @@ var mongoose = require('mongoose'),
 //defining the patient schema
 var patientsSchema = new Schema({
 	date_created: { type: Date, default: Date.now },
-	email: { type: String, required: true, unique: true},
-	password: { type: String, required: true},
 	name: {
 		first: { type: String, required: true, trim: true},
 		last: { type: String, required: true, trim: true}
 	},
-	dateOfBirth: {type: Date},
+	dateOfBirth: {type: Date, required: true},
+	gender: {type: String, required: true},
+	contact: {
+		mobilenumber: { type: Number },
+		state: {type: String, required: true},
+		city: {type: String, required: true},
+		zipcode: {type: Number, required: true}
+	},
 	admissionsDate: {type: Date, required: true},
 	priority: {type: Boolean, required: true},
-	address: {type: String, required: true}
+	doctor: { type : ObjectId, ref: 'Doctors' }
 });
 
 module.exports = mongoose.model('Patients', patientsSchema);
+
+
+
 
