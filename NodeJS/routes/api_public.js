@@ -39,9 +39,26 @@ router.route('/authentication')
     });
 
 // Allows a user to change their password.
-router.route('/recovery')
+router.route('/reset')
     .post(function(req, res){
+        let password = req.body.password;
+        let email = req.body.email;
 
+        db.getDoctorByEmail(email, changePassword);
+        function changePassword(err, doctor){
+            if(err){
+                res.json({success: 'false', message: err});
+            }
+            doctor.password = Security.hashPassword(password);
+            doctor.save(reply);
+        }
+        function reply(err, doctor){
+            if(err){
+                res.json({success: 'false', message: err});
+            } else if(doctor){
+                res.json({success: 'true', message: 'password updated'});
+            }
+        }
     });
 // Register a new user with the system, will be a doctor.
 
