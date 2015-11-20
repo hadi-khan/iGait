@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserProfileActivity extends AppCompatActivity {
     private TextView textViewLastName;
     private TextView textViewFirstName;
@@ -117,8 +120,7 @@ public class UserProfileActivity extends AppCompatActivity {
             editTextOfficeZipCode.setVisibility(View.GONE);
             editTextPassword.setVisibility(View.GONE);
             editTextRePassword.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             textViewLastName.setVisibility(View.GONE);
             textViewFirstName.setVisibility(View.GONE);
             textViewEmail.setVisibility(View.GONE);
@@ -143,7 +145,10 @@ public class UserProfileActivity extends AppCompatActivity {
             editTextRePassword.setVisibility(View.VISIBLE);
         }
     }
+
     private boolean checkChanges() {
+        List<String> changes = new ArrayList<>();
+        List<String> original = new ArrayList<>();
         String lastName = editTextLastName.getText().toString().trim();
         String firstName = editTextFirstName.getText().toString().trim();
         String email = editTextEmail.getText().toString().trim();
@@ -154,53 +159,64 @@ public class UserProfileActivity extends AppCompatActivity {
         String officeZipCode = editTextOfficeZipCode.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
         String rePassword = editTextRePassword.getText().toString().trim();
-
         boolean result = false;
 
-        if (!InputCheck.name(lastName)) {
+        changes.add(lastName);
+        changes.add(firstName);
+        changes.add(email);
+        changes.add(officePhoneNumber);
+        changes.add(officeAddress);
+        changes.add(officeCity);
+        changes.add(officeState);
+        changes.add(officeZipCode);
+
+        original.add(user.getLastName());
+        original.add(user.getFirstName());
+        original.add(user.getContactInfo().getEmail());
+        original.add(Long.toString(user.getContactInfo().getPhoneNumber()));
+        original.add(user.getContactInfo().getAddress());
+        original.add(user.getContactInfo().getCity());
+        original.add(user.getContactInfo().getState());
+        original.add(Long.toString(user.getContactInfo().getZipCode()));
+
+        if (InputCheck.noChanges(changes, original) && InputCheck.unChangedPassword(password)) {
+            Toast.makeText(UserProfileActivity.this, "Cannot save. No changes have been made.", Toast.LENGTH_SHORT).show();
+        } else if (!InputCheck.name(lastName)) {
             Toast.makeText(UserProfileActivity.this, "Invalid last name.", Toast.LENGTH_SHORT).show();
             editTextLastName.requestFocus();
-        }
-        else if (!InputCheck.name(firstName)) {
+        } else if (!InputCheck.name(firstName)) {
             Toast.makeText(UserProfileActivity.this, "Invalid first name.", Toast.LENGTH_SHORT).show();
             editTextFirstName.requestFocus();
-        }
-        else if (!InputCheck.email(email)) {
+        } else if (!InputCheck.email(email)) {
             Toast.makeText(UserProfileActivity.this, "Invalid e-mail address.", Toast.LENGTH_SHORT).show();
             editTextEmail.requestFocus();
-        }
-        else if (!InputCheck.phoneNumber(officePhoneNumber)) {
+        } else if (!InputCheck.phoneNumber(officePhoneNumber)) {
             Toast.makeText(UserProfileActivity.this, "Invalid phone number.", Toast.LENGTH_SHORT).show();
             editTextOfficePhoneNumber.requestFocus();
-        }
-        else if (!InputCheck.address(officeAddress)) {
+        } else if (!InputCheck.address(officeAddress)) {
             Toast.makeText(UserProfileActivity.this, "Invalid office address.", Toast.LENGTH_SHORT).show();
             editTextOfficeAddress.requestFocus();
-        }
-        else if (!InputCheck.city(officeCity)) {
+        } else if (!InputCheck.city(officeCity)) {
             Toast.makeText(UserProfileActivity.this, "Invalid office city.", Toast.LENGTH_SHORT).show();
             editTextOfficeCity.requestFocus();
-        }
-        else if (!InputCheck.state(officeState)) {
+        } else if (!InputCheck.state(officeState)) {
             Toast.makeText(UserProfileActivity.this, "Invalid office state.", Toast.LENGTH_SHORT).show();
             editTextOfficeState.requestFocus();
-        }
-        else if (!InputCheck.zipCode(officeZipCode)) {
+        } else if (!InputCheck.zipCode(officeZipCode)) {
             Toast.makeText(UserProfileActivity.this, "Invalid office zip code.", Toast.LENGTH_SHORT).show();
             editTextOfficeZipCode.requestFocus();
-        }
-        else if (!InputCheck.unChangedPassword(password)) {
+        } else if (!InputCheck.unChangedPassword(password)) {
             if (!InputCheck.newPassword(password)) {
                 Toast.makeText(UserProfileActivity.this, "Invalid password.", Toast.LENGTH_SHORT).show();
                 editTextRePassword.requestFocus();
             } else if (!InputCheck.rePassword(password, rePassword)) {
                 Toast.makeText(UserProfileActivity.this, "Passwords do not match.", Toast.LENGTH_SHORT).show();
                 editTextRePassword.requestFocus();
+            } else {
+                result = true;
             }
 
-            editTextPassword.requestFocus();
-        }
-        else {
+        } else {
             result = true;
         }
 
@@ -221,10 +237,9 @@ public class UserProfileActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        if(!editable) {
+        if (!editable) {
             getMenuInflater().inflate(R.menu.menu_user_profile, menu);
-        }
-        else {
+        } else {
             getMenuInflater().inflate(R.menu.menu_user_profile_edit, menu);
         }
 
@@ -247,11 +262,15 @@ public class UserProfileActivity extends AppCompatActivity {
             setTitle(R.string.title_activity_user_profile_edit);
 
             return true;
-        }
-        else if (id == R.id.action_logout) {
+        } else if (id == R.id.action_logout) {
+            Intent intent = new Intent(UserProfileActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            Toast.makeText(UserProfileActivity.this, "Logging out...", Toast.LENGTH_SHORT).show();
+
+            startActivity(intent);
+
             return true;
-        }
-        else if (id == R.id.action_save_edit_profile) {
+        } else if (id == R.id.action_save_edit_profile) {
             if (checkChanges()) {
                 editable = !editable;
                 editable();
@@ -260,12 +279,12 @@ public class UserProfileActivity extends AppCompatActivity {
                 setTitle(R.string.title_activity_user_profile);
 
                 saveChanges();
+                Toast.makeText(UserProfileActivity.this, "Changes saved.", Toast.LENGTH_SHORT).show();
                 populateViews();
             }
 
             return true;
-        }
-        else if (id == R.id.action_cancel_edit_profile) {
+        } else if (id == R.id.action_cancel_edit_profile) {
             editable = !editable;
             editable();
 

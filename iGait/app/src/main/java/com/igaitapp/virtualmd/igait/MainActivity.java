@@ -10,18 +10,16 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
-    public final static String EXTRA_PATIENT = "com.igaitapp.virtualmd.igait.PATIENT_MAIN";
-    public final static String EXTRA_PATIENT_LIST = "com.igaitapp.virtualmd.igait.PATIENT_LIST";
-    public final static String EXTRA_SEARCH_ID = "com.igaitapp.virtualmd.igait.SEARCH_ID";
-    public final static String EXTRA_USER = "com.igaitapp.virtualmd.igait.USER";
+    static final String EXTRA_PATIENT = "com.igaitapp.virtualmd.igait.PATIENT";
+    static final String EXTRA_PATIENT_LIST = "com.igaitapp.virtualmd.igait.PATIENT_LIST";
+    static final String EXTRA_PARENT_ID = "com.igaitapp.virtualmd.igait.PARENT_ID";
+    static final String EXTRA_USER = "com.igaitapp.virtualmd.igait.USER";
 
     private List<Patient> patientList = new ArrayList<>();
     private User user = new User();
@@ -36,30 +34,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getUserAndPatients() {
-        List<GaitHealth> gh = new ArrayList<>();
+        SimpleDateFormat df = new SimpleDateFormat("MM dd yyyy HH:mm:ss");
+        SimpleDateFormat tf = new SimpleDateFormat("HH:mm:ss");
 
-        DateFormat df = new SimpleDateFormat("MM dd yyyy kk:mm:ss");
-        DateFormat tf = new SimpleDateFormat("kk:mm:ss");
+        List<GaitHealth> gh = new ArrayList<>();
 
         user = new User("Saunders", "Brian", new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345));
 
         try {
             gh.add(new GaitHealth(3, df.parse("10 30 2015 08:10:00"), df.parse("10 30 2015 08:11:00"), true));
-            gh.add(new GaitHealth(3, df.parse("10 30 2015 12:20:00"), df.parse("10 30 2015 12:25:00"), false));
+            gh.add(new GaitHealth(3, df.parse("10 30 2015 12:20:00"), df.parse("10 30 2015 12:21:00"), false));
             gh.add(new GaitHealth(3, df.parse("10 31 2015 08:09:00"), df.parse("10 31 2015 08:10:00"), false));
-            gh.add(new GaitHealth(2, df.parse("10 31 2015 15:00:00"), df.parse("10 31 2015 15:03:00"), true));
-            gh.add(new GaitHealth(2, df.parse("11 01 2015 08:10:00"), df.parse("11 01 2015 08:14:00"), false));
-            gh.add(new GaitHealth(1, df.parse("11 01 2015 12:10:00"), df.parse("11 01 2015 12:16:00"), true));
-            gh.add(new GaitHealth(1, df.parse("11 01 2015 15:10:00"), df.parse("11 01 2015 15:12:00"), false));
-            gh.add(new GaitHealth(1, df.parse("11 02 2015 08:10:00"), df.parse("11 02 2015 08:18:00"), false));
-            gh.add(new GaitHealth(2, df.parse("11 02 2015 12:10:00"), df.parse("11 02 2015 12:19:00"), true));
-            gh.add(new GaitHealth(3, df.parse("11 03 2015 08:10:00"), df.parse("11 03 2015 08:12:00"), false));
-            gh.add(new GaitHealth(3, df.parse("11 03 2015 13:10:00"), df.parse("11 03 2015 13:14:00"), false));
-            gh.add(new GaitHealth(3, df.parse("11 03 2015 15:10:00"), df.parse("11 03 2015 15:15:00"), false));
+            gh.add(new GaitHealth(2, df.parse("10 31 2015 15:00:00"), df.parse("10 31 2015 15:01:00"), true));
+            gh.add(new GaitHealth(2, df.parse("11 01 2015 08:10:00"), df.parse("11 01 2015 08:11:00"), false));
+            gh.add(new GaitHealth(1, df.parse("11 01 2015 12:10:00"), df.parse("11 01 2015 12:11:00"), true));
+            gh.add(new GaitHealth(1, df.parse("11 01 2015 15:10:00"), df.parse("11 01 2015 15:11:00"), false));
+            gh.add(new GaitHealth(1, df.parse("11 02 2015 08:10:00"), df.parse("11 02 2015 08:11:00"), false));
+            gh.add(new GaitHealth(2, df.parse("11 02 2015 12:10:00"), df.parse("11 02 2015 12:11:00"), true));
+            gh.add(new GaitHealth(3, df.parse("11 03 2015 08:10:00"), df.parse("11 03 2015 08:11:00"), false));
+            gh.add(new GaitHealth(3, df.parse("11 03 2015 13:10:00"), df.parse("11 03 2015 13:11:00"), false));
+            gh.add(new GaitHealth(3, df.parse("11 03 2015 15:10:00"), df.parse("11 03 2015 15:11:00"), false));
             gh.add(new GaitHealth(0, df.parse("11 04 2015 08:10:00"), df.parse("11 04 2015 08:11:00"), true));
-            gh.add(new GaitHealth(0, df.parse("11 04 2015 13:10:00"), df.parse("11 04 2015 13:18:00"), true));
+            gh.add(new GaitHealth(0, df.parse("11 04 2015 13:10:00"), df.parse("11 04 2015 13:11:00"), true));
 
-            patientList.add(new Patient(1234567890, "Shutter", "Selma", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
+            patientList.add(new Patient(1234567890, "Shutter", "Selma", tf.parse("00:10:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
             patientList.add(new Patient(1234567890, "Whitby", "Phoebe", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
             patientList.add(new Patient(1234567890, "Boardman", "Kay", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
             patientList.add(new Patient(1234567890, "Masser", "Ivan", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
@@ -109,30 +107,25 @@ public class MainActivity extends AppCompatActivity {
             patientList.add(new Patient(1234567890, "Cantin", "Veronique", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
             patientList.add(new Patient(1234567890, "Rueter", "Tracie", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
             patientList.add(new Patient(1234567890, "Gamache", "Darrin", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-        }
-        catch (ParseException pe) {
+        } catch (ParseException pe) {
             pe.printStackTrace();
         }
     }
 
     private void populateListViewPatients() {
-        ListView list;
-        PatientListAdapter adapter;
+        ListView list = (ListView) findViewById(R.id.listViewPatients);
+        PatientListAdapter adapter = new PatientListAdapter(this, patientList, 0);
 
-        list = (ListView) findViewById(R.id.listViewPatients);
-        adapter = new PatientListAdapter(this, patientList);
         list.setAdapter(adapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Patient tappedPatient = new Patient();
-                Intent intent;
+                Patient tappedPatient = patientList.get(position);
+                Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
 
-                tappedPatient = patientList.get(position);
-                intent = new Intent(MainActivity.this, CalendarActivity.class);
                 intent.putExtra(EXTRA_PATIENT, tappedPatient);
-                intent.putExtra(EXTRA_SEARCH_ID, false);
+                intent.putExtra(EXTRA_PARENT_ID, 0);
 
                 startActivity(intent);
             }
@@ -156,28 +149,20 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_add_patient) {
-            Intent intent;
-
-            intent = new Intent(MainActivity.this, NewPatientActivity.class);
+            Intent intent = new Intent(MainActivity.this, NewPatientActivity.class);
 
             startActivity(intent);
 
             return true;
-        }
-        else if (id == R.id.action_search) {
-            Intent intent;
-
-            intent = new Intent(MainActivity.this, SearchActivity.class);
+        } else if (id == R.id.action_search) {
+            Intent intent = new Intent(MainActivity.this, SearchActivity.class);
             intent.putExtra(EXTRA_PATIENT_LIST, (Serializable) patientList);
 
             startActivity(intent);
 
             return true;
-        }
-        else if (id == R.id.action_account) {
-            Intent intent;
-
-            intent = new Intent(MainActivity.this, UserProfileActivity.class);
+        } else if (id == R.id.action_account) {
+            Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
             intent.putExtra(EXTRA_USER, user);
 
             startActivity(intent);

@@ -55,25 +55,40 @@
     <string name="priority">priority</string>
     <string name="video">video</string>
 
-    <!-- standard strings -->
-    <string name="id_number">ID Number</string>
-    <string name="first_name">First Name</string>
+    <!-- profile strings -->
     <string name="last_name">Last Name</string>
+    <string name="first_name">First Name</string>
     <string name="email">E-mail</string>
     <string name="phone_number">Phone Number</string>
+    <string name="office_phone_number">Office Phone Number</string>
+    <string name="expected_walk_time">Expected Walk Time</string>
     <string name="birthday">Birthday</string>
     <string name="sex">Sex</string>
     <string name="address">Address</string>
-    <string name="expected_walk_time">Expected Walk Time</string>
-    <string name="office_phone_number">Office Phone Number</string>
     <string name="office_address">Office Address</string>
     <string name="city">City</string>
     <string name="state">State</string>
     <string name="zip_code">Zip Code</string>
     <string name="password">Password</string>
-    <string name="hidden_password">**********</string>
     <string name="re_password">Re-enter Password</string>
-    <string name="show_password">Show Password</string>
+    <string name="hidden_password">**********</string>
+
+    <string name="last_name_hint">(1 - 20 characters)</string>
+    <string name="first_name_hint">(1 - 20 characters)</string>
+    <string name="email_hint">(1 - 75 characters)</string>
+    <string name="phone_number_hint">(10 digits only)</string>
+    <string name="office_phone_number_hint">(10 digits only)</string>
+    <string name="expected_walk_time_hint">(hh:mm:ss)</string>
+    <string name="birthday_hint">(mm/dd/yyy)</string>
+    <string name="sex_hint">(m or f)</string>
+    <string name="address_hint">(1 - 30 characters)</string>
+    <string name="office_address_hint">(1 - 30 characters)</string>
+    <string name="city_hint">(1 - 30 characters)</string>
+    <string name="state_hint">(2 characters)</string>
+    <string name="zip_code_hint">(5 digits)</string>
+    <string name="password_hint">(5 characters, 1 uppercase, 1 special)</string>
+    <string name="re_password_hint">(Must match password)</string>
+    <string name="hidden_password_hint">**********</string>
 
     <!-- errors -->
     <string name="invalid_query">Invalid search query.</string>

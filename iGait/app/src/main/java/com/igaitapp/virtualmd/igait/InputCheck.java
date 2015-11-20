@@ -2,6 +2,7 @@ package com.igaitapp.virtualmd.igait;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class InputCheck {
     public static boolean name(String input) {
@@ -11,23 +12,22 @@ public class InputCheck {
 
     public static boolean email(String input) {
 
-        return input.length() > 0 && input.length() <= 20;
+        return input.length() > 0 && input.length() <= 75;
     }
 
     public static boolean phoneNumber(String input) {
 
-        return input.replaceAll("\\D+","").length() == 10;
+        return input.replaceAll("\\D+", "").length() == 10;
     }
 
     public static boolean expectedWalkTime(String input) {
-        SimpleDateFormat tf = new SimpleDateFormat("kk:mm:ss");
+        SimpleDateFormat tf = new SimpleDateFormat("HH:mm:ss");
         boolean result;
 
         try {
             tf.parse(input);
             result = true;
-        }
-        catch (ParseException pe) {
+        } catch (ParseException pe) {
             result = false;
         }
 
@@ -77,8 +77,7 @@ public class InputCheck {
             for (int i = 0; i < input.length(); i++) {
                 result = Character.isDigit(input.charAt(i)) && result;
             }
-        }
-        else {
+        } else {
             result = false;
         }
 
@@ -101,8 +100,7 @@ public class InputCheck {
                 result0 = Character.isUpperCase(input.charAt(i)) || result0;
                 result1 = Character.isDigit(input.charAt(i)) || result1;
             }
-        }
-        else {
+        } else {
             result0 = false;
             result1 = false;
         }
@@ -115,14 +113,21 @@ public class InputCheck {
         return input0.equals(input1);
     }
 
-    public static boolean searchQuery(String input) {
-        boolean result;
+    public static boolean searchQueryName(String input) {
 
-        if (input.length() == input.replaceAll("\\D+","").length()) {
-            result = input.length() > 0 && input.length() <= 3;
-        }
-        else {
-            result = input.length() > 0 && input.length() <= 20;
+        return input.length() > 0 && input.length() <= 20;
+    }
+
+    public static boolean searchQueryAge(String input) {
+
+        return input.length() > 0 && input.length() <= 3;
+    }
+
+    public static boolean noChanges(List<String> input0, List<String> input1) {
+        boolean result = true;
+
+        for (int i = 0; i < input0.size(); i++) {
+            result = result && input0.get(i).equals(input1.get(i));
         }
 
         return result;
