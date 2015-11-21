@@ -11,9 +11,9 @@ const PATIENT_DELETE_MESSAGE = 'patient deleted';
 router.route('/patient')
     .get(function(req, res){
         let authorization = req.header('Authorization');
-        let username = authorization.username;
+        let email = authorization.username;
 
-        db.getDoctorByEmail(username, searchPatients);
+        db.getDoctorByEmail(email, searchPatients);
 
         function searchPatients(err, doctor){
             if(err){

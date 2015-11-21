@@ -14,7 +14,7 @@ router.use('/api', apiAccount);
 router.use('/api', apiPatient);
 
 function verify(req, res, next){
-    let token = req.body.token;
+    let token = req.header('Authorization');
 
     Security.verifyToken(token, function(err, decoded){
         if(err){
