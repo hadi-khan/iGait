@@ -10,8 +10,7 @@ const PATIENT_DELETE_MESSAGE = 'patient deleted';
 //TODO implement the new db function for finding a patient
 router.route('/patient')
     .get(function(req, res){
-        let authorization = req.header('Authorization');
-        let email = authorization.username;
+        let email = req.header('email');
 
         db.getDoctorByEmail(email, searchPatients);
 
@@ -58,7 +57,7 @@ router.route('/patient/:id')
     .put(function(req, res){
         let id = req.params.id;
 
-        db.getPatientByEmail(id, modify);
+        db.getPatientByObjectId(id, modify);
         function modify(err, patient){
             if(err){
                 res.json({success: 'false', message: err});
