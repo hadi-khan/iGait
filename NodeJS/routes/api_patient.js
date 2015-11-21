@@ -18,7 +18,7 @@ router.route('/patient')
             if(err){
                 res.json({success: 'false', message: err});
             }else if(doctor) {
-                db.getDoctorPatients(doctor.objectId, reply);
+                db.getDoctorPatients(doctor._id, reply);
             }
         }
 
