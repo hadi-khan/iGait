@@ -10,8 +10,7 @@ var mongoose = require('mongoose'),
     ObjectId = mongoose.Schema.Types.ObjectId;
 //command = require('command.js');
 
-function dbMgrBridge(whichdb)
-{
+function dbMgrBridge(whichdb) {
 // Implementation reference:
     this._impl = this._EstablishImplementor(whichdb);
     //console.log(this._impl);
@@ -23,19 +22,15 @@ dbMgrBridge.prototype = {
     _IAmAPrivateMethod: function(){
         return true;
     },
-    //not quite for sure what this does....
-    _SetImplementation: function(implementor)
-    {
+    _SetImplementation: function(implementor) {
         this._impl = null;
         if(implementor) this._impl = implementor;
     },
-
     // EstablishImplementor - function that creates            |||||factory method
     // the Concrete Implementor and binds it to Abstraction.
     // This is the very method to place your
     // browser/feature/object detection code.
-    _EstablishImplementor: function(whichdb)
-    {
+    _EstablishImplementor: function(whichdb) {
         if(whichdb === 1) {//change later!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
             return new ImplementationMongoose();//mongoose / mongodb
         }
@@ -48,11 +43,16 @@ dbMgrBridge.prototype = {
     // Function "exported" by the Abstraction:
     // for each one of these, add to implmentation 1 and implementation 2
     // Public Methods
-    getDoctorByEmail: function(reqEmail, callback)
-    {
+    getDoctorByEmail: function(reqEmail, callback) {
         // Check if any implementor is bound and has the required method:
         if(this._impl && this._impl.getDoctorByEmail)
             this._impl.getDoctorByEmail(reqEmail, callback);     // Forward request to implementor
+    },
+    getDoctorByObjectID: function(reqObjectID, callback){
+        // Check if any implementor is bound and has the required method:
+        if(this._impl && this._impl.getDoctorByObjectID) {
+            this._impl.getDoctorByObjectID(reqObjectID, callback);     // Forward request to implementor
+        }
     },
     getPatientByObjectID: function(reqObjectID, callback){
         // Check if any implementor is bound and has the required method:
@@ -61,18 +61,22 @@ dbMgrBridge.prototype = {
     },
     getDoctorPatients: function(reqObjectID, callback){
         // Check if any implementor is bound and has the required method:
-        if(this._impl && this._impl.getDoctorPatients)
+        if(this._impl && this._impl.getDoctorPatients) {
             this._impl.getDoctorPatients(reqObjectID, callback);     // Forward request to implementor
+        }
     },
-
-    createDoctor: function(reqDocObj, callback)
-    {
+    getPatientsHealth: function(reqObjectID, callback){
+        // Check if any implementor is bound and has the required method:
+        if(this._impl && this._impl.getPatientsHealth) {
+            this._impl.getPatientsHealth(reqObjectID, callback);     // Forward request to implementor
+        }
+    },
+    createDoctor: function(reqDocObj, callback) {
         // Check if any implementor is bound and has the required method:
         if(this._impl && this._impl.createDoctor)
             this._impl.createDoctor(reqDocObj, callback);     // Forward request to implementor
     },
-    createPatient: function(reqPatObj, callback)
-    {
+    createPatient: function(reqPatObj, callback) {
         // Check if any implementor is bound and has the required method:
         if(this._impl && this._impl.createPatient)
             this._impl.createPatient(reqPatObj, callback);     // Forward request to implementor
@@ -87,27 +91,23 @@ dbMgrBridge.prototype = {
         if(this._impl && this._impl.updatePatient)
             this._impl.updatePatient(reqEmail, reqUpdate, callback);     // Forward request to implementor
     },
-    removeDoctor: function(reqEmail, callback)
-    {
+    removeDoctor: function(reqEmail, callback) {
         // Check if any implementor is bound and has the required method:
         if(this._impl && this._impl.removeDoctor)
             this._impl.removeDoctor(reqEmail, callback);     // Forward request to implementor
     },
-    removePatient: function(reqEmail, callback)
-    {
+    removePatient: function(reqEmail, callback) {
         // Check if any implementor is bound and has the required method:
         if(this._impl && this._impl.removePatient)
             this._impl.removePatient(reqEmail, callback);     // Forward request to implementor
     },
-    connectDB: function()
-    {
+    connectDB: function() {
         // Check if any implementor is bound and has the required method:
         if(this._impl && this._impl.connectDB)
             this._impl.connectDB();     // Forward request to implementor
 
     },
-    disconnectDB: function()
-    {
+    disconnectDB: function() {
         // Check if any implementor is bound and has the required method:
         if(this._impl && this._impl.disconnectDB)
             this._impl.disconnectDB();     // Forward request to implementor
@@ -161,8 +161,13 @@ ImplementationMongoose.prototype = {
             callback(err,doc);
         });
     },
+    getDoctorByObjectID: function(reqObjectID, callback){
+        Models.Doctors.findOne({_id:reqObjectID}, function(err,doc){
+            callback(err,doc);
+        });
+    },
     getPatientByObjectID: function(reqObjectID, callback){
-        Models.Doctors.findOne({_id:reqObjectID}, function(err,pat){
+        Models.Patients.findOne({_id:reqObjectID}, function(err,pat){
             callback(err,pat);
         });
     },
@@ -170,6 +175,13 @@ ImplementationMongoose.prototype = {
         //may need to use next line
         //reqObjectID = new ObjectId(reqObjectID);
         Models.Patients.find({doctor:reqObjectID}, function(err,pat){
+            callback(err,pat);
+        });
+    },
+    getPatientsHealth: function(reqObjectID, callback){
+        //may need to use next line
+        //reqObjectID = new ObjectId(reqObjectID);
+        Models.Health.find({patient:reqObjectID}, function(err,pat){
             callback(err,pat);
         });
     },
@@ -203,7 +215,7 @@ ImplementationMongoose.prototype = {
             callback(err, pat);
         });
     }
-}
+};
 
 //Concrete Implementation 2//
 // This is the second implementor:
@@ -220,9 +232,9 @@ ImplementationTwo.prototype = {
     disconnectDB: function()
     {
     }
-}
+};
 module.exports = {
     bridge: function(whichDB){
         return new dbMgrBridge(whichDB);
     }
-}
+};

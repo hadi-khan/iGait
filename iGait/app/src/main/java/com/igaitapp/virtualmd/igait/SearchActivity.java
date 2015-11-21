@@ -35,11 +35,9 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void populateSpinnerFilter() {
-        Spinner spinner;
+        Spinner spinner = (Spinner) findViewById(R.id.spinnerFilter);
         List<String> filters = new ArrayList<>();
         ArrayAdapter<String> adapter;
-
-        spinner = (Spinner) findViewById(R.id.spinnerFilter);
 
         filters.add(lastName);
         filters.add(firstName);
@@ -56,11 +54,9 @@ public class SearchActivity extends AppCompatActivity {
                 if (!selectedFilter.equals(newFilter)) {
                     if (newFilter.equals(lastName)) {
                         hashifyLastName();
-                    }
-                    else if (newFilter.equals(firstName)) {
+                    } else if (newFilter.equals(firstName)) {
                         hashifyFirstName();
-                    }
-                    else if (newFilter.equals(age)) {
+                    } else if (newFilter.equals(age)) {
                         hashifyAge();
                     }
                 }
@@ -77,75 +73,64 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void performSearch(View v) {
-        EditText editTextSearch;
-        String query, queryKey;
+        EditText editTextSearch = (EditText) findViewById(R.id.editTextSearch);
+        String query = editTextSearch.getText().toString().trim().toLowerCase(), queryKey;
         Patient patient = new Patient();
         int exactCount = 0;
 
-        editTextSearch = (EditText) findViewById(R.id.editTextSearch);
-        query = editTextSearch.getText().toString().trim().toLowerCase();
+        if (selectedFilter.equals(lastName) && InputCheck.searchQueryName(query)) {
+            query = removeRepeats(query);
+            queryKey = convertToKey(query);
 
-        if (InputCheck.searchQuery(query)) {
-            if (selectedFilter.equals(lastName)) {
-                query = removeRepeats(query);
-                queryKey = convertToKey(query);
+            if (patientMap.get(queryKey) != null) {
+                patientResultList = patientMap.get(queryKey);
 
-                if (patientMap.get(queryKey) != null) {
-                    patientResultList = patientMap.get(queryKey);
+                for (int i = 0; i < patientResultList.size(); i++) {
+                    patient = patientResultList.get(i);
 
-                    for (int i = 0; i < patientResultList.size(); i++) {
-                        patient = patientResultList.get(i);
-
-                        if (removeRepeats(patient.getLastName().trim().toLowerCase()).equals(query)) {
-                            patientResultList.set(i, patientResultList.get(exactCount));
-                            patientResultList.set(exactCount, patient);
-                            exactCount += 1;
-                        }
+                    if (removeRepeats(patient.getLastName().trim().toLowerCase()).equals(query)) {
+                        patientResultList.set(i, patientResultList.get(exactCount));
+                        patientResultList.set(exactCount, patient);
+                        exactCount += 1;
                     }
+                }
 
-                    populateListViewPatientsSearch();
-                }
-                else {
-                    hideListViewPatientsSearch();
-                }
+                populateListViewPatientsSearch();
+            } else {
+                hideListViewPatientsSearch();
             }
-            else if (selectedFilter.equals(firstName)) {
-                query = removeRepeats(query);
-                queryKey = convertToKey(query);
+        } else if (selectedFilter.equals(firstName) && InputCheck.searchQueryName(query)) {
+            query = removeRepeats(query);
+            queryKey = convertToKey(query);
 
-                if (patientMap.get(queryKey) != null) {
-                    patientResultList = patientMap.get(queryKey);
+            if (patientMap.get(queryKey) != null) {
+                patientResultList = patientMap.get(queryKey);
 
-                    for (int i = 0; i < patientResultList.size(); i++) {
-                        patient = patientResultList.get(i);
+                for (int i = 0; i < patientResultList.size(); i++) {
+                    patient = patientResultList.get(i);
 
-                        if (removeRepeats(patient.getFirstName().trim().toLowerCase()).equals(query)) {
-                            patientResultList.set(i, patientResultList.get(exactCount));
-                            patientResultList.set(exactCount, patient);
-                            exactCount += 1;
-                        }
+                    if (removeRepeats(patient.getFirstName().trim().toLowerCase()).equals(query)) {
+                        patientResultList.set(i, patientResultList.get(exactCount));
+                        patientResultList.set(exactCount, patient);
+                        exactCount += 1;
                     }
+                }
 
-                    populateListViewPatientsSearch();
-                }
-                else {
-                    hideListViewPatientsSearch();
-                }
+                populateListViewPatientsSearch();
+            } else {
+                hideListViewPatientsSearch();
             }
-            else if (selectedFilter.equals(age)) {
-                queryKey = query;
+        } else if (selectedFilter.equals(age) && InputCheck.searchQueryAge(query)) {
+            queryKey = query;
 
-                if (patientMap.get(queryKey) != null) {
-                    patientResultList = patientMap.get(queryKey);
+            if (patientMap.get(queryKey) != null) {
+                patientResultList = patientMap.get(queryKey);
 
-                    populateListViewPatientsSearch();
-                }
-                else {
-                    hideListViewPatientsSearch();
-                }
+                populateListViewPatientsSearch();
+            } else {
+                hideListViewPatientsSearch();
             }
-        }
-        else {
+        } else {
             Toast.makeText(getApplicationContext(), getString(R.string.invalid_query), Toast.LENGTH_SHORT).show();
         }
     }
@@ -171,8 +156,7 @@ public class SearchActivity extends AppCompatActivity {
                 patientValueList.add(patient);
 
                 patientMap.put(patientKey, patientValueList);
-            }
-            else {
+            } else {
                 patientValueList = patientMap.get(patientKey);
 
                 patientValueList.add(patient);
@@ -233,8 +217,7 @@ public class SearchActivity extends AppCompatActivity {
                 patientValueList.add(patient);
 
                 patientMap.put(patientKey, patientValueList);
-            }
-            else {
+            } else {
                 patientValueList = patientMap.get(patientKey);
 
                 patientValueList.add(patient);
@@ -251,8 +234,7 @@ public class SearchActivity extends AppCompatActivity {
         for (int i = 0; i < key.length(); i++) {
             if (tempChar == key.charAt(i)) {
                 repeatChars.add(Character.toString(tempChar));
-            }
-            else {
+            } else {
                 tempChar = key.charAt(i);
             }
         }
@@ -267,35 +249,28 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private String convertToKey(String key) {
-        key = key.substring(0, 1).toLowerCase();
 
-        return key;
+        return key.substring(0, 1).toLowerCase();
     }
 
     private void populateListViewPatientsSearch() {
-        ListView list;
-        PatientListSearchAdapter adapter;
-        TextView notFound;
+        ListView list = (ListView) findViewById(R.id.listViewPatientsSearch);
+        PatientListSearchAdapter adapter = new PatientListSearchAdapter(this, patientResultList, 3);
+        TextView notFound = (TextView) findViewById(R.id.textViewNotFound);
 
-        list = (ListView) findViewById(R.id.listViewPatientsSearch);
         list.setVisibility(View.VISIBLE);
-
-        notFound = (TextView) findViewById(R.id.textViewNotFound);
         notFound.setVisibility(View.GONE);
 
-        adapter = new PatientListSearchAdapter(this, patientResultList);
         list.setAdapter(adapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Patient tappedPatient;
-                Intent intent;
+                Patient tappedPatient = patientResultList.get(position);
+                Intent intent = new Intent(SearchActivity.this, CalendarActivity.class);
 
-                tappedPatient = patientResultList.get(position);
-                intent = new Intent(SearchActivity.this, CalendarActivity.class);
                 intent.putExtra(MainActivity.EXTRA_PATIENT, tappedPatient);
-                intent.putExtra(MainActivity.EXTRA_SEARCH_ID, true);
+                intent.putExtra(MainActivity.EXTRA_PARENT_ID, 3);
 
                 startActivity(intent);
             }
@@ -303,13 +278,10 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void hideListViewPatientsSearch() {
-        ListView list;
-        TextView notFound;
+        ListView list = (ListView) findViewById(R.id.listViewPatientsSearch);
+        TextView notFound = (TextView) findViewById(R.id.textViewNotFound);
 
-        list = (ListView) findViewById(R.id.listViewPatientsSearch);
         list.setVisibility(View.GONE);
-
-        notFound = (TextView) findViewById(R.id.textViewNotFound);
         notFound.setVisibility(View.VISIBLE);
     }
 }

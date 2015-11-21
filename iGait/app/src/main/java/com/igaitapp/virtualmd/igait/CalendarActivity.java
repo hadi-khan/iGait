@@ -21,10 +21,10 @@ import java.util.Date;
 import java.util.List;
 
 public class CalendarActivity extends AppCompatActivity {
-    public final static String EXTRA_PATIENT_CALENDAR = " com.igaitapp.virtualmd.igait.PATIENT_CALENDAR";
-    public final static String EXTRA_SELECTED_DATE_CALENDAR = " com.igaitapp.virtualmd.igait.SELECTED_DATE_CALENDAR";
+    static final String EXTRA_SELECTED_DATE = "com.igaitapp.virtualmd.igait.SELECTED_DATE";
 
     private Patient patient = new Patient();
+
     private CaldroidFragment caldroidFragment = new CaldroidFragment();
 
     @Override
@@ -48,15 +48,15 @@ public class CalendarActivity extends AppCompatActivity {
         }
     }
 
-    private void populateListViewPatient () {
-        ListView list;
-        PatientListAdapter adapter;
+    private void populateListViewPatient() {
         List<Patient> patientList = new ArrayList<>();
+        ListView list = (ListView) findViewById(R.id.listViewPatient);
+        PatientListAdapter adapter;
 
         patientList.add(patient);
 
-        list = (ListView) findViewById(R.id.listViewPatient);
-        adapter = new PatientListAdapter(this, patientList);
+        adapter = new PatientListAdapter(this, patientList, 1);
+
         list.setAdapter(adapter);
     }
 
@@ -71,42 +71,38 @@ public class CalendarActivity extends AppCompatActivity {
         t.replace(R.id.calendarViewHealth, caldroidFragment);
         t.commit();
 
-        DateFormat df = new SimpleDateFormat("MM dd yyyy");
-        List<GaitHealth> gaitHealthList;
-        GaitHealth gaitHealth = new GaitHealth();
-        Date prevDay, currentDay;
-        String prevDayString, currentDayString;
+        final SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        final List<GaitHealth> gaitHealthList = patient.getGaitHealth();
+        GaitHealth gaitHealth = gaitHealthList.get(0);
         int gaitHealthSum = 0, gaitHealthCount = 0;
+        Date prevDay = gaitHealth.getStartTime(), currentDay;
 
-        gaitHealthList = patient.getGaitHealth();
-        gaitHealth = gaitHealthList.get(0);
-        prevDay = gaitHealth.getStartTime();
-
-        for(int i = 0; i < gaitHealthList.size(); i++) {
+        for (int i = 0; i < gaitHealthList.size(); i++) {
             gaitHealth = gaitHealthList.get(i);
             currentDay = gaitHealth.getStartTime();
 
-            prevDayString = df.format(prevDay);
-            currentDayString = df.format(currentDay);
+            try {
+                currentDay = df.parse(df.format(currentDay));
+                prevDay = df.parse(df.format(prevDay));
+            }
+            catch (ParseException e) {
+                e.printStackTrace();
+            }
 
-            if (!(currentDayString.equals(prevDayString)) || (i + 1) == gaitHealthList.size()) {
+            if (!(currentDay.equals(prevDay)) || (i + 1) == gaitHealthList.size()) {
                 if (Math.round(gaitHealthSum / gaitHealthCount) == 3) {
                     caldroidFragment.setBackgroundResourceForDate(R.color.GameGreen, prevDay);
                     caldroidFragment.setTextColorForDate(R.color.PlainWhite, prevDay);
-                }
-                else if (Math.round(gaitHealthSum / gaitHealthCount) == 2) {
+                } else if (Math.round(gaitHealthSum / gaitHealthCount) == 2) {
                     caldroidFragment.setBackgroundResourceForDate(R.color.MusicOrange, prevDay);
                     caldroidFragment.setTextColorForDate(R.color.PlainWhite, prevDay);
-                }
-                else if (Math.round(gaitHealthSum / gaitHealthCount) == 1) {
+                } else if (Math.round(gaitHealthSum / gaitHealthCount) == 1) {
                     caldroidFragment.setBackgroundResourceForDate(R.color.MovieRed, prevDay);
                     caldroidFragment.setTextColorForDate(R.color.PlainWhite, prevDay);
-                }
-                else if ((gaitHealthSum / gaitHealthCount) > 0) {
+                } else if ((gaitHealthSum / gaitHealthCount) > 0) {
                     caldroidFragment.setBackgroundResourceForDate(R.color.StarGrey, prevDay);
                     caldroidFragment.setTextColorForDate(R.color.PlainWhite, prevDay);
-                }
-                else {
+                } else {
                     caldroidFragment.setBackgroundResourceForDate(R.color.StarGrey, prevDay);
                     caldroidFragment.setTextColorForDate(R.color.PlainWhite, prevDay);
                 }
@@ -124,30 +120,25 @@ public class CalendarActivity extends AppCompatActivity {
 
             @Override
             public void onSelectDate(Date date, View view) {
+                Date firstDate = gaitHealthList.get(0).getStartTime(),
+                        lastDate = gaitHealthList.get(gaitHealthList.size() - 1).getStartTime(),
+                        selectedDate = date;
                 Intent intent;
-                List<GaitHealth> gaitHealthList = new ArrayList<>();
-                Date firstDate, lastDate, selectedDate;
-                DateFormat df = new SimpleDateFormat("MM dd yyyy");
-
-                gaitHealthList = patient.getGaitHealth();
-                firstDate = gaitHealthList.get(0).getStartTime();
-                lastDate = gaitHealthList.get(gaitHealthList.size() - 1).getStartTime();
-                selectedDate = date;
 
                 try {
                     firstDate = df.parse(df.format(firstDate));
                     lastDate = df.parse(df.format(lastDate));
                     selectedDate = df.parse(df.format(selectedDate));
-                }
-                catch (ParseException e) {
+                } catch (ParseException e) {
                     e.printStackTrace();
                 }
 
-                if ((selectedDate.equals(firstDate) || selectedDate.equals(lastDate)) || (selectedDate.after(firstDate) && selectedDate.before(lastDate))) {
+                if ((selectedDate.equals(firstDate) || selectedDate.equals(lastDate)) ||
+                        (selectedDate.after(firstDate) && selectedDate.before(lastDate))) {
                     intent = new Intent(CalendarActivity.this, EventActivity.class);
 
-                    intent.putExtra(EXTRA_PATIENT_CALENDAR, patient);
-                    intent.putExtra(EXTRA_SELECTED_DATE_CALENDAR, date);
+                    intent.putExtra(MainActivity.EXTRA_PATIENT, patient);
+                    intent.putExtra(EXTRA_SELECTED_DATE, date);
 
                     startActivity(intent);
                 }
@@ -158,8 +149,7 @@ public class CalendarActivity extends AppCompatActivity {
     private void restoreCalendar(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             caldroidFragment.restoreStatesFromKey(savedInstanceState, "CALDROID_SAVED_STATE");
-        }
-        else {
+        } else {
             Bundle args = new Bundle();
             Calendar cal = Calendar.getInstance();
             args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
@@ -174,10 +164,10 @@ public class CalendarActivity extends AppCompatActivity {
     private Intent getParentActivityIntentImpl() {
         Intent intent = null;
 
-        if ((boolean) getIntent().getSerializableExtra(MainActivity.EXTRA_SEARCH_ID)) {
-            intent = new Intent(this, SearchActivity.class);
-        } else {
+        if ((int) getIntent().getSerializableExtra(MainActivity.EXTRA_PARENT_ID) == 0) {
             intent = new Intent(this, MainActivity.class);
+        } else {
+            intent = new Intent(this, SearchActivity.class);
         }
 
         return intent;

@@ -20,4 +20,4 @@ var doctorsSchema = new Schema({
 	},
 	accessToken: { type: String } // Used for Remember Me
 });
-module.exports = mongoose.model('DoctorsModel', doctorsSchema);
+module.exports = mongoose.model('DoctorsModel', doctorsSchema); //Database Table is name Doctors

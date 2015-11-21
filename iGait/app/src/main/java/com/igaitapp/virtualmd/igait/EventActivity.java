@@ -23,8 +23,8 @@ public class EventActivity extends AppCompatActivity {
         DateFormat df = new SimpleDateFormat("EEE, MMM dd yyyy");
         String dateString;
 
-        patient = (Patient) getIntent().getSerializableExtra(CalendarActivity.EXTRA_PATIENT_CALENDAR);
-        selectedDate = (Date) getIntent().getSerializableExtra(CalendarActivity.EXTRA_SELECTED_DATE_CALENDAR);
+        patient = (Patient) getIntent().getSerializableExtra(MainActivity.EXTRA_PATIENT);
+        selectedDate = (Date) getIntent().getSerializableExtra(CalendarActivity.EXTRA_SELECTED_DATE);
 
         dateString = df.format(selectedDate);
         setTitle(dateString);
@@ -33,27 +33,25 @@ public class EventActivity extends AppCompatActivity {
         populateListViewEvents();
     }
 
-    private void populateListViewPatient () {
-        ListView list;
-        PatientListAdapter adapter;
+    private void populateListViewPatient() {
         List<Patient> patientList = new ArrayList<>();
+        ListView list = (ListView) findViewById(R.id.listViewPatientEvent);
+        PatientListAdapter adapter;
 
         patientList.add(patient);
 
-        list = (ListView) findViewById(R.id.listViewPatientEvent);
-        adapter = new PatientListAdapter(this, patientList);
+        adapter = new PatientListAdapter(this, patientList, 2);
+
         list.setAdapter(adapter);
     }
 
-    private void populateListViewEvents () {
-        ListView list;
-        EventListAdapter adapter;
-        List<GaitHealth> gaitHealthList, eventList = new ArrayList<>();
-        GaitHealth gaitHealth = new GaitHealth();
-        Date currentDate;
+    private void populateListViewEvents() {
         SimpleDateFormat df = new SimpleDateFormat("MM dd yyyy");
-
-        gaitHealthList = patient.getGaitHealth();
+        ListView list = (ListView) findViewById(R.id.listViewEvents);
+        List<GaitHealth> gaitHealthList = patient.getGaitHealth(), eventList = new ArrayList<>();
+        GaitHealth gaitHealth = new GaitHealth();
+        EventListAdapter adapter;
+        Date currentDate;
 
         for (int i = 0; i < gaitHealthList.size(); i++) {
             gaitHealth = gaitHealthList.get(i);
@@ -62,8 +60,7 @@ public class EventActivity extends AppCompatActivity {
             try {
                 currentDate = df.parse(df.format(currentDate));
                 selectedDate = df.parse(df.format(selectedDate));
-            }
-            catch (ParseException e) {
+            } catch (ParseException e) {
                 e.printStackTrace();
             }
 
@@ -72,7 +69,6 @@ public class EventActivity extends AppCompatActivity {
             }
         }
 
-        list = (ListView) findViewById(R.id.listViewEvents);
         adapter = new EventListAdapter(this, eventList);
         list.setAdapter(adapter);
     }

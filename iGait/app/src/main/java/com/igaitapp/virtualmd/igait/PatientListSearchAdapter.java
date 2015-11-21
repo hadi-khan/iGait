@@ -1,8 +1,8 @@
 package com.igaitapp.virtualmd.igait;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +19,15 @@ public class PatientListSearchAdapter extends BaseAdapter {
     private Resources mResource;
 
     private List<Patient> patientList;
+    private int activity;
 
-    PatientListSearchAdapter(Context context, List<Patient> patientList)
+    PatientListSearchAdapter(Context context, List<Patient> patientList, int activity)
     {
         this.mContext = context;
         this.mResource = mContext.getResources();
 
         this.patientList = patientList;
+        this.activity = activity;
     }
 
     @Override
@@ -49,38 +51,23 @@ public class PatientListSearchAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
-        LayoutInflater inflater;
-        View view;
-
-        TextView[] textViewG = new TextView[4];
-        TextView textViewInfoLeft, textViewInfoRight;
-        ImageView imageViewPriorityNotif;
-
-        Patient patient;
-        Date birthday;
-        List<GaitHealth> gaitHealthList;
-        GaitHealth gaitHealth;
+        final Patient patient = getItem(position);
+        List<GaitHealth> gaitHealthList = patient.getGaitHealth();
+        GaitHealth gaitHealth = gaitHealthList.get(0);
         Calendar weekPrev = Calendar.getInstance(), weekCurrent = Calendar.getInstance();
+
         int gaitHealthSum = 0, gaitHealthCount = 0;
-        String color[] = {"#ffb7b7b7", "#ffb7b7b7", "#ffb7b7b7", "#ffb7b7b7"};
+        int[] health = {0, 0, 0, 0};
 
-        inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        view = inflater.inflate(R.layout.patient_item, null);
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.patient_item, null);
 
-        textViewG[0]=  (TextView) view.findViewById(R.id.textViewG1);
-        textViewG[1] =  (TextView) view.findViewById(R.id.textViewG2);
-        textViewG[2] =  (TextView) view.findViewById(R.id.textViewG3);
-        textViewG[3] =  (TextView) view.findViewById(R.id.textViewG4);
-        textViewInfoLeft = (TextView) view.findViewById(R.id.textViewInfoLeft);
-        textViewInfoRight = (TextView) view.findViewById(R.id.textViewInfoRight);
-        imageViewPriorityNotif = (ImageView) view.findViewById(R.id.imageViewPriorityNotif);
+        ImageView imageViewPatientImage = (ImageView) view.findViewById(R.id.imageViewPatientImage);
+        TextView textViewInfoLeft = (TextView) view.findViewById(R.id.textViewInfoLeft);
+        TextView textViewInfoRight = (TextView) view.findViewById(R.id.textViewInfoRight);
+        ImageView imageViewPriorityNotif = (ImageView) view.findViewById(R.id.imageViewPriorityNotif);
 
-        patient = (Patient) getItem(position);
-
-        gaitHealthList = patient.getGaitHealth();
-        gaitHealth = (GaitHealth) gaitHealthList.get(0);
         weekPrev.setTime(gaitHealth.getStartTime());
-
         for (int i = 0; i < gaitHealthList.size(); i++) {
             gaitHealth = gaitHealthList.get(i);
             weekCurrent.setTime(gaitHealth.getStartTime());
@@ -89,23 +76,19 @@ public class PatientListSearchAdapter extends BaseAdapter {
                 weekPrev.setTime(gaitHealth.getStartTime());
 
                 for (int o = 0; o < 3; o++) {
-                    color[o] = color[o + 1];
+                    health[o] = health[o + 1];
                 }
 
                 if (Math.round(gaitHealthSum / gaitHealthCount) == 3) {
-                    color[3] = "#ff689f38";
+                    health[3] = 3;
                 }
                 else if(Math.round(gaitHealthSum / gaitHealthCount) == 2) {
-                    color[3] = "#ffef6c00";
+                    health[3] = 2;
                 }
                 else if (Math.round(gaitHealthSum / gaitHealthCount) == 1) {
-                    color[3] = "#ffed3b3b";
-                }
-                else if ((gaitHealthSum / gaitHealthCount) > 0) {
-                    color[3] = "#ffed3b3b";
-                }
-                else {
-                    color[3] = "ffb7b7b7";
+                    health[3] = 1;
+                } else {
+                    health[3] = 0;
                 }
 
                 gaitHealthSum = 0;
@@ -116,19 +99,29 @@ public class PatientListSearchAdapter extends BaseAdapter {
             gaitHealthCount += 1;
         }
 
-        for (int i = 0; i < 4; i++) {
-            textViewG[i].setTextColor(Color.parseColor(color[i]));
-        }
+        imageViewPatientImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent;
+
+                intent = new Intent(mContext, PatientProfileActivity.class);
+
+                intent.putExtra(MainActivity.EXTRA_PATIENT, patient);
+                intent.putExtra(MainActivity.EXTRA_PARENT_ID, activity);
+
+                mContext.startActivity(intent);
+            }
+        });
+
+        textViewInfoLeft.setText(patient.getFirstName() + " " + patient.getLastName());
+        textViewInfoRight.setText("" + ((new Date().getTime() - patient.getBirthday().getTime()) / 1000 / 60 / 60 / 24 / 365));
 
         if (!patient.isPriority()) {
-            imageViewPriorityNotif.setVisibility(View.INVISIBLE);
+            imageViewPriorityNotif.setVisibility(View.GONE);
         }
         else {
             imageViewPriorityNotif.setVisibility(View.VISIBLE);
         }
-
-        textViewInfoLeft.setText(patient.getFirstName() + " " + patient.getLastName());
-        textViewInfoRight.setText("" + ((new Date().getTime() - patient.getBirthday().getTime()) / 1000 / 60 / 60 / 24 / 365));
 
         return view;
     }

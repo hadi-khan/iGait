@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.igaitapp.virtualmd.igait" >
+    package="com.igaitapp.virtualmd.igait">
 
-    <uses-permission android:name="android.permission.INTERNET" >
-    </uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" >
-    </uses-permission>
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/BookBlueActionBarTheme" >
+        android:theme="@style/BookBlueActionBarTheme">
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name" >
-        </activity>
+            android:label="@string/app_name"
+            android:windowSoftInputMode="stateHidden"></activity>
         <activity
             android:name=".CalendarActivity"
             android:label="@string/title_activity_calendar"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.igaitapp.virtualmd.igait.MainActivity" />
@@ -28,7 +27,9 @@
         <activity
             android:name=".EventActivity"
             android:label="@string/title_activity_events"
-            android:parentActivityName=".CalendarActivity" >
+            android:launchMode="singleTop"
+            android:parentActivityName=".CalendarActivity"
+            android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.igaitapp.virtualmd.igait.CalendarActivity" />
@@ -36,7 +37,7 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/app_name"
-            android:windowSoftInputMode="stateHidden" >
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -46,7 +47,7 @@
         <activity
             android:name=".RegisterActivity"
             android:label="@string/title_activity_register"
-            android:parentActivityName=".LoginActivity" >
+            android:parentActivityName=".LoginActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.igaitapp.virtualmd.igait.LoginActivity" />
@@ -54,7 +55,7 @@
         <activity
             android:name=".ForgotPasswordActivity"
             android:label="@string/title_activity_forgot_password"
-            android:parentActivityName=".LoginActivity" >
+            android:parentActivityName=".LoginActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.igaitapp.virtualmd.igait.LoginActivity" />
@@ -63,7 +64,7 @@
             android:name=".SearchActivity"
             android:label="@string/title_activity_search"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.igaitapp.virtualmd.igait.MainActivity" />
@@ -72,7 +73,8 @@
             android:name=".UserProfileActivity"
             android:label="@string/title_activity_user_profile"
             android:launchMode="singleTop"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.igaitapp.virtualmd.igait.MainActivity" />
@@ -80,14 +82,21 @@
         <activity
             android:name=".NewPatientActivity"
             android:label="@string/title_activity_new_patient"
-            android:parentActivityName=".UserProfileActivity" >
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.igaitapp.virtualmd.igait.UserProfileActivity" />
+                android:value="com.igaitapp.virtualmd.igait.MainActivity" />
         </activity>
         <activity
             android:name=".PatientProfileActivity"
-            android:label="@string/title_activity_patient_profile" >
+            android:label="@string/title_activity_patient_profile"
+            android:launchMode="singleTop"
+            android:parentActivityName=".MainActivity"
+            android:windowSoftInputMode="stateHidden">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.igaitapp.virtualmd.igait.MainActivity" />
         </activity>
     </application>
 

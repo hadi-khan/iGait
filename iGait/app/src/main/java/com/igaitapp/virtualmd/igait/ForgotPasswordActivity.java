@@ -8,7 +8,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
-
     private EditText emailEditText;
     private Button submitButton;
 
@@ -28,8 +27,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 if (!InputCheck.email(email)) {
                     Toast.makeText(ForgotPasswordActivity.this, "Invalid e-mail address.", Toast.LENGTH_SHORT).show();
                     emailEditText.requestFocus();
-                }
-                else {
+                } else {
                     Toast.makeText(ForgotPasswordActivity.this, "Recovery instructions sent to e-mail address.", Toast.LENGTH_SHORT).show();
                 }
             }

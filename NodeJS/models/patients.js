@@ -20,10 +20,10 @@ var patientsSchema = new Schema({
 	},
 	admissionsDate: {type: Date, required: true},
 	priority: {type: Boolean, required: true},
-	doctor: { type : ObjectId, ref: 'Doctors' }
+	doctor: { type : ObjectId, ref: 'Doctors' } //the export name in models/index.js
 });
 
-module.exports = mongoose.model('Patients', patientsSchema);
+module.exports = mongoose.model('PatientsModels', patientsSchema);
 
 
 
