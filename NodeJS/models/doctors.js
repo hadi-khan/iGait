@@ -10,8 +10,7 @@ var doctorsSchema = new Schema({
 	  first: { type: String, required: true, trim: true},
 	  last: { type: String, required: true, trim: true}
 	},
-	contact: { 
-		mobilenumber: { type: Number },
+	contact: {
 		officenumber: { type: Number },
 		officeaddress: { type: String },
 		state: {type: String, required: true},
@@ -20,4 +19,4 @@ var doctorsSchema = new Schema({
 	},
 	accessToken: { type: String } // Used for Remember Me
 });
-module.exports = mongoose.model('DoctorsModel', doctorsSchema);
+module.exports = mongoose.model('DoctorsModel', doctorsSchema); //Database Table is name Doctors

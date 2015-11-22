@@ -1,13 +1,32 @@
 'use strict';
 
-var
-    express = require('express'),
-    app = express(),
-    dbmgr = require('../controllers/bridge.js');
+let express = require('express');
+let dbmgr = require('../controllers/bridge.js');
+let Security = require('../class/Security');
 
-app.set('secret', 'secret1234');
 let db = dbmgr.bridge(1);
+let router = express.Router();
 
+router.route('/account')
+    .put(function (req, res){
+        let changes = req.body;
+        if(changes.password) {
+            changes.password = Security.hashPassword(changes.password);
+        }
+        let email = req.header('email');
+
+        db.updateDoctor(email, changes, reply);
+        function reply(err, doctor){
+            if(err){
+                res.json({success: 'false', message: err});
+            }else if(doctor){
+                res.json({success: 'true', message: doctor});
+            }
+        }
+    });
+
+module.exports = router;
+/*
 module.exports = (function(){
     let router = express.Router();
     
@@ -48,4 +67,4 @@ module.exports = (function(){
 app.use('/account', router);
 
 return app;
-})();
+})();*/
