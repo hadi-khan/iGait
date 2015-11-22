@@ -10,8 +10,9 @@ let router = express.Router();
 router.route('/account')
     .put(function (req, res){
         let changes = req.body;
-        if(changes.password)
+        if(changes.password) {
             changes.password = Security.hashPassword(changes.password);
+        }
         let email = req.header('email');
 
         db.updateDoctor(email, changes, reply);

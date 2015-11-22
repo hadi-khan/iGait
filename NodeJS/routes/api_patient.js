@@ -87,4 +87,18 @@ router.route('/patient/:id')
         }
     });
 
+router.route('/patient/health/:id')
+    .get(function(req, res){
+        let patientID = req.params.id;
+
+        db.getPatientsHealth(patientID, reply);
+        function reply(err, health){
+            if(err){
+                res.json({success: 'false', message: err});
+            } else if(health){
+                res.json({success: 'true', message: health});
+            }
+        }
+    });
+
 module.exports = router;
