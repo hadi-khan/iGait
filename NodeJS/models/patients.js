@@ -13,13 +13,20 @@ var patientsSchema = new Schema({
 	dateOfBirth: {type: Date, required: true},
 	gender: {type: String, required: true},
 	contact: {
-		mobilenumber: { type: Number },
+		email: { type: String, required: true },
+		mobilenumber: { type: Number, require: true },
+		address: {type: String, required: true},
 		state: {type: String, required: true},
 		city: {type: String, required: true},
 		zipcode: {type: Number, required: true}
 	},
 	admissionsDate: {type: Date, required: true},
 	priority: {type: Boolean, required: true},
+	expectedWalkTime: {
+		hour: {type: Number, required: true},
+		minute: {type: Number, required: true},
+		second: {type: Number, required: true}
+	},
 	doctor: { type : ObjectId, ref: 'Doctors' } //the export name in models/index.js
 });
 
