@@ -138,7 +138,7 @@
                 android:id="@+id/editTextOfficeState"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/state"
+                android:hint="@string/state_hint"
                 android:inputType="text"
                 android:singleLine="true" />
 

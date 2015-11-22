@@ -284,6 +284,16 @@
                 android:singleLine="true"
                 android:visibility="gone" />
 
+            <Switch
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/priority_status"
+                android:id="@+id/switchPriority"
+                android:hint="@string/priority_status_hint" />
+                <!--android:showText="true"-->
+                <!--android:textOff="@string/priority_status_off"-->
+                <!--android:textOn="@string/priority_status_on"-->
         </LinearLayout>
     </RelativeLayout>
 </ScrollView>

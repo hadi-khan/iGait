@@ -4,13 +4,6 @@
     tools:context="com.igaitapp.virtualmd.igait.PatientProfileActivity">
 
     <item
-        android:id="@+id/action_change_priority"
-        android:hint="@string/action_change_priority_hint"
-        android:icon="@drawable/ic_report_problem_white_48dp"
-        android:title="@string/action_change_priority"
-        app:showAsAction="always" />
-
-    <item
         android:id="@+id/action_edit_profile"
         android:hint="@string/action_edit_hint"
         android:icon="@drawable/ic_edit_white_48dp"

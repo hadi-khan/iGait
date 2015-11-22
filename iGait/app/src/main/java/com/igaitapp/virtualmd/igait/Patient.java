@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 public class Patient implements Serializable {
-    private long idNumber;
     private String lastName, firstName;
     private Date birthday, expectedWalkTime;;
     private char sex;
@@ -18,10 +17,9 @@ public class Patient implements Serializable {
 
     }
 
-    public Patient(long idNumber, String lastName, String firstName, Date expectedWalkTime, Date birthday, char sex, ContactInfo contactInfo, List<GaitHealth> gaitHealth, boolean priority) {
+    public Patient(String lastName, String firstName, Date expectedWalkTime, Date birthday, char sex, ContactInfo contactInfo, List<GaitHealth> gaitHealth, boolean priority) {
         super();
 
-        this.idNumber = idNumber;
         this.lastName = lastName;
         this.firstName = firstName;
         this.expectedWalkTime = expectedWalkTime;
@@ -30,14 +28,6 @@ public class Patient implements Serializable {
         this.contactInfo = contactInfo;
         this.gaitHealth = gaitHealth;
         this.priority = priority;
-    }
-
-    public long getIdNumber() {
-        return idNumber;
-    }
-
-    public void setIdNumber(long idNumber) {
-        this.idNumber = idNumber;
     }
 
     public String getLastName() {

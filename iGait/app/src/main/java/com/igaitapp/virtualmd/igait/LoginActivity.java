@@ -3,6 +3,7 @@ package com.igaitapp.virtualmd.igait;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -19,11 +20,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class LoginActivity extends AppCompatActivity {
-
     private EditText editTextUserName;
     private EditText editTextPassword;
     private Button buttonSubmit;
@@ -54,7 +55,8 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Invalid password.", Toast.LENGTH_SHORT).show();
                     editTextPassword.requestFocus();
                 } else {
-                    new ServerLogin().execute("http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/authentication", username, password);
+                    new ServerLogin().execute("http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/authentication",
+                            username, password);
                 }
             }
         });
@@ -78,24 +80,20 @@ public class LoginActivity extends AppCompatActivity {
 
     public static String POST(String urlPaths, String username, String password)  {
         InputStream inputStream = null;
+        String jsonString = "";
         String result = "";
+        String token = "";
 
         try {
             URL url = new URL(urlPaths);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
 
-            String json = "";
             JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("email", username);
-                jsonObject.put("password", password);
+            jsonObject.put("email", username);
+            jsonObject.put("password", password);
+            jsonString = jsonObject.toString();
 
-                json = jsonObject.toString();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
+            conn.setRequestMethod("POST");
             conn.setDoOutput(true);
             conn.setConnectTimeout(30000);
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -104,26 +102,39 @@ public class LoginActivity extends AppCompatActivity {
             conn.connect();
 
             OutputStream os = conn.getOutputStream();
-            os.write(json.getBytes("UTF-8"));
+            os.write(jsonString.getBytes("UTF-8"));
             os.close();
+
+            token = conn.getHeaderField("Authorization");
 
             inputStream = new BufferedInputStream(conn.getInputStream());
             if(inputStream != null) {
                 result = convertInputStreamToString(inputStream);
+                jsonObject = new JSONObject(result);
+
+                JSONObject jsonObjectUser = jsonObject.getJSONObject("message");
+                jsonObjectUser.put("accessToken", token);
+
+                jsonObject.put("message", jsonObjectUser);
+                result = jsonObject.toString();
             }
             else {
-                result = "Failure.";
+                result = "Failure connecting.";
             }
 
             return result;
         } catch (IOException e) {
-            Log.d("Server", "IOException reading data " + e.getMessage());
+            Log.d("Server", "IOException reading data" + e.getMessage());
             e.printStackTrace();
             return null;
         } catch (SecurityException e) {
             Log.d("Server", "SecException: needs permisssion");
             return null;
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
+        return result;
     }
 
     private class ServerLogin extends AsyncTask<String, Void, String> {
@@ -137,16 +148,42 @@ public class LoginActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
+            String success = "";
             String message = "";
 
             try {
-                JSONObject reader = new JSONObject(result);
-                message = reader.getString("success").toString();
+                JSONObject jsonObject = new JSONObject(result);
+                success = jsonObject.getString("success").toString();
 
-                if(message.equals("true")) {
+                if (success.equals("true")) {
+                    message = jsonObject.getString("message").toString();
+
+                    JSONObject jsonObjectUser = new JSONObject(message);
+                    JSONObject jsonObjectContact = jsonObjectUser.getJSONObject("contact");
+                    JSONObject jsonObjectName = jsonObjectUser.getJSONObject("name");
+
+                    String firstName = jsonObjectName.getString("first").toString();
+                    String lastName = jsonObjectName.getString("last").toString();
+                    Long officePhoneNumber = jsonObjectContact.getLong("mobilenumber");
+                    String email = jsonObjectUser.getString("email").toString();
+                    String officeAddress = jsonObjectContact.getString("officeaddress").toString();
+                    String officeCity = jsonObjectContact.getString("city").toString();
+                    String officeState = jsonObjectContact.getString("state").toString();
+                    Long officeZipcode = jsonObjectContact.getLong("zipcode");
+                    String token = jsonObjectUser.getString("accessToken").toString();
+
+                    User user = new User(lastName, firstName, new ContactInfo(officePhoneNumber, email,
+                            officeAddress, officeCity, officeState, officeZipcode));
+
+                    user.setToken(token);
+
                     Toast.makeText(LoginActivity.this, "Logging in...", Toast.LENGTH_SHORT).show();
+
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.putExtra(MainActivity.EXTRA_USER, user);
+                    intent.putExtra(MainActivity.EXTRA_PARENT_ID, "login");
                     startActivity(intent);
+
                     finish();
                 } else {
                     Toast.makeText(getBaseContext(), "Invalid e-mail or password.", Toast.LENGTH_LONG).show();

@@ -3,6 +3,7 @@ package com.igaitapp.virtualmd.igait;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -255,7 +256,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private void populateListViewPatientsSearch() {
         ListView list = (ListView) findViewById(R.id.listViewPatientsSearch);
-        PatientListSearchAdapter adapter = new PatientListSearchAdapter(this, patientResultList, 3);
+        PatientListSearchAdapter adapter = new PatientListSearchAdapter(this, patientResultList, "search");
         TextView notFound = (TextView) findViewById(R.id.textViewNotFound);
 
         list.setVisibility(View.VISIBLE);
@@ -270,7 +271,7 @@ public class SearchActivity extends AppCompatActivity {
                 Intent intent = new Intent(SearchActivity.this, CalendarActivity.class);
 
                 intent.putExtra(MainActivity.EXTRA_PATIENT, tappedPatient);
-                intent.putExtra(MainActivity.EXTRA_PARENT_ID, 3);
+                intent.putExtra(MainActivity.EXTRA_PARENT_ID, "search");
 
                 startActivity(intent);
             }
@@ -283,5 +284,38 @@ public class SearchActivity extends AppCompatActivity {
 
         list.setVisibility(View.GONE);
         notFound.setVisibility(View.VISIBLE);
+    }
+
+    private Intent getParentActivityIntentImpl() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(MainActivity.EXTRA_PARENT_ID, "search");
+
+        return intent;
+    }
+
+    @Override
+    public Intent getSupportParentActivityIntent() {
+        return getParentActivityIntentImpl();
+    }
+
+    @Override
+    public Intent getParentActivityIntent() {
+        return getParentActivityIntentImpl();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.home) {
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -105,38 +105,39 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    public static String POST(String urlPaths, User user, String password) {
+    public static String POST(String urlPaths, User user) {
         InputStream inputStream = null;
         String result = "";
+        String jsonString = "";
 
         try {
             URL url = new URL(urlPaths);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
 
-            String json = "";
-            JSONObject jsonObject = new JSONObject();
+            JSONObject jsonObjectUser = new JSONObject();
             JSONObject jsonObjectName = new JSONObject();
             JSONObject jsonObjectContact = new JSONObject();
             try {
-                jsonObject.put("email", user.getContactInfo().getEmail());
-                jsonObject.put("password", password);
+                jsonObjectUser.put("email", user.getContactInfo().getEmail());
+                jsonObjectUser.put("password", user.getPassword());
                 jsonObjectName.put("first", user.getFirstName());
                 jsonObjectName.put("last", user.getLastName());
-                jsonObjectContact.put("mobilenumber", Integer.parseInt(Long.toString(user.getContactInfo().getPhoneNumber())));
-                jsonObjectContact.put("officenumber", Integer.parseInt(Long.toString(user.getContactInfo().getPhoneNumber())));
+                jsonObjectContact.put("mobilenumber", user.getContactInfo().getPhoneNumber());
+                jsonObjectContact.put("officenumber", user.getContactInfo().getPhoneNumber());
                 jsonObjectContact.put("officeaddress", user.getContactInfo().getAddress());
                 jsonObjectContact.put("city", user.getContactInfo().getCity());
                 jsonObjectContact.put("state", user.getContactInfo().getState());
-                jsonObjectContact.put("zipcode", Integer.parseInt(Long.toString(user.getContactInfo().getZipCode())));
+                jsonObjectContact.put("zipcode", user.getContactInfo().getZipCode());
 
-                jsonObject.put("name", jsonObjectName);
-                jsonObject.put("contact", jsonObjectContact);
-                json = jsonObject.toString();
+                jsonObjectUser.put("name", jsonObjectName);
+                jsonObjectUser.put("contact", jsonObjectContact);
+
+                jsonString = jsonObjectUser.toString();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
+            conn.setRequestMethod("POST");
             conn.setDoOutput(true);
             conn.setConnectTimeout(30000);
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -145,19 +146,19 @@ public class RegisterActivity extends AppCompatActivity {
             conn.connect();
 
             OutputStream os = conn.getOutputStream();
-            os.write(json.getBytes("UTF-8"));
+            os.write(jsonString.getBytes("UTF-8"));
             os.close();
 
             inputStream = new BufferedInputStream(conn.getInputStream());
             if (inputStream != null) {
                 result = convertInputStreamToString(inputStream);
             } else {
-                result = "Failure to connect.";
+                result = "Failure connecting.";
             }
 
             return result;
         } catch (IOException e) {
-            Log.d("Server", "IOException reading data " + e.getMessage());
+            Log.d("Server", "IOException reading data" + e.getMessage());
             e.printStackTrace();
             return null;
         } catch (SecurityException e) {
@@ -169,26 +170,30 @@ public class RegisterActivity extends AppCompatActivity {
     private class ServerConnect extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
-            ContactInfo ci = new ContactInfo(Long.parseLong(urls[3]), urls[4], urls[5], urls[6], urls[7], Long.parseLong(urls[8]));
-            User user = new User(urls[1], urls[2], ci);
+            User user = new User(urls[1], urls[2], new ContactInfo(Long.parseLong(urls[3]), urls[4],
+                    urls[5], urls[6], urls[7], Long.parseLong(urls[8])));
 
-            return POST(urls[0], user, urls[9]);
+            user.setPassword(urls[9]);
+
+            return POST(urls[0], user);
         }
 
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            String message;
-            try {
-                JSONObject reader = new JSONObject(result);
-                message = reader.getString("success").toString();
+            String success = "";
 
-                if (message.equals("true")) {
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                success = jsonObject.getString("success").toString();
+
+                if (success.equals("true")) {
+
                     Toast.makeText(RegisterActivity.this, "Successfully registered.", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    Toast.makeText(getBaseContext(), "E-mail is already registered.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), "Could not register.", Toast.LENGTH_LONG).show();
                 }
 
             } catch (JSONException e) {

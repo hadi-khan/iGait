@@ -3,6 +3,7 @@ package com.igaitapp.virtualmd.igait;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +20,16 @@ public class PatientListAdapter extends BaseAdapter {
     private Resources mResource;
 
     private List<Patient> patientList;
-    private int activity;
+    private String activity;
 
-    PatientListAdapter(Context context, List<Patient> patientList, int activity) {
+    PatientListAdapter(Context context, List<Patient> patientList, String activity) {
         this.mContext = context;
         this.mResource = mContext.getResources();
 
         this.patientList = patientList;
         this.activity = activity;
+
+        Log.d(":(", patientList.size() + "");
     }
 
     @Override
@@ -67,6 +70,9 @@ public class PatientListAdapter extends BaseAdapter {
             gaitHealth = gaitHealthList.get(i);
             weekCurrent.setTime(gaitHealth.getStartTime());
 
+            gaitHealthSum += gaitHealth.getHealth();
+            gaitHealthCount += 1;
+
             if (weekPrev.get(Calendar.WEEK_OF_YEAR) != weekCurrent.get(Calendar.WEEK_OF_YEAR) || (i + 1) == gaitHealthList.size()) {
                 weekPrev.setTime(gaitHealth.getStartTime());
 
@@ -89,9 +95,6 @@ public class PatientListAdapter extends BaseAdapter {
                 gaitHealthSum = 0;
                 gaitHealthCount = 0;
             }
-
-            gaitHealthSum += gaitHealth.getHealth();
-            gaitHealthCount += 1;
         }
 
         imageViewPatientImage.setOnClickListener(new View.OnClickListener() {

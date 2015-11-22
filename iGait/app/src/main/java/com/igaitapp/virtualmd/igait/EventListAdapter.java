@@ -66,7 +66,7 @@ public class EventListAdapter extends BaseAdapter {
         textViewInfoRight = (TextView) view.findViewById(R.id.textViewInfoRight);
         imageViewVideoNotif = (ImageView) view.findViewById(R.id.imageViewVideoNotif);
 
-        gaitHealth = (GaitHealth) getItem(position);
+        gaitHealth = getItem(position);
 
         if (gaitHealth.getHealth() == 3) {
             textViewG1.setTextColor(Color.parseColor("#ff689f38"));

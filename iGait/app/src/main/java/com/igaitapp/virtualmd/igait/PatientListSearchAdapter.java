@@ -19,9 +19,9 @@ public class PatientListSearchAdapter extends BaseAdapter {
     private Resources mResource;
 
     private List<Patient> patientList;
-    private int activity;
+    private String activity;
 
-    PatientListSearchAdapter(Context context, List<Patient> patientList, int activity)
+    PatientListSearchAdapter(Context context, List<Patient> patientList, String activity)
     {
         this.mContext = context;
         this.mResource = mContext.getResources();
@@ -72,6 +72,9 @@ public class PatientListSearchAdapter extends BaseAdapter {
             gaitHealth = gaitHealthList.get(i);
             weekCurrent.setTime(gaitHealth.getStartTime());
 
+            gaitHealthSum += gaitHealth.getHealth();
+            gaitHealthCount += 1;
+
             if (weekPrev.get(Calendar.WEEK_OF_YEAR) != weekCurrent.get(Calendar.WEEK_OF_YEAR) || (i + 1) == gaitHealthList.size()) {
                 weekPrev.setTime(gaitHealth.getStartTime());
 
@@ -94,9 +97,6 @@ public class PatientListSearchAdapter extends BaseAdapter {
                 gaitHealthSum = 0;
                 gaitHealthCount = 0;
             }
-
-            gaitHealthSum += gaitHealth.getHealth();
-            gaitHealthCount += 1;
         }
 
         imageViewPatientImage.setOnClickListener(new View.OnClickListener() {

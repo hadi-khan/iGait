@@ -55,7 +55,7 @@ public class CalendarActivity extends AppCompatActivity {
 
         patientList.add(patient);
 
-        adapter = new PatientListAdapter(this, patientList, 1);
+        adapter = new PatientListAdapter(this, patientList, "calendar");
 
         list.setAdapter(adapter);
     }
@@ -80,6 +80,9 @@ public class CalendarActivity extends AppCompatActivity {
         for (int i = 0; i < gaitHealthList.size(); i++) {
             gaitHealth = gaitHealthList.get(i);
             currentDay = gaitHealth.getStartTime();
+
+            gaitHealthSum += gaitHealth.getHealth();
+            gaitHealthCount += 1;
 
             try {
                 currentDay = df.parse(df.format(currentDay));
@@ -111,9 +114,6 @@ public class CalendarActivity extends AppCompatActivity {
                 gaitHealthSum = 0;
                 gaitHealthCount = 0;
             }
-
-            gaitHealthSum += gaitHealth.getHealth();
-            gaitHealthCount += 1;
         }
 
         caldroidFragment.setCaldroidListener(new CaldroidListener() {
@@ -161,11 +161,19 @@ public class CalendarActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_calendar, menu);
+        return true;
+    }
+
     private Intent getParentActivityIntentImpl() {
         Intent intent = null;
 
-        if ((int) getIntent().getSerializableExtra(MainActivity.EXTRA_PARENT_ID) == 0) {
+        if (getIntent().getStringExtra(MainActivity.EXTRA_PARENT_ID).equals("main")) {
             intent = new Intent(this, MainActivity.class);
+            intent.putExtra(MainActivity.EXTRA_PARENT_ID, "calendar");
         } else {
             intent = new Intent(this, SearchActivity.class);
         }
@@ -181,13 +189,6 @@ public class CalendarActivity extends AppCompatActivity {
     @Override
     public Intent getParentActivityIntent() {
         return getParentActivityIntentImpl();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_calendar, menu);
-        return true;
     }
 
     @Override

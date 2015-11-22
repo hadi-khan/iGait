@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,8 @@ public class PatientProfileActivity extends AppCompatActivity {
     private EditText editTextCity;
     private EditText editTextState;
     private EditText editTextZipCode;
+
+    private Switch switchPriority;
 
     private boolean editable = false;
 
@@ -84,6 +87,8 @@ public class PatientProfileActivity extends AppCompatActivity {
         editTextState = (EditText) findViewById(R.id.editTextState);
         editTextZipCode = (EditText) findViewById(R.id.editTextZipCode);
 
+        switchPriority = (Switch) findViewById(R.id.switchPriority);
+
         textViewLastName.setText(patient.getLastName());
         textViewFirstName.setText(patient.getFirstName());
         textViewEmail.setText(patient.getContactInfo().getEmail());
@@ -107,6 +112,8 @@ public class PatientProfileActivity extends AppCompatActivity {
         editTextCity.setText(patient.getContactInfo().getCity());
         editTextState.setText(patient.getContactInfo().getState());
         editTextZipCode.setText(Long.toString(patient.getContactInfo().getZipCode()));
+
+        switchPriority.setChecked(patient.isPriority());
     }
 
     private void editable() {
@@ -134,6 +141,8 @@ public class PatientProfileActivity extends AppCompatActivity {
             editTextCity.setVisibility(View.GONE);
             editTextState.setVisibility(View.GONE);
             editTextZipCode.setVisibility(View.GONE);
+
+            switchPriority.setEnabled(false);
         } else {
             textViewLastName.setVisibility(View.GONE);
             textViewFirstName.setVisibility(View.GONE);
@@ -158,6 +167,8 @@ public class PatientProfileActivity extends AppCompatActivity {
             editTextCity.setVisibility(View.VISIBLE);
             editTextState.setVisibility(View.VISIBLE);
             editTextZipCode.setVisibility(View.VISIBLE);
+
+            switchPriority.setEnabled(true);
         }
     }
 
@@ -175,6 +186,7 @@ public class PatientProfileActivity extends AppCompatActivity {
         String city = editTextCity.getText().toString().trim();
         String state = editTextState.getText().toString().trim();
         String zipCode = editTextZipCode.getText().toString().trim();
+        boolean priority = switchPriority.isChecked();
         boolean result = false;
 
         changes.add(lastName);
@@ -201,7 +213,7 @@ public class PatientProfileActivity extends AppCompatActivity {
         original.add(patient.getContactInfo().getState());
         original.add(Long.toString(patient.getContactInfo().getZipCode()));
 
-        if (InputCheck.noChanges(changes, original)) {
+        if (InputCheck.noChanges(changes, original) && priority == patient.isPriority()) {
             Toast.makeText(PatientProfileActivity.this, "Cannot save. No changes have been made.", Toast.LENGTH_SHORT).show();
         } else if (!InputCheck.name(lastName)) {
             Toast.makeText(PatientProfileActivity.this, "Invalid last name.", Toast.LENGTH_SHORT).show();
@@ -261,6 +273,8 @@ public class PatientProfileActivity extends AppCompatActivity {
         patient.getContactInfo().setCity(editTextCity.getText().toString().trim());
         patient.getContactInfo().setState(editTextState.getText().toString().trim());
         patient.getContactInfo().setZipCode(Long.parseLong(editTextZipCode.getText().toString().trim()));
+
+        patient.setPriority(switchPriority.isChecked());
     }
 
     @Override
@@ -278,11 +292,12 @@ public class PatientProfileActivity extends AppCompatActivity {
     private Intent getParentActivityIntentImpl() {
         Intent intent = null;
 
-        if ((int) getIntent().getSerializableExtra(MainActivity.EXTRA_PARENT_ID) == 0) {
+        if (getIntent().getStringExtra(MainActivity.EXTRA_PARENT_ID).equals("main")) {
             intent = new Intent(this, MainActivity.class);
-        } else if ((int) getIntent().getSerializableExtra(MainActivity.EXTRA_PARENT_ID) == 1) {
+            intent.putExtra(MainActivity.EXTRA_PARENT_ID, "pprofile");
+        } else if (getIntent().getStringExtra(MainActivity.EXTRA_PARENT_ID).equals("calendar")) {
             intent = new Intent(this, CalendarActivity.class);
-        } else if ((int) getIntent().getSerializableExtra(MainActivity.EXTRA_PARENT_ID) == 2) {
+        } else if (getIntent().getStringExtra(MainActivity.EXTRA_PARENT_ID).equals("event")) {
             intent = new Intent(this, EventActivity.class);
         } else {
             intent = new Intent(this, SearchActivity.class);
@@ -311,16 +326,6 @@ public class PatientProfileActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.home) {
             finish();
-            return true;
-        } else if (id == R.id.action_change_priority) {
-            patient.setPriority(!patient.isPriority());
-
-            if (patient.isPriority()) {
-                Toast.makeText(PatientProfileActivity.this, "Patient is now a priority.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(PatientProfileActivity.this, "Patient is no longer a priority.", Toast.LENGTH_SHORT).show();
-            }
-
             return true;
         } else if (id == R.id.action_edit_profile) {
             editable = !editable;

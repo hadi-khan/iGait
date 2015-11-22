@@ -1,15 +1,32 @@
 package com.igaitapp.virtualmd.igait;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,92 +46,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getUserAndPatients();
-        populateListViewPatients();
-    }
+        String parent = getIntent().getStringExtra(EXTRA_PARENT_ID);
 
-    private void getUserAndPatients() {
-        SimpleDateFormat df = new SimpleDateFormat("MM dd yyyy HH:mm:ss");
-        SimpleDateFormat tf = new SimpleDateFormat("HH:mm:ss");
-
-        List<GaitHealth> gh = new ArrayList<>();
-
-        user = new User("Saunders", "Brian", new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345));
-
-        try {
-            gh.add(new GaitHealth(3, df.parse("10 30 2015 08:10:00"), df.parse("10 30 2015 08:11:00"), true));
-            gh.add(new GaitHealth(3, df.parse("10 30 2015 12:20:00"), df.parse("10 30 2015 12:21:00"), false));
-            gh.add(new GaitHealth(3, df.parse("10 31 2015 08:09:00"), df.parse("10 31 2015 08:10:00"), false));
-            gh.add(new GaitHealth(2, df.parse("10 31 2015 15:00:00"), df.parse("10 31 2015 15:01:00"), true));
-            gh.add(new GaitHealth(2, df.parse("11 01 2015 08:10:00"), df.parse("11 01 2015 08:11:00"), false));
-            gh.add(new GaitHealth(1, df.parse("11 01 2015 12:10:00"), df.parse("11 01 2015 12:11:00"), true));
-            gh.add(new GaitHealth(1, df.parse("11 01 2015 15:10:00"), df.parse("11 01 2015 15:11:00"), false));
-            gh.add(new GaitHealth(1, df.parse("11 02 2015 08:10:00"), df.parse("11 02 2015 08:11:00"), false));
-            gh.add(new GaitHealth(2, df.parse("11 02 2015 12:10:00"), df.parse("11 02 2015 12:11:00"), true));
-            gh.add(new GaitHealth(3, df.parse("11 03 2015 08:10:00"), df.parse("11 03 2015 08:11:00"), false));
-            gh.add(new GaitHealth(3, df.parse("11 03 2015 13:10:00"), df.parse("11 03 2015 13:11:00"), false));
-            gh.add(new GaitHealth(3, df.parse("11 03 2015 15:10:00"), df.parse("11 03 2015 15:11:00"), false));
-            gh.add(new GaitHealth(0, df.parse("11 04 2015 08:10:00"), df.parse("11 04 2015 08:11:00"), true));
-            gh.add(new GaitHealth(0, df.parse("11 04 2015 13:10:00"), df.parse("11 04 2015 13:11:00"), true));
-
-            patientList.add(new Patient(1234567890, "Shutter", "Selma", tf.parse("00:10:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Whitby", "Phoebe", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Boardman", "Kay", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Masser", "Ivan", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Labarge", "Soraya", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Sasaki", "Chanelle", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Orosz", "Latarsha", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Macdonald", "Cathrine", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Trivett", "Cammy", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Archambault", "Ulrike", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Durante", "Tracy", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Blakey", "Marylee", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Reich", "Darrel", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Rane", "Kallie", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Shealey", "Floria", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Smithson", "Carina", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Coffey", "Beverley", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Olivera", "Charlesetta", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Beckwith", "Erlinda", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Spires", "Diane", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Borda", "Cherlyn", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Dasher", "Estella", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Campoverde", "Billie", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Greb", "Coletta", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Bonnet", "Ramona", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Sneller", "Warren", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Watford", "Franklin", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Poss", "Lonna", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Northrup", "Shirlee", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Pangburn", "Drucilla", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Jeon", "Lu", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Pool", "Ebonie", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Bateman", "America", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Talbert", "Donna", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Mcandrews", "Iluminada", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Lippert", "Nickolas", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Washburn", "Tandy", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Kurland", "Elenore", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Dennett", "Maira", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Elkin", "Rosy", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Machado", "Cinderella", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Merry", "Tyler", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Aylor", "Eunice", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Garett", "Houston", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Yokoyama", "Ezra", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Urban", "Valarie", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Meuser", "Juliette", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Cantin", "Veronique", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Rueter", "Tracie", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-            patientList.add(new Patient(1234567890, "Gamache", "Darrin", tf.parse("00:03:00"), df.parse("02 21 1989 07:00:00"), 'm', new ContactInfo(1234567890, "example@gmail.com", "1234 Example St.", "Example", "TX", 12345), gh, true));
-        } catch (ParseException pe) {
-            pe.printStackTrace();
+        if (parent.equals("login") || parent.equals("pprofile")) {
+            user = (User) getIntent().getSerializableExtra(EXTRA_USER);
+            new ServerConnect().execute("http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/patient");
+        }
+        else if (parent.equals("uprofile") || parent.equals("npprofile")) {
+            new ServerConnect().execute("http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/patient");
+        }
+        else {
+            // timer
         }
     }
 
     private void populateListViewPatients() {
         ListView list = (ListView) findViewById(R.id.listViewPatients);
-        PatientListAdapter adapter = new PatientListAdapter(this, patientList, 0);
+        PatientListAdapter adapter = new PatientListAdapter(this, patientList, "main");
 
         list.setAdapter(adapter);
 
@@ -125,11 +73,113 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
 
                 intent.putExtra(EXTRA_PATIENT, tappedPatient);
-                intent.putExtra(EXTRA_PARENT_ID, 0);
+                intent.putExtra(EXTRA_PARENT_ID, "main");
 
                 startActivity(intent);
             }
         });
+    }
+
+    public static String GET(String urlPaths, String email, String token) {
+        InputStream inputStream = null;
+        String result = "";
+
+        try {
+            URL url = new URL(urlPaths);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Authorization", token);
+            conn.setRequestProperty("Email", email);
+            conn.connect();
+
+            inputStream = new BufferedInputStream(conn.getInputStream());
+            if (inputStream != null) {
+                result = convertInputStreamToString(inputStream);
+            } else {
+                result = "Failure connecting.";
+            }
+
+            return result;
+        } catch (IOException e) {
+            Log.d("Server", "IOException reading data " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        } catch (SecurityException e) {
+            Log.d("Server", "SecException: needs permisssion");
+            return null;
+        }
+    }
+
+    private class ServerConnect extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+            String email = user.getContactInfo().getEmail(),
+                    token = user.getToken();
+
+            return GET(urls[0], email, token);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            String success = "";
+
+            SimpleDateFormat tf = new SimpleDateFormat("HH:mm:ss");
+            SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                success = jsonObject.getString("success").toString();
+
+                JSONArray jsonArrayPatients = jsonObject.getJSONArray("message");
+                JSONObject patient = new JSONObject(), name = new JSONObject(), contact = new JSONObject();
+
+                if (success.equals("true")) {
+                    for (int i = 0; i < jsonArrayPatients.length(); i++) {
+                        patient = jsonArrayPatients.getJSONObject(i);
+                        name = patient.getJSONObject("name");
+                        contact = patient.getJSONObject("contact");
+
+                        ContactInfo ci = new ContactInfo(1234567890l, "example@example.com",
+                                "Real St.", contact.getString("city"), contact.getString("state"),
+                                contact.getLong("zipcode"));
+
+                        List<GaitHealth> gil = new ArrayList<GaitHealth>();
+                        gil.add(new GaitHealth(3, df.parse("11/21/2015 8:00:00"), df.parse("11/21/2015 8:02:00"), false));
+
+                        patientList.add(new Patient(name.getString("last"), name.getString("first"),
+                                tf.parse("00:03:00"), df.parse("12/25/1980"),
+                                patient.getString("gender").charAt(0), ci,
+                                gil, patient.getBoolean("priority")));
+                    }
+
+                    Log.d(":)", patientList.size() + "");
+                    populateListViewPatients();
+                } else {
+                    Toast.makeText(getBaseContext(), "Could not sync patients.", Toast.LENGTH_LONG).show();
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (ParseException pe) {
+                pe.printStackTrace();
+            }
+        }
+    }
+
+    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        String line = "";
+        String result = "";
+
+        while ((line = bufferedReader.readLine()) != null) {
+            result += line;
+        }
+
+        inputStream.close();
+        return result;
     }
 
     @Override
@@ -150,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_add_patient) {
             Intent intent = new Intent(MainActivity.this, NewPatientActivity.class);
+            intent.putExtra(EXTRA_USER, user);
 
             startActivity(intent);
 

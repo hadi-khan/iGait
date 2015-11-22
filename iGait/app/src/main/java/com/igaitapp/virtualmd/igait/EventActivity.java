@@ -40,13 +40,13 @@ public class EventActivity extends AppCompatActivity {
 
         patientList.add(patient);
 
-        adapter = new PatientListAdapter(this, patientList, 2);
+        adapter = new PatientListAdapter(this, patientList, "event");
 
         list.setAdapter(adapter);
     }
 
     private void populateListViewEvents() {
-        SimpleDateFormat df = new SimpleDateFormat("MM dd yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
         ListView list = (ListView) findViewById(R.id.listViewEvents);
         List<GaitHealth> gaitHealthList = patient.getGaitHealth(), eventList = new ArrayList<>();
         GaitHealth gaitHealth = new GaitHealth();

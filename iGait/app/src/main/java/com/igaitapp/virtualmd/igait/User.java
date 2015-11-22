@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 public class User implements Serializable {
-    private String lastName, firstName;
+    private String lastName, firstName, token, password;
     private ContactInfo contactInfo = new ContactInfo();
 
     public User() {
@@ -45,4 +45,19 @@ public class User implements Serializable {
         this.contactInfo = contactInfo;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

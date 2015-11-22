@@ -215,7 +215,6 @@ public class UserProfileActivity extends AppCompatActivity {
             } else {
                 result = true;
             }
-
         } else {
             result = true;
         }
@@ -246,6 +245,24 @@ public class UserProfileActivity extends AppCompatActivity {
         return true;
     }
 
+    private Intent getParentActivityIntentImpl() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra(MainActivity.EXTRA_USER, user);
+        intent.putExtra(MainActivity.EXTRA_PARENT_ID, "uprofile");
+
+        return intent;
+    }
+
+    @Override
+    public Intent getSupportParentActivityIntent() {
+        return getParentActivityIntentImpl();
+    }
+
+    @Override
+    public Intent getParentActivityIntent() {
+        return getParentActivityIntentImpl();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -254,7 +271,10 @@ public class UserProfileActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_edit_profile) {
+        if (id == R.id.home) {
+            finish();
+            return true;
+        } else if (id == R.id.action_edit_profile) {
             editable = !editable;
             editable();
 

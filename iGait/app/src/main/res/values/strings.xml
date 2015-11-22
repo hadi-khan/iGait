@@ -70,23 +70,28 @@
     <string name="state">State</string>
     <string name="zip_code">Zip Code</string>
     <string name="password">Password</string>
+    <string name="priority_status">Priority Status</string>
     <string name="re_password">Re-enter Password</string>
     <string name="hidden_password">**********</string>
 
-    <string name="last_name_hint">(1 - 20 characters)</string>
-    <string name="first_name_hint">(1 - 20 characters)</string>
-    <string name="email_hint">(1 - 75 characters)</string>
-    <string name="phone_number_hint">(10 digits only)</string>
-    <string name="office_phone_number_hint">(10 digits only)</string>
+    <string name="priority_status_off">Off</string>
+    <string name="priority_status_on">On</string>
+
+    <string name="last_name_hint">(1 - 20 chars)</string>
+    <string name="first_name_hint">(1 - 20 chars)</string>
+    <string name="email_hint">(1 - 75 chars)</string>
+    <string name="phone_number_hint">(10 digits)</string>
+    <string name="office_phone_number_hint">(10 digits)</string>
     <string name="expected_walk_time_hint">(hh:mm:ss)</string>
     <string name="birthday_hint">(mm/dd/yyy)</string>
     <string name="sex_hint">(m or f)</string>
-    <string name="address_hint">(1 - 30 characters)</string>
-    <string name="office_address_hint">(1 - 30 characters)</string>
-    <string name="city_hint">(1 - 30 characters)</string>
-    <string name="state_hint">(2 characters)</string>
+    <string name="address_hint">(1 - 30 chars)</string>
+    <string name="office_address_hint">(1 - 30 chars)</string>
+    <string name="city_hint">(1 - 30 chars)</string>
+    <string name="state_hint">(2 chars)</string>
     <string name="zip_code_hint">(5 digits)</string>
-    <string name="password_hint">(5 characters, 1 uppercase, 1 special)</string>
+    <string name="priority_status_hint">(User priority)</string>
+    <string name="password_hint">(5 chars, 1 upper, 1 digit)</string>
     <string name="re_password_hint">(Must match password)</string>
     <string name="hidden_password_hint">**********</string>
 
