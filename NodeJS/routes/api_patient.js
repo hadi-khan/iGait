@@ -32,15 +32,14 @@ router.route('/patient')
     })
     .post(function(req, res){
         let newPatient = Models.Patients(req.body);
-        let email = req.header('Authorization').email;
+        let email = req.header('email');
 
         db.getDoctorByEmail(email, assignPatient);
-
         function assignPatient(err, doctor){
             if(err){
                 res.json({success: 'false', message:err});
             }
-            newPatient.doctor = doctor.objectId;
+            newPatient.doctor = doctor._id;
 
             db.createPatient(newPatient, reply);
             function reply(err, patient){
