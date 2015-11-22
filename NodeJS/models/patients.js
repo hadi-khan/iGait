@@ -13,7 +13,7 @@ var patientsSchema = new Schema({
 	dateOfBirth: {type: Date, required: true},
 	gender: {type: String, required: true},
 	contact: {
-		email: { type: String, required: true },
+		email: { type: String, required: true, unique: true },
 		mobilenumber: { type: Number, require: true },
 		address: {type: String, required: true},
 		state: {type: String, required: true},
