@@ -14,8 +14,6 @@ public class User implements Serializable {
     }
 
     public User(String lastName, String firstName, ContactInfo contactInfo) {
-        super();
-
         this.lastName = lastName;
         this.firstName = firstName;
         this.contactInfo = contactInfo;

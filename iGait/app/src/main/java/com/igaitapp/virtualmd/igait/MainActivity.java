@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,66 +21,130 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     static final String EXTRA_PATIENT = "com.igaitapp.virtualmd.igait.PATIENT";
     static final String EXTRA_PATIENT_LIST = "com.igaitapp.virtualmd.igait.PATIENT_LIST";
-    static final String EXTRA_PARENT_ID = "com.igaitapp.virtualmd.igait.PARENT_ID";
     static final String EXTRA_USER = "com.igaitapp.virtualmd.igait.USER";
 
-    private List<Patient> patientList = new ArrayList<>();
     private User user = new User();
+    private List<Patient> patientList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String parent = getIntent().getStringExtra(EXTRA_PARENT_ID);
+        user = (User) getIntent().getSerializableExtra(EXTRA_USER);
+        new ServerConnect().execute("http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/patient",
+                "http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/patient/health/");
+    }
 
-        if (parent.equals("login") || parent.equals("pprofile")) {
-            user = (User) getIntent().getSerializableExtra(EXTRA_USER);
-            new ServerConnect().execute("http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/patient");
-        }
-        else if (parent.equals("uprofile") || parent.equals("npprofile")) {
-            new ServerConnect().execute("http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/patient");
-        }
-        else {
-            // timer
-        }
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        patientList = new ArrayList<>();
+        new ServerConnect().execute("http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/patient",
+                "http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/patient/health/");
     }
 
     private void populateListViewPatients() {
-        ListView list = (ListView) findViewById(R.id.listViewPatients);
-        PatientListAdapter adapter = new PatientListAdapter(this, patientList, "main");
+        if (!patientList.isEmpty()) {
+            ListView list = (ListView) findViewById(R.id.listViewPatients);
+            PatientListAdapter adapter = new PatientListAdapter(this, patientList);
 
-        list.setAdapter(adapter);
+            list.setAdapter(adapter);
 
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Patient tappedPatient = patientList.get(position);
-                Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
+            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                    Patient tappedPatient = patientList.get(position);
+                    Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
 
-                intent.putExtra(EXTRA_PATIENT, tappedPatient);
-                intent.putExtra(EXTRA_PARENT_ID, "main");
+                    intent.putExtra(EXTRA_PATIENT, tappedPatient);
 
-                startActivity(intent);
-            }
-        });
+                    startActivity(intent);
+                }
+            });
+        } else {
+            Toast.makeText(getBaseContext(), "User has no patients.", Toast.LENGTH_LONG).show();
+        }
     }
 
-    public static String GET(String urlPaths, String email, String token) {
-        InputStream inputStream = null;
+    private class ServerConnect extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... urls) {
+            return GET(urls[0], urls[1], user.getToken(), user.getContactInfo().getEmail());
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS'Z'");
+            SimpleDateFormat tf = new SimpleDateFormat("HH:mm:ss");
+            SimpleDateFormat dff = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
+
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                String success = jsonObject.getString("success");
+                String message = jsonObject.getString("message");
+
+                if (success.equals("true")) {
+                    JSONArray jsonArrayPatients = jsonObject.getJSONArray("message");
+                    for (int i = 0; i < jsonArrayPatients.length(); i++) {
+                        JSONObject patient = jsonArrayPatients.getJSONObject(i);
+                        JSONObject name = patient.getJSONObject("name");
+                        JSONObject contact = patient.getJSONObject("contact");
+                        JSONObject expectedWalkTime = patient.getJSONObject("expectedWalkTime");
+                        JSONArray healthArray = patient.getJSONArray("health");
+
+                        ContactInfo ci = new ContactInfo(contact.getLong("zipcode"), contact.getString("email"),
+                                contact.getString("address"), contact.getString("city"), contact.getString("state"),
+                                contact.getLong("zipcode"));
+
+                        List<GaitHealth> gil = new ArrayList<>();
+                        for (int o = 0; o < healthArray.length(); o++) {
+                            JSONObject health = healthArray.getJSONObject(i);
+
+                            gil.add(new GaitHealth(health.getInt("health"), df.parse(health.getString("start_time")),
+                                    df.parse(health.getString("end_time")), false));
+                        }
+
+                        Date ewt = tf.parse(expectedWalkTime.getString("hour") + ":" +
+                                expectedWalkTime.getString("minute") + ":" +
+                                expectedWalkTime.getString("second"));
+
+                        patientList.add(new Patient(name.getString("last"), name.getString("first"),
+                                ewt, df.parse(patient.getString("dateOfBirth")),
+                                patient.getString("gender").charAt(0), ci, gil,
+                                patient.getBoolean("priority")));
+                    }
+
+                    populateListViewPatients();
+                } else if (success.equals("error")) {
+                    Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getBaseContext(), "Invalid new patient.", Toast.LENGTH_LONG).show();
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public static String GET(String urlPaths, String urlPaths1, String token, String email) {
         String result = "";
 
         try {
@@ -91,87 +154,63 @@ public class MainActivity extends AppCompatActivity {
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Authorization", token);
             conn.setRequestProperty("Email", email);
+            conn.setConnectTimeout(50000);
             conn.connect();
 
-            inputStream = new BufferedInputStream(conn.getInputStream());
+            InputStream inputStream = new BufferedInputStream(conn.getInputStream());
             if (inputStream != null) {
                 result = convertInputStreamToString(inputStream);
-            } else {
-                result = "Failure connecting.";
-            }
-
-            return result;
-        } catch (IOException e) {
-            Log.d("Server", "IOException reading data " + e.getMessage());
-            e.printStackTrace();
-            return null;
-        } catch (SecurityException e) {
-            Log.d("Server", "SecException: needs permisssion");
-            return null;
-        }
-    }
-
-    private class ServerConnect extends AsyncTask<String, Void, String> {
-        @Override
-        protected String doInBackground(String... urls) {
-            String email = user.getContactInfo().getEmail(),
-                    token = user.getToken();
-
-            return GET(urls[0], email, token);
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            String success = "";
-
-            SimpleDateFormat tf = new SimpleDateFormat("HH:mm:ss");
-            SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-
-            try {
                 JSONObject jsonObject = new JSONObject(result);
-                success = jsonObject.getString("success").toString();
-
-                JSONArray jsonArrayPatients = jsonObject.getJSONArray("message");
-                JSONObject patient = new JSONObject(), name = new JSONObject(), contact = new JSONObject();
+                String success = jsonObject.getString("success");
 
                 if (success.equals("true")) {
+                    JSONArray jsonArrayPatients = jsonObject.getJSONArray("message");
                     for (int i = 0; i < jsonArrayPatients.length(); i++) {
-                        patient = jsonArrayPatients.getJSONObject(i);
-                        name = patient.getJSONObject("name");
-                        contact = patient.getJSONObject("contact");
+                        url = new URL(urlPaths1 + jsonArrayPatients.getJSONObject(i).getString("_id"));
+                        conn = (HttpURLConnection) url.openConnection();
 
-                        ContactInfo ci = new ContactInfo(1234567890l, "example@example.com",
-                                "Real St.", contact.getString("city"), contact.getString("state"),
-                                contact.getLong("zipcode"));
+                        conn.setRequestMethod("GET");
+                        conn.setRequestProperty("Authorization", token);
+                        conn.setRequestProperty("Email", email);
+                        conn.setConnectTimeout(50000);
+                        conn.connect();
 
-                        List<GaitHealth> gil = new ArrayList<GaitHealth>();
-                        gil.add(new GaitHealth(3, df.parse("11/21/2015 8:00:00"), df.parse("11/21/2015 8:02:00"), false));
+                        inputStream = new BufferedInputStream(conn.getInputStream());
+                        if (inputStream != null) {
+                            result = convertInputStreamToString(inputStream);
+                            JSONObject jsonObjectHealth = new JSONObject(result);
+                            success = jsonObjectHealth.getString("success");
 
-                        patientList.add(new Patient(name.getString("last"), name.getString("first"),
-                                tf.parse("00:03:00"), df.parse("12/25/1980"),
-                                patient.getString("gender").charAt(0), ci,
-                                gil, patient.getBoolean("priority")));
+                            if (success.equals("true")) {
+                                JSONArray jsonArrayHealth = jsonObjectHealth.getJSONArray("message");
+                                jsonArrayPatients.getJSONObject(i).put("health", jsonArrayHealth);
+                            }
+                        }
                     }
 
-                    Log.d(":)", patientList.size() + "");
-                    populateListViewPatients();
-                } else {
-                    Toast.makeText(getBaseContext(), "Could not sync patients.", Toast.LENGTH_LONG).show();
+                    jsonObject.put("message", jsonArrayPatients);
+                    result = jsonObject.toString();
                 }
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (ParseException pe) {
-                pe.printStackTrace();
+            } else {
+                result = "{\"success\":error,\"message\":\"Connection error.\"}";
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "{\"success\":error,\"message\":\"Connection error.\"}";
+        } catch (SecurityException e) {
+            e.printStackTrace();
+            return "{\"success\":error,\"message\":\"Connection error.\"}";
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "{\"success\":error,\"message\":\"Connection error.\"}";
         }
+
+        return result;
     }
 
     private static String convertInputStreamToString(InputStream inputStream) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = "";
+        String line;
         String result = "";
 
         while ((line = bufferedReader.readLine()) != null) {
@@ -207,6 +246,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_search) {
             Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+            intent.putExtra(EXTRA_USER, user);
             intent.putExtra(EXTRA_PATIENT_LIST, (Serializable) patientList);
 
             startActivity(intent);

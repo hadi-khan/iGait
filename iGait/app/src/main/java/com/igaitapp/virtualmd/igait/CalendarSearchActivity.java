@@ -12,7 +12,6 @@ import android.widget.ListView;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
-import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,7 +20,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class CalendarActivity extends AppCompatActivity {
+public class CalendarSearchActivity extends AppCompatActivity {
     static final String EXTRA_SELECTED_DATE = "com.igaitapp.virtualmd.igait.SELECTED_DATE";
 
     private Patient patient = new Patient();
@@ -142,7 +141,7 @@ public class CalendarActivity extends AppCompatActivity {
 
                     if ((selectedDate.equals(firstDate) || selectedDate.equals(lastDate)) ||
                             (selectedDate.after(firstDate) && selectedDate.before(lastDate))) {
-                        intent = new Intent(CalendarActivity.this, EventActivity.class);
+                        intent = new Intent(CalendarSearchActivity.this, EventActivity.class);
 
                         intent.putExtra(MainActivity.EXTRA_PATIENT, patient);
                         intent.putExtra(EXTRA_SELECTED_DATE, date);
@@ -167,21 +166,5 @@ public class CalendarActivity extends AppCompatActivity {
             args.putInt(CaldroidFragment.THEME_RESOURCE, R.style.CalendariGait);
             caldroidFragment.setArguments(args);
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.home) {
-            onBackPressed();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }

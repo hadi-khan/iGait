@@ -256,7 +256,7 @@ public class SearchActivity extends AppCompatActivity {
 
     private void populateListViewPatientsSearch() {
         ListView list = (ListView) findViewById(R.id.listViewPatientsSearch);
-        PatientListSearchAdapter adapter = new PatientListSearchAdapter(this, patientResultList, "search");
+        PatientListSearchAdapter adapter = new PatientListSearchAdapter(this, patientResultList);
         TextView notFound = (TextView) findViewById(R.id.textViewNotFound);
 
         list.setVisibility(View.VISIBLE);
@@ -268,10 +268,9 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 Patient tappedPatient = patientResultList.get(position);
-                Intent intent = new Intent(SearchActivity.this, CalendarActivity.class);
+                Intent intent = new Intent(SearchActivity.this, CalendarSearchActivity.class);
 
                 intent.putExtra(MainActivity.EXTRA_PATIENT, tappedPatient);
-                intent.putExtra(MainActivity.EXTRA_PARENT_ID, "search");
 
                 startActivity(intent);
             }
@@ -286,23 +285,6 @@ public class SearchActivity extends AppCompatActivity {
         notFound.setVisibility(View.VISIBLE);
     }
 
-    private Intent getParentActivityIntentImpl() {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(MainActivity.EXTRA_PARENT_ID, "search");
-
-        return intent;
-    }
-
-    @Override
-    public Intent getSupportParentActivityIntent() {
-        return getParentActivityIntentImpl();
-    }
-
-    @Override
-    public Intent getParentActivityIntent() {
-        return getParentActivityIntentImpl();
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -312,7 +294,7 @@ public class SearchActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.home) {
-            finish();
+            onBackPressed();
             return true;
         }
 
