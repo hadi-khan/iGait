@@ -61,7 +61,7 @@ router.route('/patient/:id')
             if(err){
                 res.json({success: 'false', message: err});
             }
-
+            let email = patient.email;
             let updates = req.body;
             db.updatePatient(email, updates, reply);
             function reply(err, patient){
