@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -20,16 +21,12 @@ public class PatientListAdapter extends BaseAdapter {
     private Resources mResource;
 
     private List<Patient> patientList;
-    private String activity;
 
-    PatientListAdapter(Context context, List<Patient> patientList, String activity) {
+    PatientListAdapter(Context context, List<Patient> patientList) {
         this.mContext = context;
         this.mResource = mContext.getResources();
 
         this.patientList = patientList;
-        this.activity = activity;
-
-        Log.d(":(", patientList.size() + "");
     }
 
     @Override
@@ -49,51 +46,109 @@ public class PatientListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        SimpleDateFormat tfh = new SimpleDateFormat("H");
+        SimpleDateFormat tfm = new SimpleDateFormat("m");
+        SimpleDateFormat tfs = new SimpleDateFormat("s");
+
         final Patient patient = getItem(position);
         List<GaitHealth> gaitHealthList = patient.getGaitHealth();
-        GaitHealth gaitHealth = gaitHealthList.get(0);
         Calendar weekPrev = Calendar.getInstance(), weekCurrent = Calendar.getInstance();
+        GaitHealth gaitHealth;
 
-        int gaitHealthSum = 0, gaitHealthCount = 0;
+        int gaitHealthSum = 0, gaitHealthCount = 0, confidenceSum = 0, confidenceCount = 0;;
         int[] health = {0, 0, 0, 0};
+        double confidencePercent = 0l;
 
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.patient_item, null);
 
         ImageView imageViewPatientImage = (ImageView) view.findViewById(R.id.imageViewPatientImage);
+        ImageView imageViewConfidence = (ImageView) view.findViewById(R.id.imageViewConfidence);
+        ImageView[] imageViewHealths = {(ImageView) view.findViewById(R.id.imageViewHealth1),
+                (ImageView) view.findViewById(R.id.imageViewHealth2),
+                (ImageView) view.findViewById(R.id.imageViewHealth3),
+                (ImageView) view.findViewById(R.id.imageViewHealth4)};
         TextView textViewInfoLeft = (TextView) view.findViewById(R.id.textViewInfoLeft);
         TextView textViewInfoRight = (TextView) view.findViewById(R.id.textViewInfoRight);
         ImageView imageViewPriorityNotif = (ImageView) view.findViewById(R.id.imageViewPriorityNotif);
 
-        weekPrev.setTime(gaitHealth.getStartTime());
-        for (int i = 0; i < gaitHealthList.size(); i++) {
-            gaitHealth = gaitHealthList.get(i);
-            weekCurrent.setTime(gaitHealth.getStartTime());
+        if (!gaitHealthList.isEmpty()) {
+            gaitHealth = gaitHealthList.get(0);
+            weekPrev.setTime(gaitHealth.getStartTime());
+            for (int i = 0; i < gaitHealthList.size(); i++) {
+                gaitHealth = gaitHealthList.get(i);
+                weekCurrent.setTime(gaitHealth.getStartTime());
 
-            gaitHealthSum += gaitHealth.getHealth();
-            gaitHealthCount += 1;
+                gaitHealthSum += gaitHealth.getHealth();
+                gaitHealthCount += 1;
 
-            if (weekPrev.get(Calendar.WEEK_OF_YEAR) != weekCurrent.get(Calendar.WEEK_OF_YEAR) || (i + 1) == gaitHealthList.size()) {
-                weekPrev.setTime(gaitHealth.getStartTime());
+                int h = 0, m = 0, s = 0, diff;
 
-                for (int o = 0; o < 3; o++) {
-                    health[o] = health[o + 1];
+                s = Integer.parseInt(tfs.format(gaitHealth.getEndTime()));
+                m = Integer.parseInt(tfm.format(gaitHealth.getEndTime())) * 60 + s;
+                h = Integer.parseInt(tfh.format(gaitHealth.getEndTime())) * 60 + m;
+
+                diff = h;
+
+                s = Integer.parseInt(tfs.format(gaitHealth.getStartTime()));
+                m = Integer.parseInt(tfm.format(gaitHealth.getStartTime())) * 60 + s;
+                h = Integer.parseInt(tfh.format(gaitHealth.getStartTime())) * 60 + m;
+
+                confidenceSum += diff - h;
+                confidenceCount += 1;
+
+                if (weekPrev.get(Calendar.WEEK_OF_YEAR) != weekCurrent.get(Calendar.WEEK_OF_YEAR) || (i + 1) == gaitHealthList.size()) {
+                    weekPrev.setTime(gaitHealth.getStartTime());
+
+                    for (int o = 0; o < 3; o++) {
+                        health[o] = health[o + 1];
+                    }
+
+                    if (Math.round(gaitHealthSum / gaitHealthCount) == 3) {
+                        health[3] = 3;
+                    } else if (Math.round(gaitHealthSum / gaitHealthCount) == 2) {
+                        health[3] = 2;
+                    } else if (Math.round(gaitHealthSum / gaitHealthCount) == 1) {
+                        health[3] = 1;
+                    } else {
+                        health[3] = 0;
+                    }
+
+                    gaitHealthSum = 0;
+                    gaitHealthCount = 0;
                 }
+            }
+        }
 
-                if (Math.round(gaitHealthSum / gaitHealthCount) == 3) {
-                    health[3] = 3;
-                }
-                else if(Math.round(gaitHealthSum / gaitHealthCount) == 2) {
-                    health[3] = 2;
-                }
-                else if (Math.round(gaitHealthSum / gaitHealthCount) == 1) {
-                    health[3] = 1;
-                } else {
-                    health[3] = 0;
-                }
+        if (confidenceCount != 0) {
+            confidencePercent = Math.round(confidenceSum / confidenceCount);
 
-                gaitHealthSum = 0;
-                gaitHealthCount = 0;
+            if (confidencePercent < 25) {
+                imageViewConfidence.setImageResource(R.drawable.conf_0);
+            }
+            else if (confidencePercent < 50) {
+                imageViewConfidence.setImageResource(R.drawable.conf_0);
+            }
+            else if (confidencePercent < 75) {
+                imageViewConfidence.setImageResource(R.drawable.conf_0);
+            }
+            else {
+                imageViewConfidence.setImageResource(R.drawable.conf_0);
+            }
+        }
+
+        for (int i = 0; i < health.length; i++) {
+            if (health[i] == 3) {
+                imageViewHealths[i].setImageResource(R.drawable.health_green);
+            }
+            else if (health[i] == 2) {
+                imageViewHealths[i].setImageResource(R.drawable.health_orange);
+            }
+            else if (health[i] == 1) {
+                imageViewHealths[i].setImageResource(R.drawable.health_red);
+            }
+            else {
+                imageViewHealths[i].setImageResource(R.drawable.health_grey);
             }
         }
 
@@ -105,7 +160,6 @@ public class PatientListAdapter extends BaseAdapter {
                 intent = new Intent(mContext, PatientProfileActivity.class);
 
                 intent.putExtra(MainActivity.EXTRA_PATIENT, patient);
-                intent.putExtra(MainActivity.EXTRA_PARENT_ID, activity);
 
                 mContext.startActivity(intent);
             }

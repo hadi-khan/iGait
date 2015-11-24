@@ -52,6 +52,7 @@
 
     <!-- text descriptions for image views -->
     <string name="patient_image">patient image</string>
+    <string name="confidence_image">confidence</string>
     <string name="priority">priority</string>
     <string name="video">video</string>
 

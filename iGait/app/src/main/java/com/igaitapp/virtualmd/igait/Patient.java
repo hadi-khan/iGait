@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Patient implements Serializable {
-    private String lastName, firstName;
+    private String lastName, firstName, id;
     private Date birthday, expectedWalkTime;;
     private char sex;
     private ContactInfo contactInfo = new ContactInfo();
@@ -17,9 +17,17 @@ public class Patient implements Serializable {
 
     }
 
-    public Patient(String lastName, String firstName, Date expectedWalkTime, Date birthday, char sex, ContactInfo contactInfo, List<GaitHealth> gaitHealth, boolean priority) {
-        super();
+    public Patient(String lastName, String firstName, Date expectedWalkTime, Date birthday, char sex, ContactInfo contactInfo, boolean priority) {
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.expectedWalkTime = expectedWalkTime;
+        this.birthday = birthday;
+        this.sex = sex;
+        this.contactInfo = contactInfo;
+        this.priority = priority;
+    }
 
+    public Patient(String lastName, String firstName, Date expectedWalkTime, Date birthday, char sex, ContactInfo contactInfo, List<GaitHealth> gaitHealth, boolean priority) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.expectedWalkTime = expectedWalkTime;
@@ -28,6 +36,19 @@ public class Patient implements Serializable {
         this.contactInfo = contactInfo;
         this.gaitHealth = gaitHealth;
         this.priority = priority;
+        this.id = id;
+    }
+
+    public Patient(String lastName, String firstName, Date expectedWalkTime, Date birthday, char sex, ContactInfo contactInfo, List<GaitHealth> gaitHealth, boolean priority, String id) {
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.expectedWalkTime = expectedWalkTime;
+        this.birthday = birthday;
+        this.sex = sex;
+        this.contactInfo = contactInfo;
+        this.gaitHealth = gaitHealth;
+        this.priority = priority;
+        this.id = id;
     }
 
     public String getLastName() {

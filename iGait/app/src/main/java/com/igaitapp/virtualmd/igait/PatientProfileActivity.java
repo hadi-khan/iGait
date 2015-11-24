@@ -289,33 +289,6 @@ public class PatientProfileActivity extends AppCompatActivity {
         return true;
     }
 
-    private Intent getParentActivityIntentImpl() {
-        Intent intent = null;
-
-        if (getIntent().getStringExtra(MainActivity.EXTRA_PARENT_ID).equals("main")) {
-            intent = new Intent(this, MainActivity.class);
-            intent.putExtra(MainActivity.EXTRA_PARENT_ID, "pprofile");
-        } else if (getIntent().getStringExtra(MainActivity.EXTRA_PARENT_ID).equals("calendar")) {
-            intent = new Intent(this, CalendarActivity.class);
-        } else if (getIntent().getStringExtra(MainActivity.EXTRA_PARENT_ID).equals("event")) {
-            intent = new Intent(this, EventActivity.class);
-        } else {
-            intent = new Intent(this, SearchActivity.class);
-        }
-
-        return intent;
-    }
-
-    @Override
-    public Intent getSupportParentActivityIntent() {
-        return getParentActivityIntentImpl();
-    }
-
-    @Override
-    public Intent getParentActivityIntent() {
-        return getParentActivityIntentImpl();
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -324,10 +297,7 @@ public class PatientProfileActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.home) {
-            finish();
-            return true;
-        } else if (id == R.id.action_edit_profile) {
+        if (id == R.id.action_edit_profile) {
             editable = !editable;
             editable();
 

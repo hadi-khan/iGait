@@ -1,8 +1,10 @@
 package com.igaitapp.virtualmd.igait;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,7 +12,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 
 public class UserProfileActivity extends AppCompatActivity {
@@ -39,6 +55,8 @@ public class UserProfileActivity extends AppCompatActivity {
     private boolean editable = false;
 
     private User user = new User();
+
+    private HashMap<String, String> changesMade = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,8 +165,8 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private boolean checkChanges() {
-        List<String> changes = new ArrayList<>();
-        List<String> original = new ArrayList<>();
+        boolean result = false;
+
         String lastName = editTextLastName.getText().toString().trim();
         String firstName = editTextFirstName.getText().toString().trim();
         String email = editTextEmail.getText().toString().trim();
@@ -159,27 +177,33 @@ public class UserProfileActivity extends AppCompatActivity {
         String officeZipCode = editTextOfficeZipCode.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
         String rePassword = editTextRePassword.getText().toString().trim();
-        boolean result = false;
 
-        changes.add(lastName);
-        changes.add(firstName);
-        changes.add(email);
-        changes.add(officePhoneNumber);
-        changes.add(officeAddress);
-        changes.add(officeCity);
-        changes.add(officeState);
-        changes.add(officeZipCode);
+        if(!lastName.equals(user.getLastName())){
+            changesMade.put("last", lastName);
+        }
+        if(!firstName.equals(user.getFirstName())){
+            changesMade.put("first", firstName);
+        }
+        if(!email.equals(user.getContactInfo().getEmail())){
+            changesMade.put("email", email);
+        }
+        if(!officePhoneNumber.equals(Long.toString(user.getContactInfo().getPhoneNumber()))){
+            changesMade.put("officenumber", officePhoneNumber);
+        }
+        if(!officeAddress.equals(user.getContactInfo().getAddress())){
+            changesMade.put("officeaddress", officeAddress);
+        }
+        if(!officeCity.equals(user.getContactInfo().getCity())){
+            changesMade.put("city", officeCity);
+        }
+        if(!officeState.equals(user.getContactInfo().getState())){
+            changesMade.put("state", officeState);
+        }
+        if(!officeZipCode.equals(Long.toString(user.getContactInfo().getZipCode()))){
+            changesMade.put("zipcode", officeZipCode);
+        }
 
-        original.add(user.getLastName());
-        original.add(user.getFirstName());
-        original.add(user.getContactInfo().getEmail());
-        original.add(Long.toString(user.getContactInfo().getPhoneNumber()));
-        original.add(user.getContactInfo().getAddress());
-        original.add(user.getContactInfo().getCity());
-        original.add(user.getContactInfo().getState());
-        original.add(Long.toString(user.getContactInfo().getZipCode()));
-
-        if (InputCheck.noChanges(changes, original) && InputCheck.unChangedPassword(password)) {
+        if (changesMade.isEmpty() && InputCheck.unChangedPassword(password)) {
             Toast.makeText(UserProfileActivity.this, "Cannot save. No changes have been made.", Toast.LENGTH_SHORT).show();
         } else if (!InputCheck.name(lastName)) {
             Toast.makeText(UserProfileActivity.this, "Invalid last name.", Toast.LENGTH_SHORT).show();
@@ -213,12 +237,144 @@ public class UserProfileActivity extends AppCompatActivity {
                 Toast.makeText(UserProfileActivity.this, "Passwords do not match.", Toast.LENGTH_SHORT).show();
                 editTextRePassword.requestFocus();
             } else {
+                changesMade.put("password", password);
+                changesMade.put("repassword", rePassword);;
                 result = true;
             }
         } else {
             result = true;
         }
 
+        return result;
+    }
+
+    private class ServerConnect extends AsyncTask<Object, Void, String> {
+        @Override
+        protected String doInBackground(Object... urls) {
+            String urlPaths = (String) urls[0];
+            HashMap<String, String> changesMade = (HashMap<String, String>) urls[1];
+            String token = (String) urls[2];
+            String email = (String) urls[3];
+
+            return PUT(urlPaths, changesMade, token, email);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                String success = jsonObject.getString("success");
+                String message = jsonObject.getString("message");
+                Log.d("SERVER", success);
+
+                if (success.equals("true")) {
+                    saveChanges();
+                    populateViews();
+                    Toast.makeText(getBaseContext(), "Changes saved.", Toast.LENGTH_LONG).show();
+                } else if (success.equals("error")) {
+                    Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getBaseContext(), "Invalid user changes.", Toast.LENGTH_LONG).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public  static String PUT(String urlPaths, HashMap<String, String> changesMade, String token, String email) {
+        String result = "";
+
+        try {
+            JSONObject jsonObject = new JSONObject();
+            JSONObject jsonObjectName = new JSONObject();
+            JSONObject jsonObjectContact = new JSONObject();
+            if(changesMade.get("last") != null){
+                jsonObjectName.put("last", changesMade.get("last"));
+                jsonObject.put("name", jsonObjectName);
+            }
+            if(changesMade.get("first") != null){
+                jsonObjectName.put("first", changesMade.get("first"));
+                jsonObject.put("name", jsonObjectName);
+            }
+            if(changesMade.get("email") != null){
+                jsonObject.put("email", changesMade.get("email"));
+            }
+            if(changesMade.get("officenumber") != null){
+                jsonObjectContact.put("officenumber", Long.parseLong(changesMade.get("officenumber")));
+                jsonObject.put("contact", jsonObjectContact);
+            }
+            if(changesMade.get("officeaddress") != null){
+                jsonObjectContact.put("officeaddress", changesMade.get("officeaddress"));
+                jsonObject.put("contact", jsonObjectContact);
+            }
+            if(changesMade.get("city") != null){
+                jsonObjectContact.put("city", changesMade.get("city"));
+                jsonObject.put("contact", jsonObjectContact);
+            }
+            if(changesMade.get("state") != null){
+                jsonObjectContact.put("state", changesMade.get("state"));
+                jsonObject.put("contact", jsonObjectContact);
+            }
+            if(changesMade.get("zipcode") != null){
+                jsonObjectContact.put("zipcode", Long.parseLong(changesMade.get("zipcode")));
+                jsonObject.put("contact", jsonObjectContact);
+            }
+            if(changesMade.get("password") != null){
+                jsonObject.put("password", changesMade.get("password"));
+            }
+            String jsonString = jsonObject.toString();
+
+
+            URL url = new URL(urlPaths);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            conn.setRequestMethod("PUT");
+            conn.setRequestProperty("Authorization", token);
+            conn.setRequestProperty("Email", email);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setConnectTimeout(50000);
+            conn.connect();
+
+            OutputStream os = conn.getOutputStream();
+            os.write(jsonString.getBytes("UTF-8"));
+            os.close();
+
+            InputStream inputStream = new BufferedInputStream(conn.getInputStream());
+            if(inputStream != null) {
+                result = convertInputStreamToString(inputStream);
+            }
+            else {
+                result = "{\"success\":error,\"message\":\"Connection error.\"}";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "{\"success\":error,\"message\":\"Connection error.\"}";
+        } catch (SecurityException e) {
+            e.printStackTrace();
+            return "{\"success\":error,\"message\":\"Connection error.\"}";
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "{\"success\":error,\"message\":\"Connection error.\"}";
+        }
+
+        return result;
+    }
+
+    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        String line;
+        String result = "";
+
+        while ((line = bufferedReader.readLine()) != null) {
+            result += line;
+        }
+
+        inputStream.close();
         return result;
     }
 
@@ -245,24 +401,6 @@ public class UserProfileActivity extends AppCompatActivity {
         return true;
     }
 
-    private Intent getParentActivityIntentImpl() {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(MainActivity.EXTRA_USER, user);
-        intent.putExtra(MainActivity.EXTRA_PARENT_ID, "uprofile");
-
-        return intent;
-    }
-
-    @Override
-    public Intent getSupportParentActivityIntent() {
-        return getParentActivityIntentImpl();
-    }
-
-    @Override
-    public Intent getParentActivityIntent() {
-        return getParentActivityIntentImpl();
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -271,10 +409,7 @@ public class UserProfileActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.home) {
-            finish();
-            return true;
-        } else if (id == R.id.action_edit_profile) {
+        if (id == R.id.action_edit_profile) {
             editable = !editable;
             editable();
 
@@ -298,9 +433,8 @@ public class UserProfileActivity extends AppCompatActivity {
                 UserProfileActivity.this.supportInvalidateOptionsMenu();
                 setTitle(R.string.title_activity_user_profile);
 
-                saveChanges();
-                Toast.makeText(UserProfileActivity.this, "Changes saved.", Toast.LENGTH_SHORT).show();
-                populateViews();
+                new ServerConnect().execute("http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/account",
+                        changesMade, user.getToken(), user.getContactInfo().getEmail());
             }
 
             return true;

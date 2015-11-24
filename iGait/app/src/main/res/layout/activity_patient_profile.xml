@@ -40,7 +40,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/last_name_hint"
-                android:inputType="text"
+                android:inputType="textPersonName"
                 android:singleLine="true"
                 android:visibility="gone" />
 
@@ -64,7 +64,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/first_name_hint"
-                android:inputType="text"
+                android:inputType="textPersonName"
                 android:singleLine="true"
                 android:visibility="gone" />
 
@@ -112,7 +112,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/phone_number_hint"
-                android:inputType="numberDecimal"
+                android:inputType="number"
                 android:singleLine="true"
                 android:visibility="gone" />
 
@@ -184,7 +184,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/sex_hint"
-                android:inputType="text"
+                android:inputType="textCapCharacters|text"
                 android:singleLine="true"
                 android:visibility="gone" />
 
@@ -208,7 +208,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/address_hint"
-                android:inputType="text"
+                android:inputType="text|textCapWords"
                 android:singleLine="true"
                 android:visibility="gone" />
 
@@ -232,7 +232,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/city_hint"
-                android:inputType="text"
+                android:inputType="text|textCapWords"
                 android:singleLine="true"
                 android:visibility="gone" />
 
@@ -256,7 +256,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/state_hint"
-                android:inputType="text"
+                android:inputType="textCapCharacters|text"
                 android:singleLine="true"
                 android:visibility="gone" />
 
@@ -280,9 +280,9 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/zip_code_hint"
-                android:inputType="text"
                 android:singleLine="true"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:inputType="number" />
 
             <Switch
                 android:layout_width="fill_parent"

@@ -26,6 +26,80 @@
         android:gravity="center_vertical|center_horizontal"
         android:orientation="horizontal">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageViewConfidence"
+            android:maxHeight="30dp"
+            android:maxWidth="30dp"
+            android:minHeight="30dp"
+            android:minWidth="30dp"
+            android:contentDescription="@string/confidence_image"
+            android:src="@drawable/conf_0"
+            android:cropToPadding="false"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:layout_marginRight="4dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageViewHealth1"
+            android:maxHeight="30dp"
+            android:maxWidth="30dp"
+            android:minHeight="30dp"
+            android:minWidth="30dp"
+            android:contentDescription="@string/confidence_image"
+            android:src="@drawable/health_grey"
+            android:cropToPadding="false"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:layout_marginRight="4dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageViewHealth2"
+            android:maxHeight="30dp"
+            android:maxWidth="30dp"
+            android:minHeight="30dp"
+            android:minWidth="30dp"
+            android:contentDescription="@string/confidence_image"
+            android:src="@drawable/health_grey"
+            android:cropToPadding="false"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:layout_marginRight="4dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageViewHealth3"
+            android:maxHeight="30dp"
+            android:maxWidth="30dp"
+            android:minHeight="30dp"
+            android:minWidth="30dp"
+            android:contentDescription="@string/confidence_image"
+            android:src="@drawable/health_grey"
+            android:cropToPadding="false"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:layout_marginRight="4dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageViewHealth4"
+            android:maxHeight="30dp"
+            android:maxWidth="30dp"
+            android:minHeight="30dp"
+            android:minWidth="30dp"
+            android:contentDescription="@string/confidence_image"
+            android:src="@drawable/health_grey"
+            android:cropToPadding="false"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:layout_marginRight="4dp" />
     </LinearLayout>
 
     <LinearLayout

@@ -40,7 +40,7 @@ public class EventActivity extends AppCompatActivity {
 
         patientList.add(patient);
 
-        adapter = new PatientListAdapter(this, patientList, "event");
+        adapter = new PatientListAdapter(this, patientList);
 
         list.setAdapter(adapter);
     }
