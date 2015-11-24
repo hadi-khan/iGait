@@ -182,7 +182,7 @@ ImplementationMongoose.prototype = {
     getDoctorPatients: function(reqObjectID, callback){
         //TODO Kevin I had to make a change to this.
         //may need to use next line
-        //reqObjectID = ObjectId(reqObjectID;
+        reqObjectID = ObjectId(reqObjectID);
         Models.Patients.find({doctor:reqObjectID}, function(err,pat){
             callback(err,pat);
         });
