@@ -172,6 +172,8 @@ ImplementationMongoose.prototype = {
         });
     },
     getPatientByObjectID: function(reqObjectID, callback){
+        //TODO Had to edit this mehtod as well.
+        reqObjectID = Object(reqObjectID);
         Models.Patients.findOne({_id:reqObjectID}, function(err,pat){
             callback(err,pat);
         });
