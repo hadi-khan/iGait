@@ -39,7 +39,7 @@ router.route('/patient')
             if(err){
                 res.json({success: 'false', message:err});
             }
-            newPatient.doctor = doctor._id;
+            newPatient.doctor = ObjectId(doctor._id);
 
             db.createPatient(newPatient, reply);
             function reply(err, patient){
@@ -55,13 +55,14 @@ router.route('/patient')
 router.route('/patient/:id')
     .put(function(req, res){
         let id = req.params.id;
+        console.log(id);
 
-        db.getPatientByObjectId(id, modify);
+        db.getPatientByObjectID(id, modify);
         function modify(err, patient){
             if(err){
                 res.json({success: 'false', message: err});
             }
-            let email = patient.email;
+            let email = patient.contact.email;
             let updates = req.body;
             db.updatePatient(email, updates, reply);
             function reply(err, patient){
