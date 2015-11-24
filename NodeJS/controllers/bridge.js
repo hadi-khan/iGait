@@ -187,8 +187,9 @@ ImplementationMongoose.prototype = {
         });
     },
     getPatientsHealth: function(reqObjectID, callback){
+        //TODO Kevin, edited this function
         //may need to use next line
-        //reqObjectID = new ObjectId(reqObjectID);
+        reqObjectID = ObjectId(reqObjectID);
         Models.Health.find({patient:reqObjectID}, function(err,pat){
             callback(err,pat);
         });
