@@ -39,7 +39,7 @@ router.route('/patient')
             if(err){
                 res.json({success: 'false', message:err});
             }
-            newPatient.doctor = doctor._id;
+            newPatient.doctor = ObjectId(doctor._id);
 
             db.createPatient(newPatient, reply);
             function reply(err, patient){
