@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
 
 //defining the patient schema
 var healthSchema = new Schema({
-	date_created: { type: Date, default: Date.now },
+	date_created: { type: Date, default: Date.now, required: true},
 	health: {type: Number, min: 0, max: 3, required: true},
 	start_time: {type: Date, required: true},
 	end_time: {type: Date, required: true},

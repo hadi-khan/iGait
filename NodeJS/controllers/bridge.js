@@ -81,6 +81,11 @@ dbMgrBridge.prototype = {
         if(this._impl && this._impl.createPatient)
             this._impl.createPatient(reqPatObj, callback);     // Forward request to implementor
     },
+    createHealth: function(reqHeaObj, callback) {
+        // Check if any implementor is bound and has the required method:
+        if(this._impl && this._impl.createHealth)
+            this._impl.createHealth(reqHeaObj, callback);     // Forward request to implementor
+    },
     updateDoctor: function(reqEmail, reqUpdate, callback){
         // Check if any implementor is bound and has the required method:
         if(this._impl && this._impl.updateDoctor)
@@ -193,6 +198,11 @@ ImplementationMongoose.prototype = {
     createDoctor: function(reqDocObj, callback){
         reqDocObj.save(function(err, doc){
             callback(err,doc);
+        });
+    },
+    createHealth: function(reqHeaObj, callback){
+        reqHeaObj.save(function(err, hea){
+            callback(err,hea);
         });
     },
     updateDoctor: function(reqEmail, reqUpdate, callback){
