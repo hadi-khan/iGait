@@ -4,7 +4,7 @@
 
 
 //To run
-//node bulkload_database.js
+//node bulkload.js
 
 'use strict';
 var mongoose = require('mongoose')
@@ -51,47 +51,47 @@ let newHealth3_3 = Models.Health({health:0,start_time:new Date(2015,11,20,21,32,
 let newHealth3_4 = Models.Health({health:1,start_time:new Date(2015,11,21,21,32,0,0).toISOString(),end_time:new Date(2015,11,21,21,33,0,0).toISOString(),patient:ObjectId(newPatient1._id)});
 let newHealth3_5 = Models.Health({health:2,start_time:new Date(2015,11,22,21,32,0,0).toISOString(),end_time:new Date(2015,11,22,21,33,0,0).toISOString(),patient:ObjectId(newPatient1._id)});
 
-let newHealth4_1 = Models.Health({health:0,start_time:new Date(2015,11,18,20,31,0,0).toISOString(),end_time:new Date(2015,11,18,20,32,0,0).toISOString(),patient:ObjectId(newPatient1._id)});
-let newHealth4_2 = Models.Health({health:0,start_time:new Date(2015,11,19,20,31,0,0).toISOString(),end_time:new Date(2015,11,19,20,32,0,0).toISOString(),patient:ObjectId(newPatient1._id)});
-let newHealth4_3 = Models.Health({health:0,start_time:new Date(2015,11,20,20,31,0,0).toISOString(),end_time:new Date(2015,11,20,20,32,0,0).toISOString(),patient:ObjectId(newPatient1._id)});
-let newHealth4_4 = Models.Health({health:0,start_time:new Date(2015,11,21,20,31,0,0).toISOString(),end_time:new Date(2015,11,21,20,32,0,0).toISOString(),patient:ObjectId(newPatient1._id)});
-let newHealth4_5 = Models.Health({health:0,start_time:new Date(2015,11,22,20,31,0,0).toISOString(),end_time:new Date(2015,11,22,20,32,0,0).toISOString(),patient:ObjectId(newPatient1._id)});
+let newHealth4_1 = Models.Health({health:3,start_time:new Date(2015,11,18,20,31,0,0).toISOString(),end_time:new Date(2015,11,18,20,32,0,0).toISOString(),patient:ObjectId(newPatient1._id)});
+let newHealth4_2 = Models.Health({health:3,start_time:new Date(2015,11,19,20,31,0,0).toISOString(),end_time:new Date(2015,11,19,20,32,0,0).toISOString(),patient:ObjectId(newPatient1._id)});
+let newHealth4_3 = Models.Health({health:3,start_time:new Date(2015,11,20,20,31,0,0).toISOString(),end_time:new Date(2015,11,20,20,32,0,0).toISOString(),patient:ObjectId(newPatient1._id)});
+let newHealth4_4 = Models.Health({health:3,start_time:new Date(2015,11,21,20,31,0,0).toISOString(),end_time:new Date(2015,11,21,20,32,0,0).toISOString(),patient:ObjectId(newPatient1._id)});
+let newHealth4_5 = Models.Health({health:3,start_time:new Date(2015,11,22,20,31,0,0).toISOString(),end_time:new Date(2015,11,22,20,32,0,0).toISOString(),patient:ObjectId(newPatient1._id)});
 
-let newHealth5_1 = Models.Health({health:0,start_time:new Date(2015,11,18,19,30,0,0).toISOString(),end_time:new Date(2015,11,18,19,31,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
-let newHealth5_2 = Models.Health({health:0,start_time:new Date(2015,11,19,19,30,0,0).toISOString(),end_time:new Date(2015,11,19,19,31,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
-let newHealth5_3 = Models.Health({health:0,start_time:new Date(2015,11,20,19,30,0,0).toISOString(),end_time:new Date(2015,11,20,19,31,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
-let newHealth5_4 = Models.Health({health:0,start_time:new Date(2015,11,21,19,30,0,0).toISOString(),end_time:new Date(2015,11,21,19,31,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
-let newHealth5_5 = Models.Health({health:0,start_time:new Date(2015,11,22,19,30,0,0).toISOString(),end_time:new Date(2015,11,22,19,31,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
+let newHealth5_1 = Models.Health({health:3,start_time:new Date(2015,11,18,19,30,0,0).toISOString(),end_time:new Date(2015,11,18,19,31,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
+let newHealth5_2 = Models.Health({health:3,start_time:new Date(2015,11,19,19,30,0,0).toISOString(),end_time:new Date(2015,11,19,19,31,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
+let newHealth5_3 = Models.Health({health:3,start_time:new Date(2015,11,20,19,30,0,0).toISOString(),end_time:new Date(2015,11,20,19,31,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
+let newHealth5_4 = Models.Health({health:3,start_time:new Date(2015,11,21,19,30,0,0).toISOString(),end_time:new Date(2015,11,21,19,31,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
+let newHealth5_5 = Models.Health({health:3,start_time:new Date(2015,11,22,19,30,0,0).toISOString(),end_time:new Date(2015,11,22,19,31,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
 
-let newHealth6_1 = Models.Health({health:0,start_time:new Date(2015,11,18,18,29,0,0).toISOString(),end_time:new Date(2015,11,18,18,30,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
-let newHealth6_2 = Models.Health({health:0,start_time:new Date(2015,11,19,18,29,0,0).toISOString(),end_time:new Date(2015,11,19,18,30,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
-let newHealth6_3 = Models.Health({health:0,start_time:new Date(2015,11,20,18,29,0,0).toISOString(),end_time:new Date(2015,11,20,18,30,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
-let newHealth6_4 = Models.Health({health:0,start_time:new Date(2015,11,21,18,29,0,0).toISOString(),end_time:new Date(2015,11,21,18,30,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
-let newHealth6_5 = Models.Health({health:0,start_time:new Date(2015,11,22,18,29,0,0).toISOString(),end_time:new Date(2015,11,22,18,30,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
+let newHealth6_1 = Models.Health({health:3,start_time:new Date(2015,11,18,18,29,0,0).toISOString(),end_time:new Date(2015,11,18,18,30,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
+let newHealth6_2 = Models.Health({health:3,start_time:new Date(2015,11,19,18,29,0,0).toISOString(),end_time:new Date(2015,11,19,18,30,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
+let newHealth6_3 = Models.Health({health:2,start_time:new Date(2015,11,20,18,29,0,0).toISOString(),end_time:new Date(2015,11,20,18,30,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
+let newHealth6_4 = Models.Health({health:3,start_time:new Date(2015,11,21,18,29,0,0).toISOString(),end_time:new Date(2015,11,21,18,30,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
+let newHealth6_5 = Models.Health({health:2,start_time:new Date(2015,11,22,18,29,0,0).toISOString(),end_time:new Date(2015,11,22,18,30,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
 
-let newHealth7_1 = Models.Health({health:0,start_time:new Date(2015,11,18,17,28,0,0).toISOString(),end_time:new Date(2015,11,18,17,29,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
-let newHealth7_2 = Models.Health({health:0,start_time:new Date(2015,11,19,17,28,0,0).toISOString(),end_time:new Date(2015,11,19,17,29,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
-let newHealth7_3 = Models.Health({health:0,start_time:new Date(2015,11,20,17,28,0,0).toISOString(),end_time:new Date(2015,11,20,17,29,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
-let newHealth7_4 = Models.Health({health:0,start_time:new Date(2015,11,21,17,28,0,0).toISOString(),end_time:new Date(2015,11,21,17,29,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
-let newHealth7_5 = Models.Health({health:0,start_time:new Date(2015,11,22,17,28,0,0).toISOString(),end_time:new Date(2015,11,22,17,29,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
+let newHealth7_1 = Models.Health({health:3,start_time:new Date(2015,11,18,17,28,0,0).toISOString(),end_time:new Date(2015,11,18,17,29,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
+let newHealth7_2 = Models.Health({health:3,start_time:new Date(2015,11,19,17,28,0,0).toISOString(),end_time:new Date(2015,11,19,17,29,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
+let newHealth7_3 = Models.Health({health:3,start_time:new Date(2015,11,20,17,28,0,0).toISOString(),end_time:new Date(2015,11,20,17,29,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
+let newHealth7_4 = Models.Health({health:2,start_time:new Date(2015,11,21,17,28,0,0).toISOString(),end_time:new Date(2015,11,21,17,29,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
+let newHealth7_5 = Models.Health({health:3,start_time:new Date(2015,11,22,17,28,0,0).toISOString(),end_time:new Date(2015,11,22,17,29,0,0).toISOString(),patient:ObjectId(newDoctor2._id)});
 
-let newHealth8_1 = Models.Health({health:0,start_time:new Date(2015,11,18,16,27,0,0).toISOString(),end_time:new Date(2015,11,18,16,28,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
-let newHealth8_2 = Models.Health({health:0,start_time:new Date(2015,11,19,16,27,0,0).toISOString(),end_time:new Date(2015,11,19,16,28,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
-let newHealth8_3 = Models.Health({health:0,start_time:new Date(2015,11,20,16,27,0,0).toISOString(),end_time:new Date(2015,11,20,16,28,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
-let newHealth8_4 = Models.Health({health:0,start_time:new Date(2015,11,21,16,27,0,0).toISOString(),end_time:new Date(2015,11,21,16,28,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
-let newHealth8_5 = Models.Health({health:0,start_time:new Date(2015,11,22,16,27,0,0).toISOString(),end_time:new Date(2015,11,22,16,28,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
+let newHealth8_1 = Models.Health({health:3,start_time:new Date(2015,11,18,16,27,0,0).toISOString(),end_time:new Date(2015,11,18,16,28,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
+let newHealth8_2 = Models.Health({health:1,start_time:new Date(2015,11,19,16,27,0,0).toISOString(),end_time:new Date(2015,11,19,16,28,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
+let newHealth8_3 = Models.Health({health:1,start_time:new Date(2015,11,20,16,27,0,0).toISOString(),end_time:new Date(2015,11,20,16,28,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
+let newHealth8_4 = Models.Health({health:3,start_time:new Date(2015,11,21,16,27,0,0).toISOString(),end_time:new Date(2015,11,21,16,28,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
+let newHealth8_5 = Models.Health({health:3,start_time:new Date(2015,11,22,16,27,0,0).toISOString(),end_time:new Date(2015,11,22,16,28,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
 
-let newHealth9_1 = Models.Health({health:0,start_time:new Date(2015,11,18,15,26,0,0).toISOString(),end_time:new Date(2015,11,18,15,27,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
-let newHealth9_2 = Models.Health({health:0,start_time:new Date(2015,11,19,15,26,0,0).toISOString(),end_time:new Date(2015,11,19,15,27,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
-let newHealth9_3 = Models.Health({health:0,start_time:new Date(2015,11,20,15,26,0,0).toISOString(),end_time:new Date(2015,11,20,15,27,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
-let newHealth9_4 = Models.Health({health:0,start_time:new Date(2015,11,21,15,26,0,0).toISOString(),end_time:new Date(2015,11,21,15,27,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
-let newHealth9_5 = Models.Health({health:0,start_time:new Date(2015,11,22,15,26,0,0).toISOString(),end_time:new Date(2015,11,22,15,27,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
+let newHealth9_1 = Models.Health({health:1,start_time:new Date(2015,11,18,15,26,0,0).toISOString(),end_time:new Date(2015,11,18,15,27,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
+let newHealth9_2 = Models.Health({health:1,start_time:new Date(2015,11,19,15,26,0,0).toISOString(),end_time:new Date(2015,11,19,15,27,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
+let newHealth9_3 = Models.Health({health:1,start_time:new Date(2015,11,20,15,26,0,0).toISOString(),end_time:new Date(2015,11,20,15,27,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
+let newHealth9_4 = Models.Health({health:1,start_time:new Date(2015,11,21,15,26,0,0).toISOString(),end_time:new Date(2015,11,21,15,27,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
+let newHealth9_5 = Models.Health({health:1,start_time:new Date(2015,11,22,15,26,0,0).toISOString(),end_time:new Date(2015,11,22,15,27,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
 
-let newHealth10_1 = Models.Health({health:0,start_time:new Date(2015,11,18,14,25,0,0).toISOString(),end_time:new Date(2015,11,18,14,26,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
-let newHealth10_2 = Models.Health({health:0,start_time:new Date(2015,11,19,14,25,0,0).toISOString(),end_time:new Date(2015,11,19,14,26,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
-let newHealth10_3 = Models.Health({health:0,start_time:new Date(2015,11,20,14,25,0,0).toISOString(),end_time:new Date(2015,11,20,14,26,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
-let newHealth10_4 = Models.Health({health:0,start_time:new Date(2015,11,21,14,25,0,0).toISOString(),end_time:new Date(2015,11,21,14,26,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
-let newHealth10_5 = Models.Health({health:0,start_time:new Date(2015,11,22,14,25,0,0).toISOString(),end_time:new Date(2015,11,22,14,26,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
+let newHealth10_1 = Models.Health({health:2,start_time:new Date(2015,11,18,14,25,0,0).toISOString(),end_time:new Date(2015,11,18,14,26,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
+let newHealth10_2 = Models.Health({health:2,start_time:new Date(2015,11,19,14,25,0,0).toISOString(),end_time:new Date(2015,11,19,14,26,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
+let newHealth10_3 = Models.Health({health:2,start_time:new Date(2015,11,20,14,25,0,0).toISOString(),end_time:new Date(2015,11,20,14,26,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
+let newHealth10_4 = Models.Health({health:2,start_time:new Date(2015,11,21,14,25,0,0).toISOString(),end_time:new Date(2015,11,21,14,26,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
+let newHealth10_5 = Models.Health({health:3,start_time:new Date(2015,11,22,14,25,0,0).toISOString(),end_time:new Date(2015,11,22,14,26,0,0).toISOString(),patient:ObjectId(newDoctor3._id)});
 
 
 db.createDoctor(newDoctor1, replyDoc);
