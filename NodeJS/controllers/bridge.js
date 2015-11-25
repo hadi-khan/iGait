@@ -211,11 +211,13 @@ ImplementationMongoose.prototype = {
         });
     },
     updateDoctor: function(reqObjectID, reqUpdate, callback){
+        //reqObjectID = ObjectId(reqObjectID)
         Models.Doctors.findOneAndUpdate({_id: reqObjectID}, reqUpdate, function(err, doc) {
             callback(err,doc);
         });
     },
     updatePatient: function(reqObjectID, reqUpdate, callback){
+        //reqObjectID = ObjectId(reqObjectID)
         Models.Patients.findOneAndUpdate({_id: reqObjectID}, reqUpdate, function(err, pat) {
             callback(err,pat);
         });
