@@ -86,15 +86,15 @@ dbMgrBridge.prototype = {
         if(this._impl && this._impl.createHealth)
             this._impl.createHealth(reqHeaObj, callback);     // Forward request to implementor
     },
-    updateDoctor: function(reqEmail, reqUpdate, callback){
+    updateDoctor: function(reqObjectID, reqUpdate, callback){
         // Check if any implementor is bound and has the required method:
         if(this._impl && this._impl.updateDoctor)
-            this._impl.updateDoctor(reqEmail, reqUpdate, callback);     // Forward request to implementor
+            this._impl.updateDoctor(reqObjectID, reqUpdate, callback);     // Forward request to implementor
     },
-    updatePatient: function(reqEmail, reqUpdate, callback){
+    updatePatient: function(reqObjectID, reqUpdate, callback){
         // Check if any implementor is bound and has the required method:
         if(this._impl && this._impl.updatePatient)
-            this._impl.updatePatient(reqEmail, reqUpdate, callback);     // Forward request to implementor
+            this._impl.updatePatient(reqObjectID, reqUpdate, callback);     // Forward request to implementor
     },
     removeDoctor: function(reqEmail, callback) {
         // Check if any implementor is bound and has the required method:
@@ -210,13 +210,13 @@ ImplementationMongoose.prototype = {
             callback(err,hea);
         });
     },
-    updateDoctor: function(reqEmail, reqUpdate, callback){
-        Models.Doctors.findOneAndUpdate({email: reqEmail}, reqUpdate, function(err, doc) {
+    updateDoctor: function(reqObjectID, reqUpdate, callback){
+        Models.Doctors.findOneAndUpdate({_id: reqObjectID}, reqUpdate, function(err, doc) {
             callback(err,doc);
         });
     },
-    updatePatient: function(reqEmail, reqUpdate, callback){
-        Models.Patients.findOneAndUpdate({email: reqEmail}, reqUpdate, function(err, pat) {
+    updatePatient: function(reqObjectID, reqUpdate, callback){
+        Models.Patients.findOneAndUpdate({_id: reqObjectID}, reqUpdate, function(err, pat) {
             callback(err,pat);
         });
     },
