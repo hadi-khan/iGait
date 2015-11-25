@@ -20,7 +20,6 @@ var patientsSchema = new Schema({
 		city: {type: String, required: true},
 		zipcode: {type: Number, required: true}
 	},
-	admissionsDate: {type: Date, required: true},
 	priority: {type: Boolean, required: true},
 	expectedWalkTime: {
 		hour: {type: Number, required: true},
