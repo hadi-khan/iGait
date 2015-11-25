@@ -20,23 +20,6 @@ router.route('/patient')
                 res.json({success: 'true', message: patients});
             }
         }
-
-        /*
-        db.getDoctorByEmail(email, searchPatients);
-        function searchPatients(err, doctor){
-            if(err){
-                res.json({success: 'false', message: err});
-            }else if(doctor) {
-                db.getDoctorPatients(doctor._id, reply);
-            }
-        }
-        function reply(err, patients){
-            if(err){
-                res.json({success: 'false', message: err});
-            } else if(patients){
-                res.json({success: 'true', message: patients});
-            }
-        }*/
     })
     .post(function(req, res){
         let newPatient = Models.Patients(req.body);
@@ -51,24 +34,6 @@ router.route('/patient')
                 res.json({success: 'true', message: patient});
             }
         }
-
-        /*
-        db.getDoctorByObjectID(email, assignPatient);
-        function assignPatient(err, doctor){
-            if(err){
-                res.json({success: 'false', message:err});
-            }
-            newPatient.doctor = doctor._id;
-
-            db.createPatient(newPatient, reply);
-            function reply(err, patient){
-                if(err){
-                    res.json({success: 'false', message: err});
-                } else if(patient){
-                    res.json({success: 'true', message: patient});
-                }
-            }
-        }*/
     });
 
 router.route('/patient/:id')
