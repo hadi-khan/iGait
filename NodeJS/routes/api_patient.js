@@ -10,8 +10,18 @@ const PATIENT_DELETE_MESSAGE = 'patient deleted';
 //TODO implement the new db function for finding a patient
 router.route('/patient')
     .get(function(req, res){
-        let email = req.header('email');
+        let doctorId = req.header('id');
+        //TODO may have to wrap id with ObjectId in bridge
+        db.getDoctorByObjectID(doctorId, reply);
+        function reply(err, patients){
+            if(err){
+                res.json({success: 'false', message: err});
+            } else if(patients){
+                res.json({success: 'true', message: patients});
+            }
+        }
 
+        /*
         db.getDoctorByEmail(email, searchPatients);
         function searchPatients(err, doctor){
             if(err){
@@ -26,13 +36,24 @@ router.route('/patient')
             } else if(patients){
                 res.json({success: 'true', message: patients});
             }
-        }
+        }*/
     })
     .post(function(req, res){
         let newPatient = Models.Patients(req.body);
-        let email = req.header('email');
+        //TODO May have to wrap this with ObjectId inside of bridge.
+        newPatient.doctor = req.header('id');
 
-        db.getDoctorByEmail(email, assignPatient);
+        db.createPatient(newPatient, reply);
+        function reply(err, patient){
+            if(err){
+                res.json({success: 'false', message: err});
+            } else if(patient){
+                res.json({success: 'true', message: patient});
+            }
+        }
+
+        /*
+        db.getDoctorByObjectID(email, assignPatient);
         function assignPatient(err, doctor){
             if(err){
                 res.json({success: 'false', message:err});
@@ -47,7 +68,7 @@ router.route('/patient')
                     res.json({success: 'true', message: patient});
                 }
             }
-        }
+        }*/
     });
 
 router.route('/patient/:id')

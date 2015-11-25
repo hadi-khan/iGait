@@ -16,7 +16,7 @@ router.use('/api', apiAccount);
 router.use('/api', apiPatient);
 
 function verify(req, res, next){
-    if(!(req.header('authorization') && req.header('email'))){
+    if(!(req.header('authorization') && req.header('id'))){
         res.json({success: 'false', message: MISSING_HEADER})
     }
 
