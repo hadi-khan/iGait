@@ -39,6 +39,12 @@ dbMgrBridge.prototype = {
     // Function "exported" by the Abstraction:
     // for each one of these, add to implmentation 1 and implementation 2
     // Public Methods
+    getDoctorByEmail: function(reqObjectID, callback){
+        // Check if any implementor is bound and has the required method:
+        if(this._impl && this._impl.getDoctorByEmail) {
+            this._impl.getDoctorByEmail(reqObjectID, callback);     // Forward request to implementor
+        }
+    },
     getDoctorByObjectID: function(reqObjectID, callback){
         // Check if any implementor is bound and has the required method:
         if(this._impl && this._impl.getDoctorByObjectID) {
@@ -174,6 +180,11 @@ ImplementationMongoose.prototype = {
             });
         });
         mongoose.connection.close();
+    },
+    getDoctorByEmail: function(reqObjectEmail, callback){
+        Models.Doctors.findOne({email:reqObjectEmail}, function(err,doc){
+            callback(err,doc);
+        });
     },
     getDoctorByObjectID: function(reqObjectID, callback){
         reqObjectID = ObjectId(reqObjectID);
