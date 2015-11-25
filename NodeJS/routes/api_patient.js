@@ -13,7 +13,6 @@ router.route('/patient')
         let email = req.header('email');
 
         db.getDoctorByEmail(email, searchPatients);
-
         function searchPatients(err, doctor){
             if(err){
                 res.json({success: 'false', message: err});
@@ -21,7 +20,6 @@ router.route('/patient')
                 db.getDoctorPatients(doctor._id, reply);
             }
         }
-
         function reply(err, patients){
             if(err){
                 res.json({success: 'false', message: err});
@@ -55,29 +53,21 @@ router.route('/patient')
 router.route('/patient/:id')
     .put(function(req, res){
         let id = req.params.id;
-        console.log(id);
+        let changes = req.body;
 
-        db.getPatientByObjectID(id, modify);
-        function modify(err, patient){
+        db.updatePaitent(id, changes, reply);
+        function reply(err, patient){
             if(err){
                 res.json({success: 'false', message: err});
-            }
-            let email = patient.contact.email;
-            let updates = req.body;
-            db.updatePatient(email, updates, reply);
-            function reply(err, patient){
-                if(err){
-                    res.json({success: 'false', message: err});
-                }else if(patient){
-                    res.json({success: 'true', message: patient});
-                }
+            } else if(patient){
+                res.json({success: 'true', message: 'patient updated'});
             }
         }
     })
-    .delete(function(req,res){
+    .delete(function(req, res){
         let id = req.params.id;
-        db.removePatient(id, reply);
 
+        db.removePatient(id, reply);
         function reply(err, pat){
             if(err){
                 res.json({success: 'false', message: err});
