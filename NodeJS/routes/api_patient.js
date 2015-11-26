@@ -12,7 +12,7 @@ router.route('/patient')
     .get(function(req, res){
         let doctorId = req.header('id');
         //TODO may have to wrap id with ObjectId in bridge
-        db.getDoctorByObjectID(doctorId, reply);
+        db.getDoctorPatients(doctorId, reply);
         function reply(err, patients){
             if(err){
                 res.json({success: 'false', message: err});
