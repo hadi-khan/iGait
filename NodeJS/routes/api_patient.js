@@ -41,7 +41,7 @@ router.route('/patient/:id')
         let id = req.params.id;
         let changes = req.body;
 
-        db.updatePaitent(id, changes, reply);
+        db.updatePatient(id, changes, reply);
         function reply(err, patient){
             if(err){
                 res.json({success: 'false', message: err});
