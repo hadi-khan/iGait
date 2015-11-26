@@ -9,7 +9,9 @@ var healthSchema = new Schema({
 	health: {type: Number, min: 0, max: 3, required: true},
 	start_time: {type: Date, required: true},
 	end_time: {type: Date, required: true},
-	patient: { type : ObjectId, ref: 'Patients' }//the export name in models/index.js
+	patient: { type : ObjectId, ref: 'Patients' },//the export name in models/index.js
+	skeleton_location: {type: String},
+	video_location: {type: String}
 });
 
 module.exports = mongoose.model('HealthModels', healthSchema);
