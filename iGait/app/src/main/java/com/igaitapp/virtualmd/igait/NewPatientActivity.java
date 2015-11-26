@@ -59,7 +59,7 @@ public class NewPatientActivity extends AppCompatActivity {
                 String state = editTextState.getText().toString().trim();
                 String zipCode = editTextZipCode.getText().toString().trim();
                 String userToken = user.getToken();
-                String userEmail = user.getContactInfo().getEmail();
+                String userId = user.getId();
 
                 if (!InputCheck.name(lastName)) {
                     Toast.makeText(NewPatientActivity.this, "Invalid last name.", Toast.LENGTH_SHORT).show();
@@ -97,7 +97,7 @@ public class NewPatientActivity extends AppCompatActivity {
                 } else {
                     new ServerConnect().execute("http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/patient",
                             lastName, firstName, expectedWalkTime, birthday, sex,
-                            phoneNumber, email, address, city, state, zipCode, userToken, userEmail);
+                            phoneNumber, email, address, city, state, zipCode, userToken, userId);
                 }
             }
         });
