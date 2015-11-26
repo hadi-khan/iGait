@@ -1,5 +1,6 @@
 package com.igaitapp.virtualmd.igait;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -254,9 +255,9 @@ public class UserProfileActivity extends AppCompatActivity {
             String urlPaths = (String) urls[0];
             HashMap<String, String> changesMade = (HashMap<String, String>) urls[1];
             String token = (String) urls[2];
-            String email = (String) urls[3];
+            String id = (String) urls[3];
 
-            return PUT(urlPaths, changesMade, token, email);
+            return PUT(urlPaths, changesMade, token, id);
         }
 
         @Override
@@ -267,7 +268,6 @@ public class UserProfileActivity extends AppCompatActivity {
                 JSONObject jsonObject = new JSONObject(result);
                 String success = jsonObject.getString("success");
                 String message = jsonObject.getString("message");
-                Log.d("SERVER", success);
 
                 if (success.equals("true")) {
                     saveChanges();
@@ -284,43 +284,34 @@ public class UserProfileActivity extends AppCompatActivity {
         }
     }
 
-    public  static String PUT(String urlPaths, HashMap<String, String> changesMade, String token, String email) {
+    public  static String PUT(String urlPaths, HashMap<String, String> changesMade, String token, String id) {
         String result = "";
 
         try {
             JSONObject jsonObject = new JSONObject();
-            JSONObject jsonObjectName = new JSONObject();
-            JSONObject jsonObjectContact = new JSONObject();
             if(changesMade.get("last") != null){
-                jsonObjectName.put("last", changesMade.get("last"));
-                jsonObject.put("name", jsonObjectName);
+                jsonObject.put("name.last", changesMade.get("last"));
             }
             if(changesMade.get("first") != null){
-                jsonObjectName.put("first", changesMade.get("first"));
-                jsonObject.put("name", jsonObjectName);
+                jsonObject.put("name.first", changesMade.get("first"));
             }
             if(changesMade.get("email") != null){
                 jsonObject.put("email", changesMade.get("email"));
             }
             if(changesMade.get("officenumber") != null){
-                jsonObjectContact.put("officenumber", Long.parseLong(changesMade.get("officenumber")));
-                jsonObject.put("contact", jsonObjectContact);
+                jsonObject.put("contact.officenumber", Long.parseLong(changesMade.get("officenumber")));
             }
             if(changesMade.get("officeaddress") != null){
-                jsonObjectContact.put("officeaddress", changesMade.get("officeaddress"));
-                jsonObject.put("contact", jsonObjectContact);
+                jsonObject.put("contact.officeaddress", changesMade.get("officeaddress"));
             }
             if(changesMade.get("city") != null){
-                jsonObjectContact.put("city", changesMade.get("city"));
-                jsonObject.put("contact", jsonObjectContact);
+                jsonObject.put("contact.city", changesMade.get("city"));
             }
             if(changesMade.get("state") != null){
-                jsonObjectContact.put("state", changesMade.get("state"));
-                jsonObject.put("contact", jsonObjectContact);
+                jsonObject.put("contact.state", changesMade.get("state"));
             }
             if(changesMade.get("zipcode") != null){
-                jsonObjectContact.put("zipcode", Long.parseLong(changesMade.get("zipcode")));
-                jsonObject.put("contact", jsonObjectContact);
+                jsonObject.put("contact.zipcode", Long.parseLong(changesMade.get("zipcode")));
             }
             if(changesMade.get("password") != null){
                 jsonObject.put("password", changesMade.get("password"));
@@ -333,7 +324,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
             conn.setRequestMethod("PUT");
             conn.setRequestProperty("Authorization", token);
-            conn.setRequestProperty("Email", email);
+            conn.setRequestProperty("Id", id);
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             conn.setRequestProperty("Accept", "application/json");
@@ -409,7 +400,18 @@ public class UserProfileActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_edit_profile) {
+        if (id == R.id.home || id == R.id.up) {
+//            Intent intent = new Intent(UserProfileActivity.this, MainActivity.class);
+//            intent.putExtra(MainActivity.EXTRA_USER, user);
+//            startActivity(intent);
+            Intent intent = new Intent(UserProfileActivity.this, MainActivity.class);
+            intent.putExtra("result", user);
+            setResult(Activity.RESULT_OK, intent);
+            finish();
+
+            return true;
+        }
+        else if (id == R.id.action_edit_profile) {
             editable = !editable;
             editable();
 
@@ -423,7 +425,6 @@ public class UserProfileActivity extends AppCompatActivity {
             Toast.makeText(UserProfileActivity.this, "Logging out...", Toast.LENGTH_SHORT).show();
 
             startActivity(intent);
-
             return true;
         } else if (id == R.id.action_save_edit_profile) {
             if (checkChanges()) {
@@ -434,7 +435,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 setTitle(R.string.title_activity_user_profile);
 
                 new ServerConnect().execute("http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/account",
-                        changesMade, user.getToken(), user.getContactInfo().getEmail());
+                        changesMade, user.getToken(), user.getId());
             }
 
             return true;

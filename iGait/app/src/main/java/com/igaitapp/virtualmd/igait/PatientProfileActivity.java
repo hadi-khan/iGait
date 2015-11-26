@@ -48,7 +48,7 @@ public class PatientProfileActivity extends AppCompatActivity {
 
     private Patient patient = new Patient();
 
-    private DateFormat tf = new SimpleDateFormat("HH:mm:ss");
+    private DateFormat tf = new SimpleDateFormat("hh:mm:ss");
     private DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 
     @Override
@@ -297,7 +297,10 @@ public class PatientProfileActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_edit_profile) {
+        if (id == R.id.up) {
+            finish();
+            return true;
+        } else if (id == R.id.action_edit_profile) {
             editable = !editable;
             editable();
 

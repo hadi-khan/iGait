@@ -46,7 +46,7 @@ public class PatientListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        SimpleDateFormat tfh = new SimpleDateFormat("H");
+        SimpleDateFormat tfh = new SimpleDateFormat("h");
         SimpleDateFormat tfm = new SimpleDateFormat("m");
         SimpleDateFormat tfs = new SimpleDateFormat("s");
 
@@ -57,7 +57,7 @@ public class PatientListAdapter extends BaseAdapter {
 
         int gaitHealthSum = 0, gaitHealthCount = 0, confidenceSum = 0, confidenceCount = 0;;
         int[] health = {0, 0, 0, 0};
-        double confidencePercent = 0l;
+        double confidencePercent = 0d;
 
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.patient_item, null);
@@ -82,17 +82,17 @@ public class PatientListAdapter extends BaseAdapter {
                 gaitHealthSum += gaitHealth.getHealth();
                 gaitHealthCount += 1;
 
-                int h = 0, m = 0, s = 0, diff;
+                int h = 0, m = 0, s = 0, diff = 0;
 
                 s = Integer.parseInt(tfs.format(gaitHealth.getEndTime()));
                 m = Integer.parseInt(tfm.format(gaitHealth.getEndTime())) * 60 + s;
-                h = Integer.parseInt(tfh.format(gaitHealth.getEndTime())) * 60 + m;
+                h = Integer.parseInt(tfh.format(gaitHealth.getEndTime())) * 60 * 60 + m;
 
                 diff = h;
 
                 s = Integer.parseInt(tfs.format(gaitHealth.getStartTime()));
                 m = Integer.parseInt(tfm.format(gaitHealth.getStartTime())) * 60 + s;
-                h = Integer.parseInt(tfh.format(gaitHealth.getStartTime())) * 60 + m;
+                h = Integer.parseInt(tfh.format(gaitHealth.getStartTime())) * 60 * 60 + m;
 
                 confidenceSum += diff - h;
                 confidenceCount += 1;
@@ -121,16 +121,22 @@ public class PatientListAdapter extends BaseAdapter {
         }
 
         if (confidenceCount != 0) {
-            confidencePercent = Math.round(confidenceSum / confidenceCount);
+            int h = 0, m = 0, s = 0;
 
-            if (confidencePercent < 25) {
-                imageViewConfidence.setImageResource(R.drawable.conf_0);
+            s = Integer.parseInt(tfs.format(patient.getExpectedWalkTime()));
+            m = Integer.parseInt(tfm.format(patient.getExpectedWalkTime())) * 60 + s;
+            h = Integer.parseInt(tfh.format(patient.getExpectedWalkTime())) * 60 * 60 + m;
+
+            confidencePercent = (double) confidenceSum / confidenceCount * 100 / h * 100;
+
+            if (confidencePercent > 75) {
+                imageViewConfidence.setImageResource(R.drawable.conf_100);
             }
-            else if (confidencePercent < 50) {
-                imageViewConfidence.setImageResource(R.drawable.conf_0);
+            else if (confidencePercent > 50) {
+                imageViewConfidence.setImageResource(R.drawable.conf_75);
             }
-            else if (confidencePercent < 75) {
-                imageViewConfidence.setImageResource(R.drawable.conf_0);
+            else if (confidencePercent > 25) {
+                imageViewConfidence.setImageResource(R.drawable.conf_50);
             }
             else {
                 imageViewConfidence.setImageResource(R.drawable.conf_0);
