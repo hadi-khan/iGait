@@ -7,21 +7,16 @@ var mongoose = require('mongoose'),
     path = require('path'),
     Models = require('../models'),
     Schema = mongoose.Schema,
-    ObjectId = mongoose.Schema.Types.ObjectId;
+    ObjectId = mongoose.Schema.Types.ObjectId; //used to reference objectID
 
 function dbMgrBridge(whichdb) {
 // Implementation reference:
     this._impl = this._EstablishImplementor(whichdb);
-    //console.log(this._impl);
     return this;
 }
 
 dbMgrBridge.prototype = {
     //Private Method:
-    _SetImplementation: function(implementor) {
-        this._impl = null;
-        if(implementor) this._impl = implementor;
-    },
     // EstablishImplementor - function that creates
     // the Concrete Implementor and binds it to Abstraction.
     // This is the very method to place your
@@ -30,10 +25,9 @@ dbMgrBridge.prototype = {
         if(whichdb === 1) {
             return new ImplementationMongoose();//mongoose / mongodb
         }
-        else if(false) {
+        else if(false) { //would change if implemented other database's in future
             return new ImplementationTwo();
         }
-        // ...
         return null;
     },
     // Function "exported" by the Abstraction:
@@ -141,7 +135,6 @@ dbMgrBridge.prototype = {
 // This is the first in the set of concrete implementors:
 function ImplementationMongoose() {
     //implement private methods
-    //need to implement command pattern to this
     this._dbAddress = 'mongodb://localhost:27017/mongotest';
     this._dbConnectedMessage = "Mongoose connected on localhost:27017";
     return this;
@@ -175,32 +168,34 @@ ImplementationMongoose.prototype = {
         });
         mongoose.connection.close();
     },
+    //gets doctor by objectID and returns the Doctor
     getDoctorByObjectID: function(reqObjectID, callback){
         reqObjectID = ObjectId(reqObjectID);
         Models.Doctors.findOne({_id:reqObjectID}, function(err,doc){
             callback(err,doc);
         });
     },
+    //gets patient by objectID and returns the Patient
     getPatientByObjectID: function(reqObjectID, callback){
         reqObjectID = ObjectId(reqObjectID);
         Models.Patients.findOne({_id:reqObjectID}, function(err,pat){
             callback(err,pat);
         });
     },
+    //gets health by objectID and returns the Health
     getHealthByObjectID: function(reqObjectID, callback){
         reqObjectID = ObjectId(reqObjectID);
         Models.Health.findOne({_id:reqObjectID}, function(err,hea){
             callback(err,hea);
         });
     },
+    //gets all patients that refer to doctor's reqObjectID and returns all patients
     getDoctorPatients: function(reqObjectID, callback){
-        //TODO Kevin I had to make a change to this.
-        //may need to use next line
-        //reqObjectID = ObjectId(reqObjectID);
         Models.Patients.find({doctor:reqObjectID}, function(err,pat){
             callback(err,pat);
         });
     },
+    //gets all health that refer to patient's reqObjectID and returns all health
     getPatientsHealth: function(reqObjectID, callback){
         //may need to use next line
         //reqObjectID = ObjectId(reqObjectID);
@@ -208,51 +203,59 @@ ImplementationMongoose.prototype = {
             callback(err,hea);
         });
     },
+    //creates Patient given the Patient Object
     createPatient: function(reqPatObj, callback){
         reqPatObj.save(function(err, pat){
             callback(err,pat);
         });
     },
+    //creates Doctor given the Doctor Object
     createDoctor: function(reqDocObj, callback){
         reqDocObj.save(function(err, doc){
             callback(err,doc);
         });
     },
+    //creates Health given the Health Object
     createHealth: function(reqHeaObj, callback){
         reqHeaObj.save(function(err, hea){
             callback(err,hea);
         });
     },
+    //updates Doctor given the doctor's ObjectID
     updateDoctor: function(reqObjectID, reqUpdate, callback){
         //reqObjectID = ObjectId(reqObjectID)
         Models.Doctors.findOneAndUpdate({_id: reqObjectID}, reqUpdate, function(err, doc) {
             callback(err,doc);
         });
     },
+    //updates Patient given the patient's ObjectID
     updatePatient: function(reqObjectID, reqUpdate, callback){
         //reqObjectID = ObjectId(reqObjectID)
         Models.Patients.findOneAndUpdate({_id: reqObjectID}, reqUpdate, function(err, pat) {
             callback(err,pat);
         });
     },
+    //updates Health given the health's ObjectID
     updateHealth: function(reqObjectID, reqUpdate, callback){
         //reqObjectID = ObjectId(reqObjectID)
         Models.Health.findOneAndUpdate({_id: reqObjectID}, reqUpdate, function(err, hea) {
             callback(err,hea);
         });
     },
+    //removes Doctor given the Doctor's ObjectID
     removeDoctor: function(reqObjectID, callback){
         //reqObjectID = ObjectId(reqObjectID)
         Models.Doctors.findOneAndRemove({_id: reqObjectID}, function(err, doc){
             callback(err,doc);
         });
     },
+    //removes Patient given the Patient's ObjectID
     removePatient: function(reqObjectID, callback){
-        //reqObjectID = ObjectId(reqObjectID)
         Models.Patients.findOneAndRemove({_id: reqObjectID}, function(err, pat){
             callback(err, pat);
         });
     },
+    //removes Health given the Health's ObjectID
     removeHealth: function(reqObjectID, callback){
         //reqObjectID = ObjectId(reqObjectID)
         Models.Health.findOneAndRemove({_id: reqObjectID}, function(err, hea){
