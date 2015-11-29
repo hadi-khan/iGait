@@ -29,7 +29,7 @@ var patientsSchema = new Schema({
 	doctor: { type : ObjectId, ref: 'Doctors' } //the export name in models/index.js
 });
 
-module.exports = mongoose.model('PatientsModels', patientsSchema);
+module.exports = mongoose.model('PatientsModels', patientsSchema); //Database Table is name patientsmodels
 
 
 

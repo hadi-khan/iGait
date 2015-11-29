@@ -1,6 +1,7 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     ObjectId = mongoose.Schema.Types.ObjectId;
+
 //defining the doctors schema
 var doctorsSchema = new Schema({
 	date_created: { type: Date, default: Date.now },
@@ -17,6 +18,6 @@ var doctorsSchema = new Schema({
 		city: {type: String, required: true},
 		zipcode: {type: Number, required: true}
 	},
-	accessToken: { type: String } // Used for Remember Me
+	accessToken: { type: String } // used to store token
 });
-module.exports = mongoose.model('DoctorsModel', doctorsSchema); //Database Table is name Doctors
+module.exports = mongoose.model('DoctorsModel', doctorsSchema); //Database Table is name doctorsmodels

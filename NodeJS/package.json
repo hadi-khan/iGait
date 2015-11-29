@@ -4,7 +4,7 @@
   "description": "Server application that acts as a middleware for the database. Built with REST so it can service all devices.",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "./node_modules/.bin/mocha --recursive --reporter list test/testDoctors.js",
     "start": "node server.js"
   },
   "author": "Ross Walker",
@@ -13,8 +13,10 @@
     "body-parser": "^1.14.0",
     "express": "^4.13.3",
     "jsonwebtoken": "^5.4.0",
+    "mocha": "^2.3.4",
     "mongodb": "^2.0.43",
     "mongoose": "^4.1.10",
-    "morgan": "^1.6.1"
+    "morgan": "^1.6.1",
+    "should": "^7.1.1"
   }
 }

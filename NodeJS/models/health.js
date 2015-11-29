@@ -14,7 +14,7 @@ var healthSchema = new Schema({
 	video_location: {type: String}
 });
 
-module.exports = mongoose.model('HealthModels', healthSchema);
+module.exports = mongoose.model('HealthModels', healthSchema); //Database Table is name healthmodels
 
 
 
