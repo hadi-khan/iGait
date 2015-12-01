@@ -46,7 +46,7 @@ public class PatientListAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        SimpleDateFormat tfh = new SimpleDateFormat("h");
+        SimpleDateFormat tfh = new SimpleDateFormat("H");
         SimpleDateFormat tfm = new SimpleDateFormat("m");
         SimpleDateFormat tfs = new SimpleDateFormat("s");
 
@@ -127,7 +127,7 @@ public class PatientListAdapter extends BaseAdapter {
             m = Integer.parseInt(tfm.format(patient.getExpectedWalkTime())) * 60 + s;
             h = Integer.parseInt(tfh.format(patient.getExpectedWalkTime())) * 60 * 60 + m;
 
-            confidencePercent = (double) confidenceSum / confidenceCount * 100 / h * 100;
+            confidencePercent = ((double) confidenceSum / confidenceCount / h) * 100d;
 
             if (confidencePercent > 75) {
                 imageViewConfidence.setImageResource(R.drawable.conf_100);

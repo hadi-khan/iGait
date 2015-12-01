@@ -86,7 +86,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             return "{\"success\":error,\"message\":\"Connection error.\"}";
         } catch (JSONException e) {
             e.printStackTrace();
-            return "{\"success\":error,\"message\":\"Connection error.\"}";
+            return "{\"success\":error,\"message\":\"Data error.\"}";
         }
 
         return result;
@@ -116,6 +116,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     Toast.makeText(getBaseContext(), "Invalid e-mail or password.", Toast.LENGTH_LONG).show();
                 }
             } catch (JSONException e) {
+                Toast.makeText(getBaseContext(), "Data error.", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
         }

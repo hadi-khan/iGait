@@ -122,6 +122,7 @@ public class RegisterActivity extends AppCompatActivity {
                     Toast.makeText(getBaseContext(), "Invalid user registration.", Toast.LENGTH_LONG).show();
                 }
             } catch (JSONException e) {
+                Toast.makeText(getBaseContext(), "Data error.", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
         }
@@ -175,7 +176,7 @@ public class RegisterActivity extends AppCompatActivity {
             return "{\"success\":error,\"message\":\"Connection error.\"}";
         } catch (JSONException e) {
             e.printStackTrace();
-            return "{\"success\":error,\"message\":\"Connection error.\"}";
+            return "{\"success\":error,\"message\":\"Data error.\"}";
         }
 
         return result;

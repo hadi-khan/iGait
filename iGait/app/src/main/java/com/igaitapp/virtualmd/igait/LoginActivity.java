@@ -110,16 +110,16 @@ public class LoginActivity extends AppCompatActivity {
 
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra(MainActivity.EXTRA_USER, user);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     Toast.makeText(LoginActivity.this, "Logging in...", Toast.LENGTH_SHORT).show();
-
-                    finish();
                 } else if (success.equals("error")) {
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getBaseContext(), "Invalid e-mail or password.", Toast.LENGTH_LONG).show();
                 }
             } catch (JSONException e) {
+                Toast.makeText(getBaseContext(), "Data error.", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
         }
@@ -154,9 +154,9 @@ public class LoginActivity extends AppCompatActivity {
                 result = convertInputStreamToString(inputStream);
                 jsonObject = new JSONObject(result);
                 String success = jsonObject.getString("success");
-                JSONObject jsonObjectUser = jsonObject.getJSONObject("message");
 
                 if (success.equals("true")) {
+                    JSONObject jsonObjectUser = jsonObject.getJSONObject("message");
                     jsonObjectUser.put("accessToken", token);
 
                     jsonObject.put("message", jsonObjectUser);
@@ -173,7 +173,7 @@ public class LoginActivity extends AppCompatActivity {
             return "{\"success\":error,\"message\":\"Connection error.\"}";
         } catch (JSONException e) {
             e.printStackTrace();
-            return "{\"success\":error,\"message\":\"Connection error.\"}";
+            return "{\"success\":error,\"message\":\"Data error.\"}";
         }
 
         return result;

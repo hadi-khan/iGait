@@ -8,6 +8,15 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/no_patients"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/textViewNoPatients"
+        android:visibility="gone" />
+
     <ListView
         android:id="@+id/listViewPatients"
         android:layout_width="fill_parent"

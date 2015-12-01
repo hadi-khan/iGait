@@ -1,8 +1,10 @@
 package com.igaitapp.virtualmd.igait;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,10 +13,24 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class PatientProfileActivity extends AppCompatActivity {
@@ -48,8 +64,7 @@ public class PatientProfileActivity extends AppCompatActivity {
 
     private Patient patient = new Patient();
 
-    private DateFormat tf = new SimpleDateFormat("hh:mm:ss");
-    private DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+    private HashMap<String, String> changesMade = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +78,11 @@ public class PatientProfileActivity extends AppCompatActivity {
     }
 
     private void populateViews() {
+        DecimalFormat dfp = new DecimalFormat("#0000000000");
+        DecimalFormat dfz = new DecimalFormat("#00000");
+        DateFormat tf = new SimpleDateFormat("HH:mm:ss");
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+
         textViewLastName = (TextView) findViewById(R.id.textViewLastName);
         textViewFirstName = (TextView) findViewById(R.id.textViewFirstName);
         textViewEmail = (TextView) findViewById(R.id.textViewEmail);
@@ -92,26 +112,26 @@ public class PatientProfileActivity extends AppCompatActivity {
         textViewLastName.setText(patient.getLastName());
         textViewFirstName.setText(patient.getFirstName());
         textViewEmail.setText(patient.getContactInfo().getEmail());
-        textViewPhoneNumber.setText(patient.getContactInfo().getPhoneNumber().toString());
+        textViewPhoneNumber.setText(dfp.format(patient.getContactInfo().getPhoneNumber()));
         textViewExpectedWalkTime.setText(tf.format(patient.getExpectedWalkTime().getTime()));
         textViewBirthday.setText(df.format(patient.getBirthday()));
         textViewSex.setText(Character.toString(patient.getSex()));
         textViewAddress.setText(patient.getContactInfo().getAddress());
         textViewCity.setText(patient.getContactInfo().getCity());
         textViewState.setText(patient.getContactInfo().getState());
-        textViewZipCode.setText(Long.toString(patient.getContactInfo().getZipCode()));
+        textViewZipCode.setText(dfz.format(patient.getContactInfo().getZipCode()));
 
         editTextLastName.setText(patient.getLastName());
         editTextFirstName.setText(patient.getFirstName());
         editTextEmail.setText(patient.getContactInfo().getEmail());
-        editTextPhoneNumber.setText(patient.getContactInfo().getPhoneNumber().toString());
+        editTextPhoneNumber.setText(dfp.format(patient.getContactInfo().getPhoneNumber()));
         editTextExpectedWalkTime.setText(tf.format(patient.getExpectedWalkTime().getTime()));
         editTextBirthday.setText(df.format(patient.getBirthday()));
         editTextSex.setText(Character.toString(patient.getSex()));
         editTextAddress.setText(patient.getContactInfo().getAddress());
         editTextCity.setText(patient.getContactInfo().getCity());
         editTextState.setText(patient.getContactInfo().getState());
-        editTextZipCode.setText(Long.toString(patient.getContactInfo().getZipCode()));
+        editTextZipCode.setText(dfz.format(patient.getContactInfo().getZipCode()));
 
         switchPriority.setChecked(patient.isPriority());
     }
@@ -173,6 +193,12 @@ public class PatientProfileActivity extends AppCompatActivity {
     }
 
     private boolean checkChanges() {
+        DateFormat tf = new SimpleDateFormat("HH:mm:ss");
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+
+        HashMap<String, String> changesMade = new HashMap<>();
+        boolean result = false;
+
         List<String> changes = new ArrayList<>();
         List<String> original = new ArrayList<>();
         String lastName = editTextLastName.getText().toString().trim();
@@ -187,7 +213,43 @@ public class PatientProfileActivity extends AppCompatActivity {
         String state = editTextState.getText().toString().trim();
         String zipCode = editTextZipCode.getText().toString().trim();
         boolean priority = switchPriority.isChecked();
-        boolean result = false;
+
+        if (!lastName.equals(patient.getLastName())){
+            changesMade.put("last", lastName);
+        }
+        if (!firstName.equals(patient.getFirstName())){
+            changesMade.put("first", firstName);
+        }
+        if (!email.equals(patient.getContactInfo().getEmail())){
+            changesMade.put("email", email);
+        }
+        if (!phoneNumber.equals(Long.toString(patient.getContactInfo().getPhoneNumber()))) {
+            changesMade.put("mobilenumber", phoneNumber);
+        }
+        if (!expectedWalkTime.equals(tf.format(patient.getExpectedWalkTime()))) {
+            changesMade.put("expectedWalkTime", expectedWalkTime);
+        }
+        if (!birthday.equals(df.format(patient.getBirthday()))) {
+            changesMade.put("dateOfBirth", birthday);
+        }
+        if (!sex.equals(Character.toString(patient.getSex()))) {
+            changesMade.put("gender", sex);
+        }
+        if (!address.equals(patient.getContactInfo().getAddress())){
+            changesMade.put("address", address);
+        }
+        if (!city.equals(patient.getContactInfo().getCity())) {
+            changesMade.put("city", city);
+        }
+        if (!state.equals(patient.getContactInfo().getState())) {
+            changesMade.put("state", state);
+        }
+        if (!zipCode.equals(Long.toString(patient.getContactInfo().getZipCode()))) {
+            changesMade.put("zipcode", zipCode);
+        }
+        if (priority != patient.isPriority()) {
+            changesMade.put("priority", Boolean.toString(priority));
+        }
 
         changes.add(lastName);
         changes.add(firstName);
@@ -237,25 +299,172 @@ public class PatientProfileActivity extends AppCompatActivity {
             Toast.makeText(PatientProfileActivity.this, "Invalid sex.", Toast.LENGTH_SHORT).show();
             editTextSex.requestFocus();
         } else if (!InputCheck.address(address)) {
-            Toast.makeText(PatientProfileActivity.this, "Invalid office address.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(PatientProfileActivity.this, "Invalid address.", Toast.LENGTH_SHORT).show();
             editTextAddress.requestFocus();
         } else if (!InputCheck.city(city)) {
-            Toast.makeText(PatientProfileActivity.this, "Invalid office city.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(PatientProfileActivity.this, "Invalid city.", Toast.LENGTH_SHORT).show();
             editTextCity.requestFocus();
         } else if (!InputCheck.state(state)) {
-            Toast.makeText(PatientProfileActivity.this, "Invalid office state.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(PatientProfileActivity.this, "Invalid state.", Toast.LENGTH_SHORT).show();
             editTextState.requestFocus();
         } else if (!InputCheck.zipCode(zipCode)) {
-            Toast.makeText(PatientProfileActivity.this, "Invalid office zip code.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(PatientProfileActivity.this, "Invalid zip code.", Toast.LENGTH_SHORT).show();
             editTextZipCode.requestFocus();
         } else {
             result = true;
+            this.changesMade = changesMade;
         }
 
         return result;
     }
 
+    private class ServerConnect extends AsyncTask<Object, Void, String> {
+        @Override
+        protected String doInBackground(Object... urls) {
+            String urlPaths = (String) urls[0];
+            HashMap<String, String> changesMade = (HashMap<String, String>) urls[1];
+            String userToken = (String) urls[2];
+            String userId = (String) urls[3];
+
+            return PUT(urlPaths, changesMade, userToken, userId);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                String success = jsonObject.getString("success");
+                String message = jsonObject.getString("message");
+
+                if (success.equals("true")) {
+                    saveChanges();
+                    populateViews();
+                    Toast.makeText(getBaseContext(), "Changes saved.", Toast.LENGTH_LONG).show();
+                } else if (success.equals("error")) {
+                    Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getBaseContext(), "Invalid patient changes.", Toast.LENGTH_LONG).show();
+                }
+            } catch (JSONException e) {
+                Toast.makeText(getBaseContext(), "Data error.", Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public  static String PUT(String urlPaths, HashMap<String, String> changesMade, String userToken, String userID) {
+        String result = "";
+
+        DateFormat tf = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat tfh = new SimpleDateFormat("H");
+        SimpleDateFormat tfm = new SimpleDateFormat("m");
+        SimpleDateFormat tfs = new SimpleDateFormat("s");
+
+        try {
+            JSONObject jsonObject = new JSONObject();
+            if(changesMade.get("last") != null){
+                jsonObject.put("name.last", changesMade.get("last"));
+            }
+            if(changesMade.get("first") != null){
+                jsonObject.put("name.first", changesMade.get("first"));
+            }
+            if(changesMade.get("email") != null){
+                jsonObject.put("contact.email", changesMade.get("email"));
+            }
+            if(changesMade.get("mobilenumber") != null){
+                jsonObject.put("contact.mobilenumber", Long.parseLong(changesMade.get("mobilenumber")));
+            }
+            if(changesMade.get("expectedWalkTime") != null) {
+                Date expectedWalkTime = tf.parse(changesMade.get("expectedWalkTime"));
+
+                int hour = Integer.parseInt(tfh.format(expectedWalkTime));
+                int minute = Integer.parseInt(tfm.format(expectedWalkTime));
+                int second = Integer.parseInt(tfs.format(expectedWalkTime));
+
+                jsonObject.put("expectedWalkTime.hour", hour);
+                jsonObject.put("expectedWalkTime.minute", minute);
+                jsonObject.put("expectedWalkTime.second", second);
+            }
+            if(changesMade.get("dateOfBirth") != null){
+                jsonObject.put("dateOfBirth", changesMade.get("dateOfBirth"));
+            }
+            if(changesMade.get("address") != null){
+                jsonObject.put("contact.address", changesMade.get("address"));
+            }
+            if(changesMade.get("city") != null){
+                jsonObject.put("contact.city", changesMade.get("city"));
+            }
+            if(changesMade.get("state") != null){
+                jsonObject.put("contact.state", changesMade.get("state"));
+            }
+            if(changesMade.get("zipcode") != null){
+                jsonObject.put("contact.zipcode", Long.parseLong(changesMade.get("zipcode")));
+            }
+            if(changesMade.get("priority") != null){
+                jsonObject.put("priority", Boolean.parseBoolean(changesMade.get("priority")));
+            }
+            String jsonString = jsonObject.toString();
+
+
+            URL url = new URL(urlPaths);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            conn.setRequestMethod("PUT");
+            conn.setRequestProperty("Authorization", userToken);
+            conn.setRequestProperty("Id", userID);
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setConnectTimeout(50000);
+            conn.connect();
+
+            OutputStream os = conn.getOutputStream();
+            os.write(jsonString.getBytes("UTF-8"));
+            os.close();
+
+            InputStream inputStream = new BufferedInputStream(conn.getInputStream());
+            if(inputStream != null) {
+                result = convertInputStreamToString(inputStream);
+            }
+            else {
+                result = "{\"success\":error,\"message\":\"Connection error.\"}";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "{\"success\":error,\"message\":\"Connection error.\"}";
+        } catch (SecurityException e) {
+            e.printStackTrace();
+            return "{\"success\":error,\"message\":\"Connection error.\"}";
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return "{\"success\":error,\"message\":\"Data error.\"}";
+        } catch (ParseException pe) {
+            pe.printStackTrace();
+            return "{\"success\":error,\"message\":\"Data error.\"}";
+        }
+
+        return result;
+    }
+
+    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+        String line;
+        String result = "";
+
+        while ((line = bufferedReader.readLine()) != null) {
+            result += line;
+        }
+
+        inputStream.close();
+        return result;
+    }
+
     private void saveChanges() {
+        DateFormat tf = new SimpleDateFormat("HH:mm:ss");
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+
         patient.setLastName(editTextLastName.getText().toString().trim());
         patient.setFirstName(editTextFirstName.getText().toString().trim());
         patient.getContactInfo().setEmail(editTextEmail.getText().toString().trim());
@@ -319,9 +528,8 @@ public class PatientProfileActivity extends AppCompatActivity {
                 PatientProfileActivity.this.supportInvalidateOptionsMenu();
                 setTitle(R.string.title_activity_patient_profile);
 
-                saveChanges();
-                Toast.makeText(PatientProfileActivity.this, "Changes saved.", Toast.LENGTH_SHORT).show();
-                populateViews();
+                new ServerConnect().execute("http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/patient/" + patient.getId(),
+                        changesMade, patient.getUserToken(), patient.getUserId());
             }
 
             return true;

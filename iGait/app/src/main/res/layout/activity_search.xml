@@ -59,7 +59,7 @@
         android:layout_marginTop="16dp"
         android:text="@string/query_not_found"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:visibility="invisible" />
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/listViewPatientsSearch"

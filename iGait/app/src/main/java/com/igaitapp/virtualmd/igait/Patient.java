@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Patient implements Serializable {
-    private String lastName, firstName, id;
+    private String lastName, firstName, id, userId, userToken;
     private Date birthday, expectedWalkTime;;
     private char sex;
     private ContactInfo contactInfo = new ContactInfo();
@@ -27,18 +27,7 @@ public class Patient implements Serializable {
         this.priority = priority;
     }
 
-    public Patient(String lastName, String firstName, Date expectedWalkTime, Date birthday, char sex, ContactInfo contactInfo, List<GaitHealth> gaitHealth, boolean priority) {
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.expectedWalkTime = expectedWalkTime;
-        this.birthday = birthday;
-        this.sex = sex;
-        this.contactInfo = contactInfo;
-        this.gaitHealth = gaitHealth;
-        this.priority = priority;
-    }
-
-    public Patient(String lastName, String firstName, Date expectedWalkTime, Date birthday, char sex, ContactInfo contactInfo, List<GaitHealth> gaitHealth, boolean priority, String id) {
+    public Patient(String lastName, String firstName, Date expectedWalkTime, Date birthday, char sex, ContactInfo contactInfo, List<GaitHealth> gaitHealth, boolean priority, String id, String userId, String userToken) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.expectedWalkTime = expectedWalkTime;
@@ -48,6 +37,8 @@ public class Patient implements Serializable {
         this.gaitHealth = gaitHealth;
         this.priority = priority;
         this.id = id;
+        this.userId = userId;
+        this.userToken = userToken;
     }
 
     public String getLastName() {
@@ -112,5 +103,29 @@ public class Patient implements Serializable {
 
     public void setPriority(boolean priority) {
         this.priority = priority;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserToken() {
+        return userToken;
+    }
+
+    public void setUserToken(String userToken) {
+        this.userToken = userToken;
     }
 }

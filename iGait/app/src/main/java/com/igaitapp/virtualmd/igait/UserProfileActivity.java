@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -71,6 +72,9 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void populateViews() {
+        DecimalFormat dfp = new DecimalFormat("#0000000000");
+        DecimalFormat dfz = new DecimalFormat("#00000");
+
         textViewLastName = (TextView) findViewById(R.id.textViewLastName);
         textViewFirstName = (TextView) findViewById(R.id.textViewFirstName);
         textViewEmail = (TextView) findViewById(R.id.textViewEmail);
@@ -97,20 +101,20 @@ public class UserProfileActivity extends AppCompatActivity {
         textViewLastName.setText(user.getLastName());
         textViewFirstName.setText(user.getFirstName());
         textViewEmail.setText(user.getContactInfo().getEmail());
-        textViewOfficePhoneNumber.setText(user.getContactInfo().getPhoneNumber().toString());
+        textViewOfficePhoneNumber.setText(dfp.format(user.getContactInfo().getPhoneNumber()));
         textViewOfficeAddress.setText(user.getContactInfo().getAddress());
         textViewOfficeCity.setText(user.getContactInfo().getCity());
         textViewOfficeState.setText(user.getContactInfo().getState());
-        textViewOfficeZipCode.setText(Long.toString(user.getContactInfo().getZipCode()));
+        textViewOfficeZipCode.setText(dfz.format(user.getContactInfo().getZipCode()));
 
         editTextLastName.setText(user.getLastName());
         editTextFirstName.setText(user.getFirstName());
         editTextEmail.setText(user.getContactInfo().getEmail());
-        editTextOfficePhoneNumber.setText(user.getContactInfo().getPhoneNumber().toString());
+        editTextOfficePhoneNumber.setText(dfp.format(user.getContactInfo().getPhoneNumber()));
         editTextOfficeAddress.setText(user.getContactInfo().getAddress());
         editTextOfficeCity.setText(user.getContactInfo().getCity());
         editTextOfficeState.setText(user.getContactInfo().getState());
-        editTextOfficeZipCode.setText(Long.toString(user.getContactInfo().getZipCode()));
+        editTextOfficeZipCode.setText(dfz.format(user.getContactInfo().getZipCode()));
         editTextPassword.setText("");
         editTextRePassword.setText("");
     }
@@ -166,6 +170,8 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private boolean checkChanges() {
+        HashMap<String, String> changesMade = new HashMap<>();
+
         boolean result = false;
 
         String lastName = editTextLastName.getText().toString().trim();
@@ -244,6 +250,7 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         } else {
             result = true;
+            this.changesMade = changesMade;
         }
 
         return result;
@@ -279,6 +286,7 @@ public class UserProfileActivity extends AppCompatActivity {
                     Toast.makeText(getBaseContext(), "Invalid user changes.", Toast.LENGTH_LONG).show();
                 }
             } catch (JSONException e) {
+                Toast.makeText(getBaseContext(), "Data error.", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
         }
@@ -350,7 +358,7 @@ public class UserProfileActivity extends AppCompatActivity {
             return "{\"success\":error,\"message\":\"Connection error.\"}";
         } catch (JSONException e) {
             e.printStackTrace();
-            return "{\"success\":error,\"message\":\"Connection error.\"}";
+            return "{\"success\":error,\"message\":\"Data error.\"}";
         }
 
         return result;
@@ -400,18 +408,7 @@ public class UserProfileActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.home || id == R.id.up) {
-//            Intent intent = new Intent(UserProfileActivity.this, MainActivity.class);
-//            intent.putExtra(MainActivity.EXTRA_USER, user);
-//            startActivity(intent);
-            Intent intent = new Intent(UserProfileActivity.this, MainActivity.class);
-            intent.putExtra("result", user);
-            setResult(Activity.RESULT_OK, intent);
-            finish();
-
-            return true;
-        }
-        else if (id == R.id.action_edit_profile) {
+        if (id == R.id.action_edit_profile) {
             editable = !editable;
             editable();
 
@@ -421,7 +418,6 @@ public class UserProfileActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_logout) {
             Intent intent = new Intent(UserProfileActivity.this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             Toast.makeText(UserProfileActivity.this, "Logging out...", Toast.LENGTH_SHORT).show();
 
             startActivity(intent);
