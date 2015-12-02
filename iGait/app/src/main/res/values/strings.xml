@@ -84,7 +84,7 @@
     <string name="phone_number_hint">(10 digits)</string>
     <string name="office_phone_number_hint">(10 digits)</string>
     <string name="expected_walk_time_hint">(hh:mm:ss)</string>
-    <string name="birthday_hint">(mm/dd/yyy)</string>
+    <string name="birthday_hint">(mm/dd/yyyy)</string>
     <string name="sex_hint">(m or f)</string>
     <string name="address_hint">(1 - 30 chars)</string>
     <string name="office_address_hint">(1 - 30 chars)</string>
@@ -99,6 +99,7 @@
     <!-- errors -->
     <string name="invalid_query">Invalid search query.</string>
     <string name="query_not_found">Search query cannot be found.</string>
+    <string name="no_patients">No patients found.</string>
 
     <!-- info activities -->
     <string name="welcome">Welcome to\nthe iGait App</string>

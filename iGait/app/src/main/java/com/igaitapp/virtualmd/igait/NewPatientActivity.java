@@ -3,7 +3,6 @@ package com.igaitapp.virtualmd.igait;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -138,7 +137,7 @@ public class NewPatientActivity extends AppCompatActivity {
                 } else if (success.equals("error")) {
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getBaseContext(), "Invalid e-mail or password.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), "Invalid new patient.", Toast.LENGTH_LONG).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -146,7 +145,7 @@ public class NewPatientActivity extends AppCompatActivity {
         }
     }
 
-    public static String POST(String urlPaths, Patient newPatient, String userToken, String userEmail) {
+    public static String POST(String urlPaths, Patient newPatient, String userToken, String userId) {
         String result = "";
 
         SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
@@ -176,7 +175,6 @@ public class NewPatientActivity extends AppCompatActivity {
             jsonObjectExpectedWalkTime.put("minute", Integer.parseInt(tfm.format(newPatient.getExpectedWalkTime())));
             jsonObjectExpectedWalkTime.put("second", Integer.parseInt(tfs.format(newPatient.getExpectedWalkTime())));
             jsonObjectNewPatient.put("dateOfBirth", df.format(newPatient.getBirthday()));
-            jsonObjectNewPatient.put("admissionsDate", df.format(newPatient.getBirthday()));
             jsonObjectNewPatient.put("name", jsonObjectName);
             jsonObjectNewPatient.put("contact", jsonObjectContact);
             jsonObjectNewPatient.put("expectedWalkTime", jsonObjectExpectedWalkTime);
@@ -184,7 +182,7 @@ public class NewPatientActivity extends AppCompatActivity {
 
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Authorization", userToken);
-            conn.setRequestProperty("Email", userEmail);
+            conn.setRequestProperty("Id", userId);
             conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
             conn.setRequestProperty("Accept", "application/json");
             conn.setConnectTimeout(50000);
@@ -208,7 +206,7 @@ public class NewPatientActivity extends AppCompatActivity {
             return "{\"success\":error,\"message\":\"Connection error.\"}";
         } catch (JSONException e) {
             e.printStackTrace();
-            return "{\"success\":error,\"message\":\"Connection error.\"}";
+            return "{\"success\":error,\"message\":\"Data error.\"}";
         }
 
         return result;
@@ -225,21 +223,5 @@ public class NewPatientActivity extends AppCompatActivity {
 
         inputStream.close();
         return result;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.home) {
-            onBackPressed();
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 }
