@@ -11,8 +11,9 @@ var
 app.set('port', process.env.PORT || 80);
 
 //load configure
+app.use(morgan('dev'));
 app = config(app);
-app.use(morgan('combined'));
+
 
 
 //connecting to mongodb with mongoose

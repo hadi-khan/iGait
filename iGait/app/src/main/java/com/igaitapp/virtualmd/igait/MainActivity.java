@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     static final String EXTRA_PATIENT = "com.igaitapp.virtualmd.igait.PATIENT";
     static final String EXTRA_PATIENT_LIST = "com.igaitapp.virtualmd.igait.PATIENT_LIST";
     static final String EXTRA_USER = "com.igaitapp.virtualmd.igait.USER";
+    static final String EXTRA_RESULT = "com.igaitapp.virtualmd.igait.USER_RESULT";
 
     private User user = new User();
     private List<Patient> patientList = new ArrayList<>();
@@ -44,18 +44,34 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         user = (User) getIntent().getSerializableExtra(EXTRA_USER);
-        new ServerConnect().execute("http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/patient",
-                "http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/patient/health/");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        patientList = new ArrayList<>();
         new ServerConnect().execute("http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/patient",
                 "http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/patient/health/");
     }
+
+    @Override public void onBackPressed(){
+        Toast.makeText(getBaseContext(), "Logout to visit the login screen.", Toast.LENGTH_LONG).show();
+    }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        User userResult = user;
+//
+//        if (requestCode == 1) {
+//            if(resultCode == Activity.RESULT_OK) {
+//                userResult = (User) data.getSerializableExtra("result");
+//            }
+//        }
+//
+//        Log.d(":(", userResult.getLastName());
+//        user = new User();
+//        user = userResult;
+//    }
 
     private void populateListViewPatients() {
         if (!patientList.isEmpty()) {
@@ -83,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
     private class ServerConnect extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
-            return GET(urls[0], urls[1], user.getToken(), user.getContactInfo().getEmail());
+            return GET(urls[0], urls[1], user.getToken(), user.getId());
         }
 
         @Override
@@ -92,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
 
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS'Z'");
             SimpleDateFormat tf = new SimpleDateFormat("HH:mm:ss");
-            SimpleDateFormat dff = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
 
             try {
                 JSONObject jsonObject = new JSONObject(result);
@@ -100,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
                 String message = jsonObject.getString("message");
 
                 if (success.equals("true")) {
+                    patientList = new ArrayList<>();
+
                     JSONArray jsonArrayPatients = jsonObject.getJSONArray("message");
                     for (int i = 0; i < jsonArrayPatients.length(); i++) {
                         JSONObject patient = jsonArrayPatients.getJSONObject(i);
@@ -134,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (success.equals("error")) {
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getBaseContext(), "Invalid new patient.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), "Could not sync patients.", Toast.LENGTH_LONG).show();
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -144,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static String GET(String urlPaths, String urlPaths1, String token, String email) {
+    public static String GET(String urlPaths, String urlPaths1, String token, String id) {
         String result = "";
 
         try {
@@ -153,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
 
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Authorization", token);
-            conn.setRequestProperty("Email", email);
+            conn.setRequestProperty("id", id);
             conn.setConnectTimeout(50000);
             conn.connect();
 
@@ -171,18 +188,22 @@ public class MainActivity extends AppCompatActivity {
 
                         conn.setRequestMethod("GET");
                         conn.setRequestProperty("Authorization", token);
-                        conn.setRequestProperty("Email", email);
+                        conn.setRequestProperty("id", id);
                         conn.setConnectTimeout(50000);
                         conn.connect();
 
                         inputStream = new BufferedInputStream(conn.getInputStream());
                         if (inputStream != null) {
                             result = convertInputStreamToString(inputStream);
+
                             JSONObject jsonObjectHealth = new JSONObject(result);
                             success = jsonObjectHealth.getString("success");
 
                             if (success.equals("true")) {
                                 JSONArray jsonArrayHealth = jsonObjectHealth.getJSONArray("message");
+                                jsonArrayPatients.getJSONObject(i).put("health", jsonArrayHealth);
+                            } else {
+                                JSONArray jsonArrayHealth = new JSONArray("[]");
                                 jsonArrayPatients.getJSONObject(i).put("health", jsonArrayHealth);
                             }
                         }
@@ -204,7 +225,6 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
             return "{\"success\":error,\"message\":\"Connection error.\"}";
         }
-
         return result;
     }
 
@@ -240,8 +260,10 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_add_patient) {
             Intent intent = new Intent(MainActivity.this, NewPatientActivity.class);
             intent.putExtra(EXTRA_USER, user);
+//            startActivityForResult(intent, 1);
 
             startActivity(intent);
+            intent.removeExtra(EXTRA_USER);
 
             return true;
         } else if (id == R.id.action_search) {
@@ -257,7 +279,6 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(EXTRA_USER, user);
 
             startActivity(intent);
-
             return true;
         }
 

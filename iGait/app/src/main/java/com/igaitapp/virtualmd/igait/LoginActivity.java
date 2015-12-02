@@ -100,17 +100,18 @@ public class LoginActivity extends AppCompatActivity {
                     String officeState = jsonObjectContact.getString("state");
                     Long officeZipcode = jsonObjectContact.getLong("zipcode");
                     String token = jsonObjectUser.getString("accessToken");
+                    String id = jsonObjectUser.getString("_id");
 
                     ContactInfo contactInfo = new ContactInfo(officePhoneNumber, email,
                             officeAddress, officeCity, officeState, officeZipcode);
                     User user = new User(lastName, firstName, contactInfo);
                     user.setToken(token);
-
-                    Toast.makeText(LoginActivity.this, "Logging in...", Toast.LENGTH_SHORT).show();
+                    user.setId(id);
 
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra(MainActivity.EXTRA_USER, user);
                     startActivity(intent);
+                    Toast.makeText(LoginActivity.this, "Logging in...", Toast.LENGTH_SHORT).show();
 
                     finish();
                 } else if (success.equals("error")) {
@@ -152,12 +153,15 @@ public class LoginActivity extends AppCompatActivity {
             if (inputStream != null) {
                 result = convertInputStreamToString(inputStream);
                 jsonObject = new JSONObject(result);
-
+                String success = jsonObject.getString("success");
                 JSONObject jsonObjectUser = jsonObject.getJSONObject("message");
-                jsonObjectUser.put("accessToken", token);
 
-                jsonObject.put("message", jsonObjectUser);
-                result = jsonObject.toString();
+                if (success.equals("true")) {
+                    jsonObjectUser.put("accessToken", token);
+
+                    jsonObject.put("message", jsonObjectUser);
+                    result = jsonObject.toString();
+                }
             } else {
                 result = "{\"success\":error,\"message\":\"Connection error.\"}";
             }

@@ -168,7 +168,6 @@ ImplementationMongoose.prototype = {
         });
         mongoose.connection.close();
     },
-    //gets doctor by objectID and returns the Doctor
     getDoctorByObjectID: function(reqObjectID, callback){
         reqObjectID = ObjectId(reqObjectID);
         Models.Doctors.findOne({_id:reqObjectID}, function(err,doc){

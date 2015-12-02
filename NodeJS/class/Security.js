@@ -39,8 +39,6 @@ class Security{
     }
 
     static verifyPassword(password, stored){
-        console.log(password);
-        console.log(stored);
         // Parsed the stored password like this just in case
         // added random bytes produce a "." (delimiter)
         let index = stored.lastIndexOf('.');
@@ -48,24 +46,14 @@ class Security{
         let storedPassword = stored.slice(index + 1);
 
         password = salt + password;
-        console.log(password);
         password = hash(password);
 
-        console.log(salt);
-        console.log(password);
-
         let result = (password === storedPassword);
-        console.log(result);
         return result;
     }
 
     static verifyToken(token, callback){
-        console.log('Verify: ' + token);
         jwt.verify(token, secret, function(err, decoded){
-            if(err)
-                console.error(err);
-            else
-                console.log(decoded);
             callback(err, decoded);
         });
     }

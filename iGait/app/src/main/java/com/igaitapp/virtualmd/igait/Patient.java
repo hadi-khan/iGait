@@ -36,7 +36,6 @@ public class Patient implements Serializable {
         this.contactInfo = contactInfo;
         this.gaitHealth = gaitHealth;
         this.priority = priority;
-        this.id = id;
     }
 
     public Patient(String lastName, String firstName, Date expectedWalkTime, Date birthday, char sex, ContactInfo contactInfo, List<GaitHealth> gaitHealth, boolean priority, String id) {

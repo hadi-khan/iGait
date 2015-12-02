@@ -10,16 +10,9 @@ const PATIENT_DELETE_MESSAGE = 'patient deleted';
 //TODO implement the new db function for finding a patient
 router.route('/patient')
     .get(function(req, res){
-        let email = req.header('email');
-
-        db.getDoctorByEmail(email, searchPatients);
-        function searchPatients(err, doctor){
-            if(err){
-                res.json({success: 'false', message: err});
-            }else if(doctor) {
-                db.getDoctorPatients(doctor._id, reply);
-            }
-        }
+        let doctorId = req.header('id');
+        //TODO may have to wrap id with ObjectId in bridge
+        db.getDoctorPatients(doctorId, reply);
         function reply(err, patients){
             if(err){
                 res.json({success: 'false', message: err});
@@ -30,22 +23,15 @@ router.route('/patient')
     })
     .post(function(req, res){
         let newPatient = Models.Patients(req.body);
-        let email = req.header('email');
+        //TODO May have to wrap this with ObjectId inside of bridge.
+        newPatient.doctor = req.header('id');
 
-        db.getDoctorByEmail(email, assignPatient);
-        function assignPatient(err, doctor){
+        db.createPatient(newPatient, reply);
+        function reply(err, patient){
             if(err){
-                res.json({success: 'false', message:err});
-            }
-            newPatient.doctor = doctor._id;
-
-            db.createPatient(newPatient, reply);
-            function reply(err, patient){
-                if(err){
-                    res.json({success: 'false', message: err});
-                } else if(patient){
-                    res.json({success: 'true', message: patient});
-                }
+                res.json({success: 'false', message: err});
+            } else if(patient){
+                res.json({success: 'true', message: patient});
             }
         }
     });
@@ -55,7 +41,7 @@ router.route('/patient/:id')
         let id = req.params.id;
         let changes = req.body;
 
-        db.updatePaitent(id, changes, reply);
+        db.updatePatient(id, changes, reply);
         function reply(err, patient){
             if(err){
                 res.json({success: 'false', message: err});
