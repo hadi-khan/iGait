@@ -49,11 +49,16 @@ class mongoImpl{
     mongoose.connection.close();
 }
     getDoctorByObjectID(reqObjectID, callback){
-    reqObjectID = ObjectId(reqObjectID);
-    Models.Doctors.findOne({_id:reqObjectID}, function(err,doc){
-        callback(err,doc);
-    });
-}
+        reqObjectID = ObjectId(reqObjectID);
+        Models.Doctors.findOne({_id:reqObjectID}, function(err,doc){
+            callback(err,doc);
+        });
+    }
+    getDoctorByEmail(reqEmail, callback){
+        Models.Doctors.findOne({email:reqEmail}, function(err,doc){
+            callback(err,doc);
+        });
+    }
     //gets patient by objectID and returns the Patient
     getPatientByObjectID(reqObjectID, callback){
     reqObjectID = ObjectId(reqObjectID);

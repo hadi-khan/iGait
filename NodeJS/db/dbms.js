@@ -55,6 +55,12 @@ class databaseManager{
             this._impl.getDoctorByObjectID(reqObjectID, callback);     // Forward request to implementor
         }
     }
+    getDoctorByEmail(reqEmail, callback){
+        // Check if any implementor is bound and has the required method:
+        if(this._impl && this._impl.getDoctorByEmail) {
+            this._impl.getDoctorByEmail(reqEmail, callback);     // Forward request to implementor
+        }
+    }
     getPatientByObjectID(reqObjectID, callback){
         // Check if any implementor is bound and has the required method:
         if(this._impl && this._impl.getPatientByObjectID){
