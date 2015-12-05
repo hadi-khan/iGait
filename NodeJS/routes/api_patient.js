@@ -1,9 +1,10 @@
 'use strict';
 
 let express = require('express');
-let dbmgr = require('../controllers/bridge');
+let dbmgr = require('../db/dbms');
 let Models = require('../models');
-let db = dbmgr.bridge(1);
+//let db = dbmgr.bridge(1);
+let db = new dbmgr();
 let router = express.Router();
 
 const PATIENT_DELETE_MESSAGE = 'patient deleted';

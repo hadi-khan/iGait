@@ -8,12 +8,13 @@
 
 'use strict';
 var mongoose = require('mongoose');
-let Security = require('./Security');
-let Models = require('../models');
-let dbmgr = require('../controllers/bridge');
+let Security = require('./../class/Security');
+let Models = require('../models/index');
+let dbmgr = require('./dbms');
 let ObjectId = mongoose.Schema.Types;
 
-let db = dbmgr.bridge(1);
+//let db = dbmgr.bridge(1);
+let db = new dbmgr();
 db.connectDB();
 
 let newDoctor1 = Models.Doctors({email:"hadi.abdul@mavs.uta.edu",password:Security.hashPassword("doc1"),name:{first:"hadi",last:"abdul"},contact:{officenumber:"1111111111",officeaddress:"701 S Nedderman Dr",state:"tx",city:"arlington",zipcode:"76019"},accessToken:""});

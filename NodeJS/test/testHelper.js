@@ -4,7 +4,7 @@
  * Modified from https://github.com/elliotf/mocha-mongoose
  */
 var mongoose = require('mongoose');
-let dbmgr = require('../controllers/bridge');
+let dbmgr = require('../db/dbms');
 let dbAddress = dbmgr.bridge(1)._dbAddress;
 
 // ensure the NODE_ENV is set to 'test'
