@@ -12,7 +12,7 @@ let Security = require('../class/Security');
 var Models = require('../models');
 let ObjectId = mongoose.Schema.Types;
 // import our DBMGR and connect to it.
-let dbmgr = require('../controllers/bridge');
+let dbmgr = require('../db/dbms');
 let db = dbmgr.bridge(1);
 db.connectDB();
 

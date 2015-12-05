@@ -5,10 +5,11 @@
 'use strict';
 let express = require('express');
 let Security = require('../class/Security');
-let dbmgr = require('../controllers/bridge');
+let dbmgr = require('../db/dbms');
 let Models = require('../models');
 
-let db = dbmgr.bridge(1);
+//let db = dbmgr.bridge(1);
+let db = new dbmgr();
 let router = express.Router();
 
 // Log in with an email / password combination and receive a token.
