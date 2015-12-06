@@ -12,6 +12,7 @@ let Security = require('./../class/Security');
 let Models = require('../models/index');
 let dbmgr = require('./dbms');
 let ObjectId = mongoose.Schema.Types;
+let async = require('async');
 
 //let db = dbmgr.bridge(1);
 let db = new dbmgr();
@@ -95,80 +96,120 @@ let newHealth10_4 = Models.Health({health:2,start_time:new Date(2015,11,21,14,25
 let newHealth10_5 = Models.Health({health:3,start_time:new Date(2015,11,22,14,25,0,0).toISOString(),end_time:new Date(2015,11,22,14,26,0,0).toISOString(),patient:newPatient10._id});
 
 
-db.createDoctor(newDoctor1, replyDoc);
-db.createDoctor(newDoctor2, replyDoc);
-db.createDoctor(newDoctor3, replyDoc);
 
-db.createPatient(newPatient1, replyPatient);
-db.createPatient(newPatient2, replyPatient);
-db.createPatient(newPatient3, replyPatient);
-db.createPatient(newPatient4, replyPatient);
-db.createPatient(newPatient5, replyPatient);
-db.createPatient(newPatient6, replyPatient);
-db.createPatient(newPatient7, replyPatient);
-db.createPatient(newPatient8, replyPatient);
-db.createPatient(newPatient9, replyPatient);
-db.createPatient(newPatient10, replyPatient);
-
-db.createHealth(newHealth1_1, replyHealth);
-db.createHealth(newHealth1_2, replyHealth);
-db.createHealth(newHealth1_3, replyHealth);
-db.createHealth(newHealth1_4, replyHealth);
-db.createHealth(newHealth1_5, replyHealth);
-db.createHealth(newHealth2_1, replyHealth);
-db.createHealth(newHealth2_2, replyHealth);
-db.createHealth(newHealth2_3, replyHealth);
-db.createHealth(newHealth2_4, replyHealth);
-db.createHealth(newHealth2_5, replyHealth);
-db.createHealth(newHealth3_1, replyHealth);
-db.createHealth(newHealth3_2, replyHealth);
-db.createHealth(newHealth3_3, replyHealth);
-db.createHealth(newHealth3_4, replyHealth);
-db.createHealth(newHealth3_5, replyHealth);
-db.createHealth(newHealth4_1, replyHealth);
-db.createHealth(newHealth4_2, replyHealth);
-db.createHealth(newHealth4_3, replyHealth);
-db.createHealth(newHealth4_4, replyHealth);
-db.createHealth(newHealth4_5, replyHealth);
-db.createHealth(newHealth5_1, replyHealth);
-db.createHealth(newHealth5_2, replyHealth);
-db.createHealth(newHealth5_3, replyHealth);
-db.createHealth(newHealth5_4, replyHealth);
-db.createHealth(newHealth5_5, replyHealth);
-db.createHealth(newHealth6_1, replyHealth);
-db.createHealth(newHealth6_2, replyHealth);
-db.createHealth(newHealth6_3, replyHealth);
-db.createHealth(newHealth6_4, replyHealth);
-db.createHealth(newHealth6_5, replyHealth);
-db.createHealth(newHealth7_1, replyHealth);
-db.createHealth(newHealth7_2, replyHealth);
-db.createHealth(newHealth7_3, replyHealth);
-db.createHealth(newHealth7_4, replyHealth);
-db.createHealth(newHealth7_5, replyHealth);
-db.createHealth(newHealth8_1, replyHealth);
-db.createHealth(newHealth8_2, replyHealth);
-db.createHealth(newHealth8_3, replyHealth);
-db.createHealth(newHealth8_4, replyHealth);
-db.createHealth(newHealth8_5, replyHealth);
-db.createHealth(newHealth9_1, replyHealth);
-db.createHealth(newHealth9_2, replyHealth);
-db.createHealth(newHealth9_3, replyHealth);
-db.createHealth(newHealth9_4, replyHealth);
-db.createHealth(newHealth9_5, replyHealth);
-db.createHealth(newHealth10_1, replyHealth);
-db.createHealth(newHealth10_2, replyHealth);
-db.createHealth(newHealth10_3, replyHealth);
-db.createHealth(newHealth10_4, replyHealth);
-db.createHealth(newHealth10_5, replyHealthWithDisconnect);
-
-function replyHealthWithDisconnect(err, health){
-    if(err) {
-        console.log("health err: "+ err);
-    }else if(health){
-        console.log("Success: Health and Disconnect");
-        //setTimeout(db.disconnectDB(), 10000);
+async.series([
+    function(callback){
+        callback(null,
+            newDoctor1,newDoctor2,newDoctor3,
+            newPatient1,newPatient2,newPatient3,newPatient4,newPatient5,newPatient6,newPatient7,newPatient8,newPatient9,newPatient10,
+            newHealth1_1,newHealth1_2,newHealth1_3,newHealth1_4,newHealth1_5,
+            newHealth2_1,newHealth2_2,newHealth2_3,newHealth2_4,newHealth2_5,
+            newHealth3_1,newHealth3_2,newHealth3_3,newHealth3_4,newHealth3_5,
+            newHealth4_1,newHealth4_2,newHealth4_3,newHealth4_4,newHealth4_5,
+            newHealth5_1,newHealth5_2,newHealth5_3,newHealth5_4,newHealth5_5,
+            newHealth6_1,newHealth6_2,newHealth6_3,newHealth6_4,newHealth6_5,
+            newHealth7_1,newHealth7_2,newHealth7_3,newHealth7_4,newHealth7_5,
+            newHealth8_1,newHealth8_2,newHealth8_3,newHealth8_4,newHealth8_5,
+            newHealth9_1,newHealth9_2,newHealth9_3,newHealth9_4,newHealth9_5,
+            newHealth10_1,newHealth10_2,newHealth10_3,newHealth10_4,newHealth10_5
+        )
+    },
+    //create doctors
+    function(){
+        console.log("Preparing for db commands");
+    },
+    setTimeout(function(){ db.createDoctor(newDoctor1, replyDoc); }, 3000),
+    setTimeout(function(){ db.createDoctor(newDoctor2, replyDoc); }, 3000),
+    setTimeout(function(){ db.createDoctor(newDoctor3, replyDoc); }, 3000),
+    ////create patients
+    setTimeout(function(){ db.createPatient(newPatient1, replyPatient); }, 4000),
+    setTimeout(function(){ db.createPatient(newPatient2, replyPatient); }, 4000),
+    setTimeout(function(){ db.createPatient(newPatient3, replyPatient); }, 4000),
+    setTimeout(function(){ db.createPatient(newPatient4, replyPatient); }, 4000),
+    setTimeout(function(){ db.createPatient(newPatient5, replyPatient); }, 4000),
+    setTimeout(function(){ db.createPatient(newPatient6, replyPatient); }, 4000),
+    setTimeout(function(){ db.createPatient(newPatient7, replyPatient); }, 4000),
+    setTimeout(function(){ db.createPatient(newPatient8, replyPatient); }, 4000),
+    setTimeout(function(){ db.createPatient(newPatient9, replyPatient); }, 4000),
+    setTimeout(function(){ db.createPatient(newPatient10, replyPatient); }, 4000),
+    //create health records
+    setTimeout(function(){ db.createHealth(newHealth1_1, replyHealth); }, 5000),
+    setTimeout(function(){ db.createHealth(newHealth1_2, replyHealth); }, 5100),
+    setTimeout(function(){ db.createHealth(newHealth1_3, replyHealth); }, 5200),
+    setTimeout(function(){ db.createHealth(newHealth1_4, replyHealth); }, 5300),
+    setTimeout(function(){ db.createHealth(newHealth1_5, replyHealth); }, 5400),
+    setTimeout(function(){ db.createHealth(newHealth2_1, replyHealth); }, 5500),
+    setTimeout(function(){ db.createHealth(newHealth2_2, replyHealth); }, 5600),
+    setTimeout(function(){ db.createHealth(newHealth2_3, replyHealth); }, 5700),
+    setTimeout(function(){ db.createHealth(newHealth2_4, replyHealth); }, 5800),
+    setTimeout(function(){ db.createHealth(newHealth2_5, replyHealth); }, 5900),
+    setTimeout(function(){ db.createHealth(newHealth3_1, replyHealth); }, 6000),
+    setTimeout(function(){ db.createHealth(newHealth3_2, replyHealth); }, 6100),
+    setTimeout(function(){ db.createHealth(newHealth3_3, replyHealth); }, 6200),
+    setTimeout(function(){ db.createHealth(newHealth3_4, replyHealth); }, 6300),
+    setTimeout(function(){ db.createHealth(newHealth3_5, replyHealth); }, 6400),
+    setTimeout(function(){ db.createHealth(newHealth4_1, replyHealth); }, 6500),
+    setTimeout(function(){ db.createHealth(newHealth4_2, replyHealth); }, 6600),
+    setTimeout(function(){ db.createHealth(newHealth4_3, replyHealth); }, 6700),
+    setTimeout(function(){ db.createHealth(newHealth4_4, replyHealth); }, 6800),
+    setTimeout(function(){ db.createHealth(newHealth4_5, replyHealth); }, 6900),
+    setTimeout(function(){ db.createHealth(newHealth5_1, replyHealth); }, 7000),
+    setTimeout(function(){ db.createHealth(newHealth5_2, replyHealth); }, 7100),
+    setTimeout(function(){ db.createHealth(newHealth5_3, replyHealth); }, 7200),
+    setTimeout(function(){ db.createHealth(newHealth5_4, replyHealth); }, 7300),
+    setTimeout(function(){ db.createHealth(newHealth5_5, replyHealth); }, 7400),
+    setTimeout(function(){ db.createHealth(newHealth6_1, replyHealth); }, 7500),
+    setTimeout(function(){ db.createHealth(newHealth6_2, replyHealth); }, 7600),
+    setTimeout(function(){ db.createHealth(newHealth6_3, replyHealth); }, 7700),
+    setTimeout(function(){ db.createHealth(newHealth6_4, replyHealth); }, 7800),
+    setTimeout(function(){ db.createHealth(newHealth6_5, replyHealth); }, 7900),
+    setTimeout(function(){ db.createHealth(newHealth7_1, replyHealth); }, 8000),
+    setTimeout(function(){ db.createHealth(newHealth7_2, replyHealth); }, 8100),
+    setTimeout(function(){ db.createHealth(newHealth7_3, replyHealth); }, 8200),
+    setTimeout(function(){ db.createHealth(newHealth7_4, replyHealth); }, 8200),
+    setTimeout(function(){ db.createHealth(newHealth7_5, replyHealth); }, 8400),
+    setTimeout(function(){ db.createHealth(newHealth8_1, replyHealth); }, 8500),
+    setTimeout(function(){ db.createHealth(newHealth8_2, replyHealth); }, 8600),
+    setTimeout(function(){ db.createHealth(newHealth8_3, replyHealth); }, 8700),
+    setTimeout(function(){ db.createHealth(newHealth8_4, replyHealth); }, 8800),
+    setTimeout(function(){ db.createHealth(newHealth8_5, replyHealth); }, 8900),
+    setTimeout(function(){ db.createHealth(newHealth9_1, replyHealth); }, 9000),
+    setTimeout(function(){ db.createHealth(newHealth9_2, replyHealth); }, 9100),
+    setTimeout(function(){ db.createHealth(newHealth9_3, replyHealth); }, 9200),
+    setTimeout(function(){ db.createHealth(newHealth9_4, replyHealth); }, 9300),
+    setTimeout(function(){ db.createHealth(newHealth9_5, replyHealth); }, 9400),
+    setTimeout(function(){ db.createHealth(newHealth10_1, replyHealth); }, 9500),
+    setTimeout(function(){ db.createHealth(newHealth10_2, replyHealth); }, 9600),
+    setTimeout(function(){ db.createHealth(newHealth10_3, replyHealth); }, 9700),
+    setTimeout(function(){ db.createHealth(newHealth10_4, replyHealth); }, 9800),
+    setTimeout(function(){ db.createHealth(newHealth10_5, replyHealthWithDisconnect); }, 9900),
+], function (err, result) {
+    // result now equals 'done'
+    if(err){
+        console.log("err: ");
+    }else{
+        console.log("Finish");
     }
-    else {
+});
+function replyDoc(err, doctor){
+    if(err){
+        console.log("doctor err: "+ err);
+    } else if(doctor){
+        console.log("Success: Doctor");
+    }
+    else{
+        console.log("This shouldn't have happend");
+    }
+}
+var k = 0;
+function replyPatient(err, patient){
+    if(err) {
+        console.log("patient err: "+ err);
+    }else if(patient){
+        console.log("Success: Patient");
+        k = k+1;
+    }
+    else{
         console.log("This shouldn't have happend");
     }
 }
@@ -182,23 +223,17 @@ function replyHealth(err, health){
         console.log("This shouldn't have happend");
     }
 }
-function replyPatient(err, patient){
+function replyHealthWithDisconnect(err, health){
     if(err) {
-        console.log("patient err: "+ err);
-    }else if(patient){
-        console.log("Success: Patient");
+        console.log("health err: "+ err);
+    }else if(health){
+        console.log("Success: Health and Disconnect");
+        //setTimeout(db.disconnectDB(), 10000);
     }
-    else{
+    else {
         console.log("This shouldn't have happend");
     }
 }
-function replyDoc(err, doctor){
-    if(err){
-        console.log("doctor err: "+ err);
-    } else if(doctor){
-        console.log("Success: Doctor");
-    }
-    else{
-        console.log("This shouldn't have happend");
-    }
-}
+
+
+
