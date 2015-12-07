@@ -4,7 +4,7 @@ let express = require('express');
 let dbmgr = require('../db/dbms.js');
 let Security = require('../class/Security');
 
-//let db = dbmgr.bridge(1);
+
 let db = new dbmgr();
 let router = express.Router();
 

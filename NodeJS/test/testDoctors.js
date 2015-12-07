@@ -3,17 +3,17 @@
 'use strict';
 
 // import the moongoose helper utilities
-var mongoose = require('mongoose');
+let mongoose = require('mongoose');
 //var utils = require('./testHelper');
-var should = require('should');
+let should = require('should');
 // import our security module
 let Security = require('../class/Security');
 // import our User mongoose model
-var Models = require('../models');
+let Models = require('../models');
 let ObjectId = mongoose.Schema.Types;
 // import our DBMGR and connect to it.
 let dbmgr = require('../db/dbms');
-let db = dbmgr.bridge(1);
+let db = new dbmgr();
 db.connectDB();
 
 
