@@ -1,0 +1,19 @@
+Hi,
+
+Here's the data file I generated. The first row is the header and shows what these numbers represent. The time I put is basically the timestamp calculated using timeval in C++ and is a time offset starting from Jan 1 1970 (You can easily convert it to date time in C++ or just use it as it is)
+   I've also attached two files as they appear in the reference column for your tests. Please let me know if you have any questions. 
+
+
+Mostafa Parchami
+-- 
+_____________________________________
+Mostafa Parchami, 
+PhD. in Computer Science
+Dept. of Computer Science and Engineering
+University of Texas at Arlington, Texas, USA
+Mobile: +1 (682) 227-3476
+Web:    Google Website
+        LinkedIn
+E-Mail: Mostafa.Parchami@Gmail.com
+        Mostafa.Parchami@Mavs.UTA.Edu
+        Parchami@Basu.ac.ir
