@@ -5,6 +5,8 @@
  */
 var mongoose = require('mongoose');
 let dbmgr = require('../db/dbms');
+//need to change next line.
+//It's implemented in the old db code.
 let dbAddress = dbmgr.bridge(1)._dbAddress;
 
 // ensure the NODE_ENV is set to 'test'
