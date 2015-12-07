@@ -1,0 +1,4 @@
+{"source": {
+    "include": [ "NodeJS/" ],
+    "exclude": [ "NodeJS/node_modules" ]
+}}

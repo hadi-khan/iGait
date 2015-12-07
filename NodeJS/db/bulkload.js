@@ -3,7 +3,7 @@
  */
 
 
-//To run
+//To run:
 //node bulkload.js
 
 'use strict';
@@ -14,7 +14,7 @@ let dbmgr = require('./dbms');
 let ObjectId = mongoose.Schema.Types;
 let async = require('async');
 
-//let db = dbmgr.bridge(1);
+
 let db = new dbmgr();
 db.connectDB();
 
@@ -96,7 +96,8 @@ let newHealth10_4 = Models.Health({health:2,start_time:new Date(2015,11,21,14,25
 let newHealth10_5 = Models.Health({health:3,start_time:new Date(2015,11,22,14,25,0,0).toISOString(),end_time:new Date(2015,11,22,14,26,0,0).toISOString(),patient:newPatient10._id});
 
 
-
+//This is can be improved by taking out setTimeout.
+//Need to do callback properly.
 async.series([
     function(callback){
         callback(null,
