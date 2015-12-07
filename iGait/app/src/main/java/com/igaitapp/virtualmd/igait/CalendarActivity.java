@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
@@ -12,8 +11,6 @@ import android.widget.ListView;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
-import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -86,9 +83,6 @@ public class CalendarActivity extends AppCompatActivity {
                 gaitHealth = gaitHealthList.get(i);
                 currentDay = gaitHealth.getStartTime();
 
-                gaitHealthSum += gaitHealth.getHealth();
-                gaitHealthCount += 1;
-
                 try {
                     currentDay = df.parse(df.format(currentDay));
                     prevDay = df.parse(df.format(prevDay));
@@ -118,6 +112,9 @@ public class CalendarActivity extends AppCompatActivity {
                     gaitHealthSum = 0;
                     gaitHealthCount = 0;
                 }
+
+                gaitHealthSum += gaitHealth.getHealth();
+                gaitHealthCount += 1;
             }
         }
 
@@ -177,8 +174,8 @@ public class CalendarActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.home) {
-            onBackPressed();
+        if (id == android.R.id.home) {
+            finish();
             return true;
         }
 

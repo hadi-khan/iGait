@@ -1,11 +1,11 @@
 package com.igaitapp.virtualmd.igait;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.inputmethod.InputMethodManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,11 +25,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.List;
 
 public class UserProfileActivity extends AppCompatActivity {
     private TextView textViewLastName;
@@ -65,10 +61,19 @@ public class UserProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
-        user = (User) getIntent().getSerializableExtra(MainActivity.EXTRA_USER);
+        user = Session.getUser();
 
         populateViews();
         editable();
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        editTextLastName.requestFocus();
+        imm.hideSoftInputFromWindow(editTextLastName.getWindowToken(), 0);
     }
 
     private void populateViews() {
@@ -279,6 +284,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 if (success.equals("true")) {
                     saveChanges();
                     populateViews();
+                    changesMade = new HashMap<>();
                     Toast.makeText(getBaseContext(), "Changes saved.", Toast.LENGTH_LONG).show();
                 } else if (success.equals("error")) {
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
@@ -386,6 +392,8 @@ public class UserProfileActivity extends AppCompatActivity {
         user.getContactInfo().setCity(editTextOfficeCity.getText().toString().trim());
         user.getContactInfo().setState(editTextOfficeState.getText().toString().trim());
         user.getContactInfo().setZipCode(Long.parseLong(editTextOfficeZipCode.getText().toString().trim()));
+
+        Session.setUser(user);
     }
 
     @Override
@@ -408,7 +416,10 @@ public class UserProfileActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_edit_profile) {
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        } else if (id == R.id.action_edit_profile) {
             editable = !editable;
             editable();
 

@@ -104,12 +104,11 @@ public class LoginActivity extends AppCompatActivity {
 
                     ContactInfo contactInfo = new ContactInfo(officePhoneNumber, email,
                             officeAddress, officeCity, officeState, officeZipcode);
-                    User user = new User(lastName, firstName, contactInfo);
-                    user.setToken(token);
-                    user.setId(id);
+                    User user = new User(lastName, firstName, contactInfo, id, token);
+
+                    Session.setUser(user);
 
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra(MainActivity.EXTRA_USER, user);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     Toast.makeText(LoginActivity.this, "Logging in...", Toast.LENGTH_SHORT).show();
@@ -163,12 +162,15 @@ public class LoginActivity extends AppCompatActivity {
                     result = jsonObject.toString();
                 }
             } else {
+                Log.d("BUG", "BUG");
                 result = "{\"success\":error,\"message\":\"Connection error.\"}";
             }
         } catch (IOException e) {
+            Log.d("BUG", "BUG1");
             e.printStackTrace();
             return "{\"success\":error,\"message\":\"Connection error.\"}";
         } catch (SecurityException e) {
+            Log.d("BUG", "BUG2");
             e.printStackTrace();
             return "{\"success\":error,\"message\":\"Connection error.\"}";
         } catch (JSONException e) {

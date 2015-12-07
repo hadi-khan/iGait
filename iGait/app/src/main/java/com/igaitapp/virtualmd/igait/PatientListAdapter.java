@@ -52,11 +52,12 @@ public class PatientListAdapter extends BaseAdapter {
 
         final Patient patient = getItem(position);
         List<GaitHealth> gaitHealthList = patient.getGaitHealth();
-        Calendar weekPrev = Calendar.getInstance(), weekCurrent = Calendar.getInstance();
+        Calendar prevDate = Calendar.getInstance(), currDate = Calendar.getInstance();
         GaitHealth gaitHealth;
 
         int gaitHealthSum = 0, gaitHealthCount = 0, confidenceSum = 0, confidenceCount = 0;;
         int[] health = {0, 0, 0, 0};
+        int hours = 0, minutes = 0, seconds = 0, diff = 0;
         double confidencePercent = 0d;
 
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -74,31 +75,17 @@ public class PatientListAdapter extends BaseAdapter {
 
         if (!gaitHealthList.isEmpty()) {
             gaitHealth = gaitHealthList.get(0);
-            weekPrev.setTime(gaitHealth.getStartTime());
+            prevDate.setTime(gaitHealth.getStartTime());
             for (int i = 0; i < gaitHealthList.size(); i++) {
                 gaitHealth = gaitHealthList.get(i);
-                weekCurrent.setTime(gaitHealth.getStartTime());
+                currDate.setTime(gaitHealth.getStartTime());
 
-                gaitHealthSum += gaitHealth.getHealth();
-                gaitHealthCount += 1;
+                if (prevDate.get(Calendar.DAY_OF_YEAR) == currDate.get(Calendar.DAY_OF_YEAR)  || (i + 1) == gaitHealthList.size()) {
+                    confidenceCount += 1;
+                }
 
-                int h = 0, m = 0, s = 0, diff = 0;
-
-                s = Integer.parseInt(tfs.format(gaitHealth.getEndTime()));
-                m = Integer.parseInt(tfm.format(gaitHealth.getEndTime())) * 60 + s;
-                h = Integer.parseInt(tfh.format(gaitHealth.getEndTime())) * 60 * 60 + m;
-
-                diff = h;
-
-                s = Integer.parseInt(tfs.format(gaitHealth.getStartTime()));
-                m = Integer.parseInt(tfm.format(gaitHealth.getStartTime())) * 60 + s;
-                h = Integer.parseInt(tfh.format(gaitHealth.getStartTime())) * 60 * 60 + m;
-
-                confidenceSum += diff - h;
-                confidenceCount += 1;
-
-                if (weekPrev.get(Calendar.WEEK_OF_YEAR) != weekCurrent.get(Calendar.WEEK_OF_YEAR) || (i + 1) == gaitHealthList.size()) {
-                    weekPrev.setTime(gaitHealth.getStartTime());
+                if (prevDate.get(Calendar.WEEK_OF_YEAR) != currDate.get(Calendar.WEEK_OF_YEAR) || (i + 1) == gaitHealthList.size()) {
+                    prevDate.setTime(gaitHealth.getStartTime());
 
                     for (int o = 0; o < 3; o++) {
                         health[o] = health[o + 1];
@@ -117,17 +104,30 @@ public class PatientListAdapter extends BaseAdapter {
                     gaitHealthSum = 0;
                     gaitHealthCount = 0;
                 }
+
+                gaitHealthSum += gaitHealth.getHealth();
+                gaitHealthCount += 1;
+
+                seconds = Integer.parseInt(tfs.format(gaitHealth.getEndTime()));
+                minutes = Integer.parseInt(tfm.format(gaitHealth.getEndTime())) * 60 + seconds;
+                hours = Integer.parseInt(tfh.format(gaitHealth.getEndTime())) * 60 * 60 + minutes;
+
+                diff = hours;
+
+                seconds = Integer.parseInt(tfs.format(gaitHealth.getStartTime()));
+                minutes = Integer.parseInt(tfm.format(gaitHealth.getStartTime())) * 60 + seconds;
+                hours = Integer.parseInt(tfh.format(gaitHealth.getStartTime())) * 60 * 60 + minutes;
+
+                confidenceSum += diff - hours;
             }
         }
 
         if (confidenceCount != 0) {
-            int h = 0, m = 0, s = 0;
+            seconds = Integer.parseInt(tfs.format(patient.getExpectedWalkTime()));
+            minutes = Integer.parseInt(tfm.format(patient.getExpectedWalkTime())) * 60 + seconds;
+            hours = Integer.parseInt(tfh.format(patient.getExpectedWalkTime())) * 60 * 60 + minutes;
 
-            s = Integer.parseInt(tfs.format(patient.getExpectedWalkTime()));
-            m = Integer.parseInt(tfm.format(patient.getExpectedWalkTime())) * 60 + s;
-            h = Integer.parseInt(tfh.format(patient.getExpectedWalkTime())) * 60 * 60 + m;
-
-            confidencePercent = ((double) confidenceSum / confidenceCount / h) * 100d;
+            confidencePercent = ((double) confidenceSum / confidenceCount / hours) * 100d;
 
             if (confidencePercent > 75) {
                 imageViewConfidence.setImageResource(R.drawable.conf_100);

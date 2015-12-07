@@ -1,10 +1,12 @@
 package com.igaitapp.virtualmd.igait;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -22,17 +24,29 @@ public class SearchActivity extends AppCompatActivity {
     private HashMap<String, List<Patient>> patientMap = new HashMap<>();
     private List<Patient> patientList = new ArrayList<>(), patientResultList = new ArrayList<>();
     private String lastName = "Last Name", firstName = "First Name", age = "Age", selectedFilter = lastName;
+    private EditText editTextSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        patientList = (List<Patient>) getIntent().getSerializableExtra(MainActivity.EXTRA_PATIENT_LIST);
+        editTextSearch = (EditText) findViewById(R.id.editTextSearch);
+
+        patientList = Session.getUser().getPatientList();
 
         hashifyLastName();
 
         populateSpinnerFilter();
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        editTextSearch.requestFocus();
+        imm.hideSoftInputFromWindow(editTextSearch.getWindowToken(), 0);
     }
 
     private void populateSpinnerFilter() {
@@ -74,7 +88,6 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void performSearch(View v) {
-        EditText editTextSearch = (EditText) findViewById(R.id.editTextSearch);
         String query = editTextSearch.getText().toString().trim().toLowerCase(), queryKey;
         Patient patient = new Patient();
         int exactCount = 0;
@@ -268,7 +281,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 Patient tappedPatient = patientResultList.get(position);
-                Intent intent = new Intent(SearchActivity.this, CalendarSearchActivity.class);
+                Intent intent = new Intent(SearchActivity.this, CalendarActivity.class);
 
                 intent.putExtra(MainActivity.EXTRA_PATIENT, tappedPatient);
 
@@ -293,8 +306,8 @@ public class SearchActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.home) {
-            onBackPressed();
+        if (id == android.R.id.home) {
+            finish();
             return true;
         }
 

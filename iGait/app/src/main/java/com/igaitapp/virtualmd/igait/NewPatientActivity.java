@@ -1,9 +1,12 @@
 package com.igaitapp.virtualmd.igait;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,28 +22,42 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class NewPatientActivity extends AppCompatActivity {
+    private EditText editTextLastName;
+    private EditText editTextFirstName;
+    private EditText editTextEmail;
+    private EditText editTextPhoneNumber;
+    private EditText editTextExpectedWalkTime;
+    private EditText editTextBirthday;
+    private EditText editTextSex;
+    private EditText editTextAddress;
+    private EditText editTextCity;
+    private EditText editTextState;
+    private EditText editTextZipCode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_patient);
 
-        final User user = (User) getIntent().getSerializableExtra(MainActivity.EXTRA_USER);
+        editTextLastName = (EditText) findViewById(R.id.editTextLastName);
+        editTextFirstName = (EditText) findViewById(R.id.editTextFirstName);
+        editTextEmail = (EditText) findViewById(R.id.editTextEmail);
+        editTextAddress = (EditText) findViewById(R.id.editTextEmail);
+        editTextPhoneNumber = (EditText) findViewById(R.id.editTextPhoneNumber);
+        editTextExpectedWalkTime = (EditText) findViewById(R.id.editTextExpectedWalkTime);
+        editTextBirthday = (EditText) findViewById(R.id.editTextBirthday);
+        editTextSex = (EditText) findViewById(R.id.editTextSex);
+        editTextAddress = (EditText) findViewById(R.id.editTextAddress);
+        editTextCity = (EditText) findViewById(R.id.editTextCity);
+        editTextState = (EditText) findViewById(R.id.editTextState);
+        editTextZipCode = (EditText) findViewById(R.id.editTextZipCode);
 
-        final EditText editTextLastName = (EditText) findViewById(R.id.editTextLastName);
-        final EditText editTextFirstName = (EditText) findViewById(R.id.editTextFirstName);
-        final EditText editTextEmail = (EditText) findViewById(R.id.editTextEmail);
-        final EditText editTextPhoneNumber = (EditText) findViewById(R.id.editTextPhoneNumber);
-        final EditText editTextExpectedWalkTime = (EditText) findViewById(R.id.editTextExpectedWalkTime);
-        final EditText editTextBirthday = (EditText) findViewById(R.id.editTextBirthday);
-        final EditText editTextSex = (EditText) findViewById(R.id.editTextSex);
-        final EditText editTextAddress = (EditText) findViewById(R.id.editTextAddress);
-        final EditText editTextCity = (EditText) findViewById(R.id.editTextCity);
-        final EditText editTextState = (EditText) findViewById(R.id.editTextState);
-        final EditText editTextZipCode = (EditText) findViewById(R.id.editTextZipCode);
         final Button submitButton = (Button) findViewById(R.id.submitButton);
 
         submitButton.setOnClickListener(new View.OnClickListener() {
@@ -57,8 +74,8 @@ public class NewPatientActivity extends AppCompatActivity {
                 String city = editTextCity.getText().toString().trim();
                 String state = editTextState.getText().toString().trim();
                 String zipCode = editTextZipCode.getText().toString().trim();
-                String userToken = user.getToken();
-                String userId = user.getId();
+                String userId = Session.getUser().getId();
+                String userToken = Session.getUser().getToken();
 
                 if (!InputCheck.name(lastName)) {
                     Toast.makeText(NewPatientActivity.this, "Invalid last name.", Toast.LENGTH_SHORT).show();
@@ -96,10 +113,19 @@ public class NewPatientActivity extends AppCompatActivity {
                 } else {
                     new ServerConnect().execute("http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/patient",
                             lastName, firstName, expectedWalkTime, birthday, sex,
-                            phoneNumber, email, address, city, state, zipCode, userToken, userId);
+                            phoneNumber, email, address, city, state, zipCode, userId, userToken);
                 }
             }
         });
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        editTextLastName.requestFocus();
+        imm.hideSoftInputFromWindow(editTextLastName.getWindowToken(), 0);
     }
 
     private class ServerConnect extends AsyncTask<String, Void, String> {
@@ -126,12 +152,16 @@ public class NewPatientActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
+            DateFormat tf = new SimpleDateFormat("HH:mm:ss");
+            SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+
             try {
                 JSONObject jsonObject = new JSONObject(result);
                 String success = jsonObject.getString("success");
                 String message = jsonObject.getString("message");
 
                 if (success.equals("true")) {
+                    saveChanges();
                     Toast.makeText(NewPatientActivity.this, "New patient added.", Toast.LENGTH_SHORT).show();
                     finish();
                 } else if (success.equals("error")) {
@@ -145,7 +175,7 @@ public class NewPatientActivity extends AppCompatActivity {
         }
     }
 
-    public static String POST(String urlPaths, Patient newPatient, String userToken, String userId) {
+    public static String POST(String urlPaths, Patient newPatient, String userId, String userToken) {
         String result = "";
 
         SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
@@ -223,5 +253,48 @@ public class NewPatientActivity extends AppCompatActivity {
 
         inputStream.close();
         return result;
+    }
+
+    private void saveChanges() {
+        DateFormat tf = new SimpleDateFormat("HH:mm:ss");
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+
+        Patient newPatient = new Patient();
+
+        newPatient.setLastName(editTextLastName.getText().toString().trim());
+        newPatient.setFirstName(editTextFirstName.getText().toString().trim());
+        newPatient.getContactInfo().setEmail(editTextEmail.getText().toString().trim());
+        newPatient.getContactInfo().setPhoneNumber(Long.parseLong(editTextPhoneNumber.getText().toString().trim()));
+
+        try {
+            newPatient.setExpectedWalkTime(tf.parse(editTextExpectedWalkTime.getText().toString().trim()));
+            newPatient.setBirthday(df.parse(editTextBirthday.getText().toString().trim()));
+        } catch (ParseException pe) {
+            pe.printStackTrace();
+        }
+
+        newPatient.setSex(editTextSex.getText().toString().charAt(0));
+        newPatient.getContactInfo().setAddress(editTextAddress.getText().toString().trim());
+        newPatient.getContactInfo().setCity(editTextCity.getText().toString().trim());
+        newPatient.getContactInfo().setState(editTextState.getText().toString().trim());
+        newPatient.getContactInfo().setZipCode(Long.parseLong(editTextZipCode.getText().toString().trim()));
+
+        Session.getUser().getPatientList().add(newPatient);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == android.R.id.home) {
+            finish();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

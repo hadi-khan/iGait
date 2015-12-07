@@ -1,13 +1,14 @@
 package com.igaitapp.virtualmd.igait;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -70,6 +71,8 @@ public class PatientProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_profile);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         patient = (Patient) getIntent().getSerializableExtra(MainActivity.EXTRA_PATIENT);
 
@@ -190,6 +193,15 @@ public class PatientProfileActivity extends AppCompatActivity {
 
             switchPriority.setEnabled(true);
         }
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        editTextLastName.requestFocus();
+        imm.hideSoftInputFromWindow(editTextLastName.getWindowToken(), 0);
     }
 
     private boolean checkChanges() {
@@ -341,6 +353,7 @@ public class PatientProfileActivity extends AppCompatActivity {
                 if (success.equals("true")) {
                     saveChanges();
                     populateViews();
+                    changesMade = new HashMap<>();
                     Toast.makeText(getBaseContext(), "Changes saved.", Toast.LENGTH_LONG).show();
                 } else if (success.equals("error")) {
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
@@ -506,7 +519,7 @@ public class PatientProfileActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.up) {
+        if (id == android.R.id.home) {
             finish();
             return true;
         } else if (id == R.id.action_edit_profile) {

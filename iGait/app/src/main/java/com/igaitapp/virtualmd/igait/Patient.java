@@ -10,7 +10,7 @@ public class Patient implements Serializable {
     private Date birthday, expectedWalkTime;;
     private char sex;
     private ContactInfo contactInfo = new ContactInfo();
-    private List<GaitHealth> gaitHealth = new ArrayList<GaitHealth>();
+    private List<GaitHealth> gaitHealth = new ArrayList<>();
     private boolean priority;
 
     public Patient() {
