@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -514,16 +515,12 @@ public class PatientProfileActivity extends AppCompatActivity {
                 conn.setConnectTimeout(50000);
                 conn.connect();
 
-                OutputStream os = conn.getOutputStream();
-                os.write(jsonString.getBytes("UTF-8"));
-                os.close();
+                int responseCode = conn.getResponseCode();
 
-                InputStream inputStream = new BufferedInputStream(conn.getInputStream());
-                if(inputStream != null) {
-                    result = convertInputStreamToString(inputStream);
-                }
-                else {
-                    result = "{\"success\":error,\"message\":\"Connection error.\"}";
+                if (responseCode == 200) {
+                    result = "{\"success\":true,\"message\":\"patient deleted\"}";
+                } else {
+                    result = "{\"success\":false,\"message\":\"patient not deleted\"}";
                 }
             } catch (IOException e) {
                 e.printStackTrace();
