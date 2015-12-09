@@ -2,12 +2,12 @@ package com.igaitapp.virtualmd.igait;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class User implements Serializable {
     private String lastName, firstName, id, token, password;
     private ContactInfo contactInfo = new ContactInfo();
-    private List<Patient> patientList;
 
     public User() {
 
@@ -17,17 +17,6 @@ public class User implements Serializable {
         this.lastName = lastName;
         this.firstName = firstName;
         this.contactInfo = contactInfo;
-        this.id = id;
-        this.token = token;
-    }
-
-    public User(String lastName, String firstName, ContactInfo contactInfo, List<Patient> patientList, String id, String token) {
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.contactInfo = contactInfo;
-        this.patientList = patientList;
-        this.id = id;
-        this.token = token;
     }
 
     public User(String lastName, String firstName, ContactInfo contactInfo, String id, String token) {
@@ -60,14 +49,6 @@ public class User implements Serializable {
 
     public void setContactInfo(ContactInfo contactInfo) {
         this.contactInfo = contactInfo;
-    }
-
-    public List<Patient> getPatientList() {
-        return patientList;
-    }
-
-    public void setPatientList(List<Patient> patientList) {
-        this.patientList = new ArrayList<>(patientList);
     }
 
     public String getId() {

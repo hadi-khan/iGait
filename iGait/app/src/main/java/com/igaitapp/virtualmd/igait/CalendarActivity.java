@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
@@ -31,10 +32,19 @@ public class CalendarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_calendar);
 
         patient = (Patient) getIntent().getSerializableExtra(MainActivity.EXTRA_PATIENT);
-
         populateListViewPatient();
         populateCalendarViewHealth();
         restoreCalendar(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!Session.getPatientListMap().isEmpty()) {
+            patient = Session.getPatientListMap().getUsingKey(patient.getId());
+            populateListViewPatient();
+        }
     }
 
     @Override
@@ -90,7 +100,7 @@ public class CalendarActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                if (!(currentDay.equals(prevDay)) || (i + 1) == gaitHealthList.size()) {
+                if (!currentDay.equals(prevDay)) {
                     if (Math.round(gaitHealthSum / gaitHealthCount) == 3) {
                         caldroidFragment.setBackgroundResourceForDate(R.color.GameGreen, prevDay);
                         caldroidFragment.setTextColorForDate(R.color.PlainWhite, prevDay);
@@ -115,6 +125,25 @@ public class CalendarActivity extends AppCompatActivity {
 
                 gaitHealthSum += gaitHealth.getHealth();
                 gaitHealthCount += 1;
+
+                if (i == (gaitHealthList.size() - 1)) {
+                    if (Math.round(gaitHealthSum / gaitHealthCount) == 3) {
+                        caldroidFragment.setBackgroundResourceForDate(R.color.GameGreen, prevDay);
+                        caldroidFragment.setTextColorForDate(R.color.PlainWhite, prevDay);
+                    } else if (Math.round(gaitHealthSum / gaitHealthCount) == 2) {
+                        caldroidFragment.setBackgroundResourceForDate(R.color.MusicOrange, prevDay);
+                        caldroidFragment.setTextColorForDate(R.color.PlainWhite, prevDay);
+                    } else if (Math.round(gaitHealthSum / gaitHealthCount) == 1) {
+                        caldroidFragment.setBackgroundResourceForDate(R.color.MovieRed, prevDay);
+                        caldroidFragment.setTextColorForDate(R.color.PlainWhite, prevDay);
+                    } else if ((gaitHealthSum / gaitHealthCount) > 0) {
+                        caldroidFragment.setBackgroundResourceForDate(R.color.StarGrey, prevDay);
+                        caldroidFragment.setTextColorForDate(R.color.PlainWhite, prevDay);
+                    } else {
+                        caldroidFragment.setBackgroundResourceForDate(R.color.StarGrey, prevDay);
+                        caldroidFragment.setTextColorForDate(R.color.PlainWhite, prevDay);
+                    }
+                }
             }
         }
 

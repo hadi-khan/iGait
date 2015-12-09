@@ -1,11 +1,13 @@
 package com.igaitapp.virtualmd.igait;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -23,12 +25,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class LoginActivity extends AppCompatActivity {
+    private EditText editTextUserName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        final EditText editTextUserName = (EditText) findViewById(R.id.editTextUserName);
+        editTextUserName = (EditText) findViewById(R.id.editTextUserName);
         final EditText editTextPassword = (EditText) findViewById(R.id.editTextPassword);
         Button buttonSubmit = (Button) findViewById(R.id.buttonSubmit);
         Button buttonRegister = (Button) findViewById(R.id.buttonRegister);
@@ -68,6 +72,12 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void closeKB() {
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        editTextUserName.requestFocus();
+        imm.hideSoftInputFromWindow(editTextUserName.getWindowToken(), 0);
     }
 
     private class ServerConnect extends AsyncTask<String, Void, String> {
@@ -110,6 +120,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    closeKB();
                     startActivity(intent);
                     Toast.makeText(LoginActivity.this, "Logging in...", Toast.LENGTH_SHORT).show();
                 } else if (success.equals("error")) {

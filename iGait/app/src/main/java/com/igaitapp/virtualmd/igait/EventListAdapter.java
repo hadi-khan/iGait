@@ -51,7 +51,7 @@ public class EventListAdapter extends BaseAdapter {
         LayoutInflater inflater;
         View view;
 
-        TextView textViewG1;
+        ImageView imageViewHealth;
         TextView textViewInfoLeft, textViewInfoRight;
         ImageView imageViewVideoNotif;
 
@@ -61,7 +61,7 @@ public class EventListAdapter extends BaseAdapter {
         inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view = inflater.inflate(R.layout.event_item, null);
 
-        textViewG1 = (TextView) view.findViewById(R.id.textViewG1);
+        imageViewHealth = (ImageView) view.findViewById(R.id.imageViewHealth1);
         textViewInfoLeft = (TextView) view.findViewById(R.id.textViewInfoLeft);
         textViewInfoRight = (TextView) view.findViewById(R.id.textViewInfoRight);
         imageViewVideoNotif = (ImageView) view.findViewById(R.id.imageViewVideoNotif);
@@ -69,16 +69,16 @@ public class EventListAdapter extends BaseAdapter {
         gaitHealth = getItem(position);
 
         if (gaitHealth.getHealth() == 3) {
-            textViewG1.setTextColor(Color.parseColor("#ff689f38"));
+            imageViewHealth.setImageResource(R.drawable.health_green);
         }
         else if (gaitHealth.getHealth() == 2) {
-            textViewG1.setTextColor(Color.parseColor("#ffef6c00"));
+            imageViewHealth.setImageResource(R.drawable.health_orange);
         }
         else if (gaitHealth.getHealth() == 1) {
-            textViewG1.setTextColor(Color.parseColor("#ffed3b3b"));
+            imageViewHealth.setImageResource(R.drawable.health_red);
         }
         else {
-            textViewG1.setTextColor(Color.parseColor("#ffb7b7b7"));
+            imageViewHealth.setImageResource(R.drawable.health_grey);
         }
 
         if (!gaitHealth.hasVideo()) {

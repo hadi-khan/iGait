@@ -65,7 +65,6 @@
             android:name=".SearchActivity"
             android:label="@string/title_activity_search"
             android:launchMode="singleTop"
-            android:configChanges="keyboardHidden|orientation|screenSize"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

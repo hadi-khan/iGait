@@ -1,6 +1,8 @@
 package com.igaitapp.virtualmd.igait;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -199,6 +201,10 @@ public class PatientProfileActivity extends AppCompatActivity {
     protected void onPause(){
         super.onPause();
 
+        closeKB();
+    }
+
+    private void closeKB() {
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         editTextLastName.requestFocus();
         imm.hideSoftInputFromWindow(editTextLastName.getWindowToken(), 0);
@@ -333,12 +339,32 @@ public class PatientProfileActivity extends AppCompatActivity {
     private class ServerConnect extends AsyncTask<Object, Void, String> {
         @Override
         protected String doInBackground(Object... urls) {
-            String urlPaths = (String) urls[0];
-            HashMap<String, String> changesMade = (HashMap<String, String>) urls[1];
-            String userToken = (String) urls[2];
-            String userId = (String) urls[3];
+            String keyWord = (String) urls[0];
+            String urlPaths;
+            String userToken;
+            String userId;
 
-            return PUT(urlPaths, changesMade, userToken, userId);
+            if(keyWord.equals("DELETE")){
+                urlPaths = (String) urls[1];
+                HashMap<String, String> changesMade = (HashMap<String, String>) urls[2];
+                userToken = (String) urls[3];
+                userId = (String) urls[4];
+            } else {
+                keyWord = "EDIT";
+                urlPaths = (String) urls[0];
+                HashMap<String, String> changesMade = (HashMap<String, String>) urls[1];
+                userToken = (String) urls[2];
+                userId = (String) urls[3];
+            }
+
+            try {
+                return PUT(keyWord,urlPaths, changesMade, userToken, userId);
+            } catch (JSONException e) {
+                Toast.makeText(getBaseContext(), "Data error.", Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
+
+            return keyWord;
         }
 
         @Override
@@ -351,10 +377,20 @@ public class PatientProfileActivity extends AppCompatActivity {
                 String message = jsonObject.getString("message");
 
                 if (success.equals("true")) {
-                    saveChanges();
-                    populateViews();
-                    changesMade = new HashMap<>();
-                    Toast.makeText(getBaseContext(), "Changes saved.", Toast.LENGTH_LONG).show();
+                    if(!(message.equals("patient deleted"))){
+                        saveChanges();
+                        populateViews();
+                        changesMade = new HashMap<>();
+                        Toast.makeText(getBaseContext(), "Changes saved.", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getBaseContext(), "Patient deleted.", Toast.LENGTH_LONG).show();
+
+                        Session.getPatientListMap().removeUsingKey(patient.getId());
+
+                        Intent intent = new Intent(PatientProfileActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    }
                 } else if (success.equals("error")) {
                     Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show();
                 } else {
@@ -367,95 +403,135 @@ public class PatientProfileActivity extends AppCompatActivity {
         }
     }
 
-    public  static String PUT(String urlPaths, HashMap<String, String> changesMade, String userToken, String userID) {
+    public  static String PUT(String key,String urlPaths, HashMap<String, String> changesMade, String userToken, String userID) throws JSONException {
         String result = "";
 
-        DateFormat tf = new SimpleDateFormat("HH:mm:ss");
-        SimpleDateFormat tfh = new SimpleDateFormat("H");
-        SimpleDateFormat tfm = new SimpleDateFormat("m");
-        SimpleDateFormat tfs = new SimpleDateFormat("s");
+        if(key.equals("EDIT")){
+            DateFormat tf = new SimpleDateFormat("HH:mm:ss");
+            SimpleDateFormat tfh = new SimpleDateFormat("H");
+            SimpleDateFormat tfm = new SimpleDateFormat("m");
+            SimpleDateFormat tfs = new SimpleDateFormat("s");
 
-        try {
-            JSONObject jsonObject = new JSONObject();
-            if(changesMade.get("last") != null){
-                jsonObject.put("name.last", changesMade.get("last"));
-            }
-            if(changesMade.get("first") != null){
-                jsonObject.put("name.first", changesMade.get("first"));
-            }
-            if(changesMade.get("email") != null){
-                jsonObject.put("contact.email", changesMade.get("email"));
-            }
-            if(changesMade.get("mobilenumber") != null){
-                jsonObject.put("contact.mobilenumber", Long.parseLong(changesMade.get("mobilenumber")));
-            }
-            if(changesMade.get("expectedWalkTime") != null) {
-                Date expectedWalkTime = tf.parse(changesMade.get("expectedWalkTime"));
+            try {
+                JSONObject jsonObject = new JSONObject();
+                if(changesMade.get("last") != null){
+                    jsonObject.put("name.last", changesMade.get("last"));
+                }
+                if(changesMade.get("first") != null){
+                    jsonObject.put("name.first", changesMade.get("first"));
+                }
+                if(changesMade.get("email") != null){
+                    jsonObject.put("contact.email", changesMade.get("email"));
+                }
+                if(changesMade.get("mobilenumber") != null){
+                    jsonObject.put("contact.mobilenumber", Long.parseLong(changesMade.get("mobilenumber")));
+                }
+                if(changesMade.get("expectedWalkTime") != null) {
+                    Date expectedWalkTime = tf.parse(changesMade.get("expectedWalkTime"));
 
-                int hour = Integer.parseInt(tfh.format(expectedWalkTime));
-                int minute = Integer.parseInt(tfm.format(expectedWalkTime));
-                int second = Integer.parseInt(tfs.format(expectedWalkTime));
+                    int hour = Integer.parseInt(tfh.format(expectedWalkTime));
+                    int minute = Integer.parseInt(tfm.format(expectedWalkTime));
+                    int second = Integer.parseInt(tfs.format(expectedWalkTime));
 
-                jsonObject.put("expectedWalkTime.hour", hour);
-                jsonObject.put("expectedWalkTime.minute", minute);
-                jsonObject.put("expectedWalkTime.second", second);
-            }
-            if(changesMade.get("dateOfBirth") != null){
-                jsonObject.put("dateOfBirth", changesMade.get("dateOfBirth"));
-            }
-            if(changesMade.get("address") != null){
-                jsonObject.put("contact.address", changesMade.get("address"));
-            }
-            if(changesMade.get("city") != null){
-                jsonObject.put("contact.city", changesMade.get("city"));
-            }
-            if(changesMade.get("state") != null){
-                jsonObject.put("contact.state", changesMade.get("state"));
-            }
-            if(changesMade.get("zipcode") != null){
-                jsonObject.put("contact.zipcode", Long.parseLong(changesMade.get("zipcode")));
-            }
-            if(changesMade.get("priority") != null){
-                jsonObject.put("priority", Boolean.parseBoolean(changesMade.get("priority")));
-            }
-            String jsonString = jsonObject.toString();
+                    jsonObject.put("expectedWalkTime.hour", hour);
+                    jsonObject.put("expectedWalkTime.minute", minute);
+                    jsonObject.put("expectedWalkTime.second", second);
+                }
+                if(changesMade.get("dateOfBirth") != null){
+                    jsonObject.put("dateOfBirth", changesMade.get("dateOfBirth"));
+                }
+                if(changesMade.get("gender") != null){
+                    jsonObject.put("gender", changesMade.get("gender"));
+                }
+                if(changesMade.get("address") != null){
+                    jsonObject.put("contact.address", changesMade.get("address"));
+                }
+                if(changesMade.get("city") != null){
+                    jsonObject.put("contact.city", changesMade.get("city"));
+                }
+                if(changesMade.get("state") != null){
+                    jsonObject.put("contact.state", changesMade.get("state"));
+                }
+                if(changesMade.get("zipcode") != null){
+                    jsonObject.put("contact.zipcode", Long.parseLong(changesMade.get("zipcode")));
+                }
+                if(changesMade.get("priority") != null){
+                    jsonObject.put("priority", Boolean.parseBoolean(changesMade.get("priority")));
+                }
+                String jsonString = jsonObject.toString();
 
 
-            URL url = new URL(urlPaths);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                URL url = new URL(urlPaths);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            conn.setRequestMethod("PUT");
-            conn.setRequestProperty("Authorization", userToken);
-            conn.setRequestProperty("Id", userID);
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-            conn.setRequestProperty("Accept", "application/json");
-            conn.setConnectTimeout(50000);
-            conn.connect();
+                conn.setRequestMethod("PUT");
+                conn.setRequestProperty("Authorization", userToken);
+                conn.setRequestProperty("Id", userID);
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                conn.setRequestProperty("Accept", "application/json");
+                conn.setConnectTimeout(50000);
+                conn.connect();
 
-            OutputStream os = conn.getOutputStream();
-            os.write(jsonString.getBytes("UTF-8"));
-            os.close();
+                OutputStream os = conn.getOutputStream();
+                os.write(jsonString.getBytes("UTF-8"));
+                os.close();
 
-            InputStream inputStream = new BufferedInputStream(conn.getInputStream());
-            if(inputStream != null) {
-                result = convertInputStreamToString(inputStream);
+                InputStream inputStream = new BufferedInputStream(conn.getInputStream());
+                if(inputStream != null) {
+                    result = convertInputStreamToString(inputStream);
+                }
+                else {
+                    result = "{\"success\":error,\"message\":\"Connection error.\"}";
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "{\"success\":error,\"message\":\"Connection error.\"}";
+            } catch (SecurityException e) {
+                e.printStackTrace();
+                return "{\"success\":error,\"message\":\"Connection error.\"}";
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return "{\"success\":error,\"message\":\"Data error.\"}";
+            } catch (ParseException pe) {
+                pe.printStackTrace();
+                return "{\"success\":error,\"message\":\"Data error.\"}";
             }
-            else {
-                result = "{\"success\":error,\"message\":\"Connection error.\"}";
+
+        } else {
+            try {
+                JSONObject jsonObject = new JSONObject();
+                String jsonString = jsonObject.toString();
+                URL url = new URL(urlPaths);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                conn.setRequestMethod("DELETE");
+                conn.setRequestProperty("Authorization", userToken);
+                conn.setRequestProperty("id", userID);
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                conn.setRequestProperty("Accept", "application/json");
+                conn.setConnectTimeout(50000);
+                conn.connect();
+
+                OutputStream os = conn.getOutputStream();
+                os.write(jsonString.getBytes("UTF-8"));
+                os.close();
+
+                InputStream inputStream = new BufferedInputStream(conn.getInputStream());
+                if(inputStream != null) {
+                    result = convertInputStreamToString(inputStream);
+                }
+                else {
+                    result = "{\"success\":error,\"message\":\"Connection error.\"}";
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "{\"success\":error,\"message\":\"Connection error.\"}";
+            } catch (SecurityException e) {
+                e.printStackTrace();
+                return "{\"success\":error,\"message\":\"Connection error.\"}";
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "{\"success\":error,\"message\":\"Connection error.\"}";
-        } catch (SecurityException e) {
-            e.printStackTrace();
-            return "{\"success\":error,\"message\":\"Connection error.\"}";
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return "{\"success\":error,\"message\":\"Data error.\"}";
-        } catch (ParseException pe) {
-            pe.printStackTrace();
-            return "{\"success\":error,\"message\":\"Data error.\"}";
         }
 
         return result;
@@ -497,6 +573,10 @@ public class PatientProfileActivity extends AppCompatActivity {
         patient.getContactInfo().setZipCode(Long.parseLong(editTextZipCode.getText().toString().trim()));
 
         patient.setPriority(switchPriority.isChecked());
+
+        Session.getPatientListMap().replaceUsingKey(patient.getId(), patient);
+
+        closeKB();
     }
 
     @Override
@@ -531,7 +611,36 @@ public class PatientProfileActivity extends AppCompatActivity {
 
             return true;
         } else if (id == R.id.action_delete_profile) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
 
+            // Setting Dialog Title
+            alertDialog.setTitle("Confirm Delete...");
+
+            // Setting Dialog Message
+            alertDialog.setMessage("Delete this patient?");
+
+            // Setting Positive "Yes" Button
+            alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // Patient will be deleted
+                    Toast.makeText(getApplicationContext(), "Deleting Patient", Toast.LENGTH_SHORT).show();
+                    new ServerConnect().execute("DELETE", "http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/patient/" + patient.getId(),
+                            changesMade, patient.getUserToken(), patient.getUserId());
+                    finish();
+                }
+
+            });
+
+            // Patient will not be deleted
+            alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // Close the dialog.
+                    dialog.cancel();
+                }
+            });
+
+            // Showing Alert Message
+            alertDialog.show();
             return true;
         } else if (id == R.id.action_save_edit_profile) {
             if (checkChanges()) {
@@ -553,6 +662,7 @@ public class PatientProfileActivity extends AppCompatActivity {
             PatientProfileActivity.this.supportInvalidateOptionsMenu();
             setTitle(R.string.title_activity_patient_profile);
 
+            closeKB();
             populateViews();
 
             return true;

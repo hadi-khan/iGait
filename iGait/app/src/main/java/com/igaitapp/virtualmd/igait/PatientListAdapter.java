@@ -80,13 +80,7 @@ public class PatientListAdapter extends BaseAdapter {
                 gaitHealth = gaitHealthList.get(i);
                 currDate.setTime(gaitHealth.getStartTime());
 
-                if (prevDate.get(Calendar.DAY_OF_YEAR) == currDate.get(Calendar.DAY_OF_YEAR)  || (i + 1) == gaitHealthList.size()) {
-                    confidenceCount += 1;
-                }
-
-                if (prevDate.get(Calendar.WEEK_OF_YEAR) != currDate.get(Calendar.WEEK_OF_YEAR) || (i + 1) == gaitHealthList.size()) {
-                    prevDate.setTime(gaitHealth.getStartTime());
-
+                if (prevDate.get(Calendar.WEEK_OF_YEAR) != currDate.get(Calendar.WEEK_OF_YEAR)) {
                     for (int o = 0; o < 3; o++) {
                         health[o] = health[o + 1];
                     }
@@ -101,6 +95,7 @@ public class PatientListAdapter extends BaseAdapter {
                         health[3] = 0;
                     }
 
+                    prevDate.setTime(gaitHealth.getStartTime());
                     gaitHealthSum = 0;
                     gaitHealthCount = 0;
                 }
@@ -108,16 +103,34 @@ public class PatientListAdapter extends BaseAdapter {
                 gaitHealthSum += gaitHealth.getHealth();
                 gaitHealthCount += 1;
 
+                if (prevDate.get(Calendar.DAY_OF_YEAR) == currDate.get(Calendar.DAY_OF_YEAR)  || (i + 1) == gaitHealthList.size()) {
+                    confidenceCount += 1;
+                }
+
+                if (i == (gaitHealthList.size() - 1)) {
+                    for (int o = 0; o < 3; o++) {
+                        health[o] = health[o + 1];
+                    }
+
+                    if (Math.round(gaitHealthSum / gaitHealthCount) == 3) {
+                        health[3] = 3;
+                    } else if (Math.round(gaitHealthSum / gaitHealthCount) == 2) {
+                        health[3] = 2;
+                    } else if (Math.round(gaitHealthSum / gaitHealthCount) == 1) {
+                        health[3] = 1;
+                    } else {
+                        health[3] = 0;
+                    }
+                }
+
                 seconds = Integer.parseInt(tfs.format(gaitHealth.getEndTime()));
                 minutes = Integer.parseInt(tfm.format(gaitHealth.getEndTime())) * 60 + seconds;
                 hours = Integer.parseInt(tfh.format(gaitHealth.getEndTime())) * 60 * 60 + minutes;
-
                 diff = hours;
 
                 seconds = Integer.parseInt(tfs.format(gaitHealth.getStartTime()));
                 minutes = Integer.parseInt(tfm.format(gaitHealth.getStartTime())) * 60 + seconds;
                 hours = Integer.parseInt(tfh.format(gaitHealth.getStartTime())) * 60 * 60 + minutes;
-
                 confidenceSum += diff - hours;
             }
         }

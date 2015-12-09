@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -25,6 +27,7 @@ public class SearchActivity extends AppCompatActivity {
     private List<Patient> patientList = new ArrayList<>(), patientResultList = new ArrayList<>();
     private String lastName = "Last Name", firstName = "First Name", age = "Age", selectedFilter = lastName;
     private EditText editTextSearch;
+    private Button buttonSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +35,9 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
 
         editTextSearch = (EditText) findViewById(R.id.editTextSearch);
+        buttonSearch = (Button) findViewById(R.id.buttonSearch);
 
-        patientList = Session.getUser().getPatientList();
-
-        hashifyLastName();
+        patientList = Session.getPatientListMap().getList();
 
         populateSpinnerFilter();
     }
@@ -44,6 +46,23 @@ public class SearchActivity extends AppCompatActivity {
     protected void onPause(){
         super.onPause();
 
+        closeKB();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!Session.getPatientListMap().isEmpty()) {
+            patientList = Session.getPatientListMap().getList();
+
+            if (editTextSearch.getText().toString().trim().length() != 0) {
+                buttonSearch.performClick();
+            }
+        }
+    }
+
+    private void closeKB() {
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         editTextSearch.requestFocus();
         imm.hideSoftInputFromWindow(editTextSearch.getWindowToken(), 0);
@@ -93,6 +112,8 @@ public class SearchActivity extends AppCompatActivity {
         int exactCount = 0;
 
         if (selectedFilter.equals(lastName) && InputCheck.searchQueryName(query)) {
+            hashifyLastName();
+
             query = removeRepeats(query);
             queryKey = convertToKey(query);
 
@@ -114,6 +135,8 @@ public class SearchActivity extends AppCompatActivity {
                 hideListViewPatientsSearch();
             }
         } else if (selectedFilter.equals(firstName) && InputCheck.searchQueryName(query)) {
+            hashifyFirstName();
+
             query = removeRepeats(query);
             queryKey = convertToKey(query);
 
@@ -135,6 +158,8 @@ public class SearchActivity extends AppCompatActivity {
                 hideListViewPatientsSearch();
             }
         } else if (selectedFilter.equals(age) && InputCheck.searchQueryAge(query)) {
+            hashifyAge();
+
             queryKey = query;
 
             if (patientMap.get(queryKey) != null) {

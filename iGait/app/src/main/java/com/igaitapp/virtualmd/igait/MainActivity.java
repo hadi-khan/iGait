@@ -33,13 +33,11 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     // Unique strings for placing extras in intents.
     static final String EXTRA_PATIENT = "com.igaitapp.virtualmd.igait.PATIENT";
-    static final String EXTRA_PATIENT_LIST = "com.igaitapp.virtualmd.igait.PATIENT_LIST";
-    static final String EXTRA_USER = "com.igaitapp.virtualmd.igait.USER";
 
     // The logged in user and their list of patients. They are stored in order to have backup data
     //  in case of a network failure.
     private User user = new User();
-    private List<Patient> patientList = new ArrayList<>();
+    private PatientListMap patientListMap = new PatientListMap();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         // If there is an error affecting the syncing of user or patient at least this last
         //  synced data is shown.
         user = Session.getUser();
-        patientList = Session.getUser().getPatientList();
+        patientListMap = Session.getPatientListMap();
 
         // Connect to the server in order to pull the user's list of patients.
         new ServerConnect().execute("http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/patient",
@@ -68,52 +66,15 @@ public class MainActivity extends AppCompatActivity {
         Toast.makeText(getBaseContext(), "Logout in order to visit the login screen.", Toast.LENGTH_LONG).show();
     }
 
-    private void populateListViewPatientsInit() {
-        // If the user has no patients, then this textview will tell them.
-        TextView textViewNoPatients = (TextView) findViewById(R.id.textViewNoPatients);
-
-        // Check if the user has patients.
-        if (!patientList.isEmpty()) {
-            // Prepare the listview and adapter for the list of patients.
-            ListView list = (ListView) findViewById(R.id.listViewPatients);
-            PatientListAdapter adapter = new PatientListAdapter(this, patientList);
-
-            // Remove the textview tellin the user they have no patients.
-            textViewNoPatients.setVisibility(View.GONE);
-
-            // Set the adapter to the listview.
-            list.setAdapter(adapter);
-
-            // Click listener for the listview that visits the calendar activity.
-            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                    // The clicked (tapped) patient and the intent for the calendar activity.
-                    Patient tappedPatient = patientList.get(position);
-                    Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
-
-                    // Put the tapped patient as an extra in the intent.
-                    intent.putExtra(EXTRA_PATIENT, tappedPatient);
-
-                    // Start the activity in the intent.
-                    startActivity(intent);
-                }
-            });
-        } else {
-            // Tell the user they have no patients.
-            textViewNoPatients.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void populateListViewPatients() {
         // If the user has no patients, then this textview will tell them.
         TextView textViewNoPatients = (TextView) findViewById(R.id.textViewNoPatients);
 
         // Check if the user has patients.
-        if (!patientList.isEmpty()) {
+        if (!patientListMap.isEmpty()) {
             // Prepare the listview and adapter for the list of patients.
             ListView list = (ListView) findViewById(R.id.listViewPatients);
-            PatientListAdapter adapter = new PatientListAdapter(this, patientList);
+            PatientListAdapter adapter = new PatientListAdapter(this, patientListMap.getList());
 
             // Remove the textview tellin the user they have no patients.
             textViewNoPatients.setVisibility(View.GONE);
@@ -126,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                     // The clicked (tapped) patient and the intent for the calendar activity.
-                    Patient tappedPatient = patientList.get(position);
+                    Patient tappedPatient = patientListMap.get(position);
                     Intent intent = new Intent(MainActivity.this, CalendarActivity.class);
 
                     // Put the tapped patient as an extra in the intent.
@@ -145,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
     private class ServerConnect extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
-            // Pass only the neccessary variables to connect to the server.
+            // Pass only the necessary variables to connect to the server.
             return GET(urls[0], urls[1], user.getToken(), user.getId());
         }
 
@@ -167,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                 // If the success is true, populate the user's patient list.
                 if (success.equals("true")) {
                     // Clear the patient list
-                    List<Patient> patientListTemp = new ArrayList<>();
+                    PatientListMap patientListMapTemp = new PatientListMap();
 
                     // Grab the json array of patients form message. Then loop through each patient,
                     //  adding it to the user's patient list.
@@ -181,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
                         JSONObject contact = patient.getJSONObject("contact");
                         JSONObject expectedWalkTime = patient.getJSONObject("expectedWalkTime");
                         JSONArray healthArray = patient.getJSONArray("health");
-                        Log.d("BUGGY BUG", healthArray.toString());
 
                         // Grab and store the patient's contact info from the contact json subobject.
                         ContactInfo ci = new ContactInfo(contact.getLong("mobilenumber"), contact.getString("email"),
@@ -206,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
 
                         // Create a patient using the various gathered data and add the patient the user's
                         //  list of patients.
-                        patientListTemp.add(new Patient(name.getString("last"), name.getString("first"),
+                        patientListMapTemp.add(new Patient(name.getString("last"), name.getString("first"),
                                 ewt, df.parse(patient.getString("dateOfBirth")),
                                 patient.getString("gender").charAt(0), ci, gil,
                                 patient.getBoolean("priority"), patient.getString("_id"),
@@ -214,10 +174,10 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     // Update the patient list.
-                    patientList = patientListTemp;
+                    patientListMap = patientListMapTemp;
 
                     // Update the patient list in the session.
-                    Session.getUser().setPatientList(patientList);
+                    Session.setPatientListMap(patientListMap);
 
                     // Display the patient list to the user.
                     populateListViewPatients();

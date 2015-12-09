@@ -71,6 +71,10 @@ public class UserProfileActivity extends AppCompatActivity {
     protected void onPause(){
         super.onPause();
 
+        closeKB();
+    }
+
+    private void closeKB() {
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         editTextLastName.requestFocus();
         imm.hideSoftInputFromWindow(editTextLastName.getWindowToken(), 0);
@@ -394,6 +398,8 @@ public class UserProfileActivity extends AppCompatActivity {
         user.getContactInfo().setZipCode(Long.parseLong(editTextOfficeZipCode.getText().toString().trim()));
 
         Session.setUser(user);
+
+        closeKB();
     }
 
     @Override
@@ -453,6 +459,7 @@ public class UserProfileActivity extends AppCompatActivity {
             UserProfileActivity.this.supportInvalidateOptionsMenu();
             setTitle(R.string.title_activity_user_profile);
 
+            closeKB();
             populateViews();
 
             return true;

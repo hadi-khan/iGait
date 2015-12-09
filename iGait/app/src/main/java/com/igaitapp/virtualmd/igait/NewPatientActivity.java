@@ -123,6 +123,10 @@ public class NewPatientActivity extends AppCompatActivity {
     protected void onPause(){
         super.onPause();
 
+        closeKB();
+    }
+
+    private void closeKB() {
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         editTextLastName.requestFocus();
         imm.hideSoftInputFromWindow(editTextLastName.getWindowToken(), 0);
@@ -279,7 +283,7 @@ public class NewPatientActivity extends AppCompatActivity {
         newPatient.getContactInfo().setState(editTextState.getText().toString().trim());
         newPatient.getContactInfo().setZipCode(Long.parseLong(editTextZipCode.getText().toString().trim()));
 
-        Session.getUser().getPatientList().add(newPatient);
+        Session.getPatientListMap().add(newPatient);
     }
 
     @Override

@@ -34,6 +34,16 @@ public class EventActivity extends AppCompatActivity {
         populateListViewEvents();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (!Session.getPatientListMap().isEmpty()) {
+            patient = Session.getPatientListMap().getUsingKey(patient.getId());
+            populateListViewPatient();
+        }
+    }
+
     private void populateListViewPatient() {
         List<Patient> patientList = new ArrayList<>();
         ListView list = (ListView) findViewById(R.id.listViewPatientEvent);
