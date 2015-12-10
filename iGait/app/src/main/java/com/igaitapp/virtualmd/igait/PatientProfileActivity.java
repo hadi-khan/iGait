@@ -623,7 +623,6 @@ public class PatientProfileActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Deleting Patient", Toast.LENGTH_SHORT).show();
                     new ServerConnect().execute("DELETE", "http://ubuntu@ec2-52-88-43-90.us-west-2.compute.amazonaws.com/api/patient/" + patient.getId(),
                             changesMade, patient.getUserToken(), patient.getUserId());
-                    finish();
                 }
 
             });

@@ -5,7 +5,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * A patient is treated by a user.
+ */
 public class Patient implements Serializable {
+    // The patient's necessary info. UserId and userToken correspond to the user who treats them.
     private String lastName, firstName, id, userId, userToken;
     private Date birthday, expectedWalkTime;;
     private char sex;
@@ -13,10 +17,12 @@ public class Patient implements Serializable {
     private List<GaitHealth> gaitHealth = new ArrayList<>();
     private boolean priority;
 
+    // Blank constructor, not really needed.
     public Patient() {
 
     }
 
+    // Constructor for a new patient.
     public Patient(String lastName, String firstName, Date expectedWalkTime, Date birthday, char sex, ContactInfo contactInfo, boolean priority) {
         this.lastName = lastName;
         this.firstName = firstName;
@@ -27,6 +33,7 @@ public class Patient implements Serializable {
         this.priority = priority;
     }
 
+    // Constructor for synced patient. Note the gait health list.
     public Patient(String lastName, String firstName, Date expectedWalkTime, Date birthday, char sex, ContactInfo contactInfo, List<GaitHealth> gaitHealth, boolean priority, String id, String userId, String userToken) {
         this.lastName = lastName;
         this.firstName = firstName;
@@ -40,6 +47,8 @@ public class Patient implements Serializable {
         this.userId = userId;
         this.userToken = userToken;
     }
+
+    // The various setters and getters for patient's necessary info.
 
     public String getLastName() {
         return lastName;

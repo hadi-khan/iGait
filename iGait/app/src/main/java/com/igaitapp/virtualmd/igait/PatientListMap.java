@@ -5,6 +5,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * A combination between a list and a hash map.
+ * Created in order to access patient's by element (0,1, 2, 3), as well
+ *  as key (patient id).
+ */
 public class PatientListMap {
     List<Patient> patientList = new ArrayList<>();
     HashMap<String, Patient> patientMap = new HashMap<>();

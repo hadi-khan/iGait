@@ -31,10 +31,10 @@ import java.util.Date;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    // Unique strings for placing extras in intents.
+    // Unique string for placing an extra patient in intents.
     static final String EXTRA_PATIENT = "com.igaitapp.virtualmd.igait.PATIENT";
 
-    // The logged in user and their list of patients. They are stored in order to have backup data
+    // The logged in user and their listmap of patients. They are stored in order to have backup data
     //  in case of a network failure.
     private User user = new User();
     private PatientListMap patientListMap = new PatientListMap();
@@ -49,9 +49,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        // Assign the user and patient list from the session.
-        // If there is an error affecting the syncing of user or patient at least this last
-        //  synced data is shown.
+        // Assign the user and patient listmap from the session.
+        // If there is an error, at least the last session of user and patients is shown.
         user = Session.getUser();
         patientListMap = Session.getPatientListMap();
 
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             ListView list = (ListView) findViewById(R.id.listViewPatients);
             PatientListAdapter adapter = new PatientListAdapter(this, patientListMap.getList());
 
-            // Remove the textview tellin the user they have no patients.
+            // Remove the textview telling the user they have no patients.
             textViewNoPatients.setVisibility(View.GONE);
 
             // Set the adapter to the listview.
@@ -130,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                     // Clear the patient list
                     PatientListMap patientListMapTemp = new PatientListMap();
 
-                    // Grab the json array of patients form message. Then loop through each patient,
+                    // Grab the json array of patients from message. Then loop through each patient,
                     //  adding it to the user's patient list.
                     JSONArray jsonArrayPatients = jsonObject.getJSONArray("message");
                     for (int i = 0; i < jsonArrayPatients.length(); i++) {
@@ -173,10 +172,10 @@ public class MainActivity extends AppCompatActivity {
                                 user.getId(), user.getToken()));
                     }
 
-                    // Update the patient list.
+                    // Update the patient listmap.
                     patientListMap = patientListMapTemp;
 
-                    // Update the patient list in the session.
+                    // Update the patient listmap in the session.
                     Session.setPatientListMap(patientListMap);
 
                     // Display the patient list to the user.
@@ -204,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             // First the patients are pulled, then each patient is assigned their health list.
-            // The api sends patients and health separately linked by patient id.
+            // The api sends patients and health separately, linked by patient id.
 
             // Create the URL from the first URL and create a connection.
             URL url = new URL(urlPaths);
@@ -299,6 +298,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private static String convertInputStreamToString(InputStream inputStream) throws IOException {
+        // Convert the input stream from the server into a string.
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
         String line;
         String result = "";
@@ -328,20 +328,26 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_add_patient) {
+            // Make an intent for the new patient activity.
             Intent intent = new Intent(MainActivity.this, NewPatientActivity.class);
 
+            // Open the new patient activity.
             startActivity(intent);
 
             return true;
         } else if (id == R.id.action_search) {
+            // Make an intent for the search activity.
             Intent intent = new Intent(MainActivity.this, SearchActivity.class);
 
+            // Open the search activity.
             startActivity(intent);
 
             return true;
         } else if (id == R.id.action_account) {
+            // Make an intent for the account activity.
             Intent intent = new Intent(MainActivity.this, UserProfileActivity.class);
 
+            // Open the user profile activity.
             startActivity(intent);
 
             return true;

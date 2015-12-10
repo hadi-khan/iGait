@@ -3,23 +3,29 @@ package com.igaitapp.virtualmd.igait;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * A gait health holds the health value, start time, and end time of a walk event.
+ */
 public class GaitHealth implements Serializable {
+    // The necessary info for gait health.
     private int health;
     private Date startTime, endTime;
     boolean video;
 
+    // Blank constructor, Not really necessary.
     public GaitHealth() {
 
     }
 
+    // Full constructor.
     public GaitHealth(int health, Date startTime, Date endTime, boolean video) {
-        super();
-
         this.health = health;
         this.startTime = startTime;
         this.endTime = endTime;
         this.video = video;
     }
+
+    // The various setters and getters for gait health's necessary info.
 
     public int getHealth() {
         return health;
