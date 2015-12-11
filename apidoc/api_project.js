@@ -1,0 +1,14 @@
+define({
+  "name": "iGait API",
+  "version": "0.1.0",
+  "description": "documention for RESTful API",
+  "title": "iGait API Docs",
+  "sampleUrl": false,
+  "apidoc": "0.2.0",
+  "generator": {
+    "name": "apidoc",
+    "time": "2015-12-11T08:21:49.194Z",
+    "url": "http://apidocjs.com",
+    "version": "0.13.1"
+  }
+});
