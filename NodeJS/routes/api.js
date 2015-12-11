@@ -7,7 +7,12 @@ let apiPublic = require('./api_public');
 let Security = require('../class/Security');
 
 const MISSING_HEADER = 'missing required header';
-
+/**
+ * @apiDefine Headers
+ * @apiHeader {String} Authorization    authentication token
+ * @apiHeader {String} id               user object id
+ * @apiHeader {String} Content-Type     application/json
+ */
 let router = express.Router();
 
 router.use('/api', apiPublic);
