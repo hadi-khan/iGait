@@ -16,6 +16,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Same as patient list adapter. Only difference is the full name is shown instead of just
+ *  first initial and last name.
+ */
 public class PatientListSearchAdapter extends BaseAdapter {
     private Context mContext;
     private Resources mResource;
