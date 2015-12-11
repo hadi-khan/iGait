@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: db/mongoImpl.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: db/mongoImpl.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+/**
+ * Created by kevin on 11/7/2015.
+ */
+"use strict";
+let mongoose = require('mongoose');
+let path = require('path');
+let Models = require('../models');
+let Schema = mongoose.Schema;
+let ObjectId = mongoose.Schema.Types.ObjectId; //used to reference objectID
+
+
+//If the developer wants to fully implement the es6 extends feature
+//  then the developer would want to use one of the following two lines.
+//let databaseManager = require('./dbms');
+//import databaseManager from './dbms';
+
+/** @classdesc Class representing the mongodb implementation.
+ * This class extends the databasemanager, but the current implantation does
+ * not specifically state/code this. NodeJS currently does not support this
+ * es6 feature, but it can be implemented by something using like "babel"
+ * @class
+ * @extends databaseManager*/
+class mongoImpl{
+    constructor() {
+        //super(); //would need to have this line uncommented once implementing extends
+        this._dbAddress = 'mongodb://localhost:27017/mongotest';
+        this._dbConnectedMessage = 'Mongoose connected on localhost:27017';
+        //return this;
+    }
+    /**
+     * Database command to connect to the database.
+     *
+     * Note:
+     *  Normally, the developer would want to connect to the database, execute
+     *  the database command, disconnect from the database, then return the result.
+     *
+     *  If using mongodb, the developer shall connect to the database once, and not
+     *  for every executed database command.
+     *  This connection shall happen at the start of the application.
+     *  This is highly recommend from online sources.
+     *  The reason being why is how mongo is implemented. It uses a pool of
+     *  connections.
+     *  Reference: http://blog.mongolab.com/2013/11/deep-dive-into-connection-pooling/
+     *  @override
+     */
+    connectDB() {
+        //connecting to mongodb with mongoose
+        mongoose.connect(this._dbAddress);
+        mongoose.connection.on('open', function() {
+            console.log(this._dbConnectedMessage);
+        });
+        mongoose.connection.on('error', function(){
+            console.log('error: connecting to Mongoose failed: ');
+        });
+        mongoose.connection.on('disconnected', function(){
+            console.log('Disconnected from Mongoose');
+        });
+        process.on('SIGINT', function() {
+            mongoose.connection.close(function () {
+                console.log('moongose default connection disconnected through app termination');
+                process.exit(0);
+            });
+        });
+    }
+    /**
+     * Database command to disconnect from the database.
+     * @override
+     */
+    disconnectDB() {
+        process.on('SIGINT', function() {
+            mongoose.connection.close(function () {
+                console.log('moongose default connection disconnected through app termination');
+                process.exit(0);
+            });
+        });
+        mongoose.connection.close();
+    }
+    /**
+     * Method to get doctor by mongo's randomly generated hash Object ID.
+     * @param {string} reqObjectID - The string of the objectid. This get converted
+     * to the type of mongoose.Schema.Types.ObjectId before executing the command.
+     * @param {function} callback - The callback function. This is the function used
+     * in the api implementation so database code can return to the api after
+     * completing it's database command.
+     * @override
+     */
+    getDoctorByObjectID(reqObjectID, callback){
+        reqObjectID = ObjectId(reqObjectID);
+        Models.Doctors.findOne({_id:reqObjectID}, function(err,doc){
+            callback(err,doc);
+        });
+    }
+    /**
+     * Method to get doctor by his email. The email he uses is
+     * unique, and there will not be another doctor with the same email.
+     * @param {string} reqObjectID - The string of the objectid. This get converted
+     * to the type of mongoose.Schema.Types.ObjectId before executing the command.
+     * @param {function} callback - The callback function. This is the function used
+     * in the api implementation so database code can return to the api after
+     * completing it's database command.
+     * @override
+     */
+    getDoctorByEmail(reqEmail, callback){
+        Models.Doctors.findOne({email:reqEmail}, function(err,doc){
+            callback(err,doc);
+        });
+    }
+    /**
+     * Method to get patient by mongo's randomly generated hash Object ID.
+     * @param {string} reqObjectID - The string of the objectid. This get converted
+     * to the type of mongoose.Schema.Types.ObjectId before executing the command.
+     * @param {function} callback - The callback function. This is the function used
+     * in the api implementation so database code can return to the api after
+     * completing it's database command.
+     * @override
+     */
+    getPatientByObjectID(reqObjectID, callback){
+        reqObjectID = ObjectId(reqObjectID);
+        Models.Patients.findOne({_id:reqObjectID}, function(err,pat){
+            callback(err,pat);
+        });
+    }
+    /**
+     * Method to get health record by mongo's randomly generated hash Object ID.
+     * @param {string} reqObjectID - The string of the objectid. This get converted
+     * to the type of mongoose.Schema.Types.ObjectId before executing the command.
+     * @param {function} callback - The callback function. This is the function used
+     * in the api implementation so database code can return to the api after
+     * completing it's database command.
+     * @override
+     */
+    getHealthByObjectID(reqObjectID, callback){
+        reqObjectID = ObjectId(reqObjectID);
+        Models.Health.findOne({_id:reqObjectID}, function(err,hea){
+            callback(err,hea);
+        });
+    }
+    /**
+     * Method to get doctor patients by mongo's randomly generated hash Object ID.
+     * This method will get all the patients that have a reference to the doctor's object id.
+     * @param {string} reqObjectID - The string of the objectid. This object id reference
+     * the doctors object id.
+     * @param {function} callback - The callback function. This is the function used
+     * in the api implementation so database code can return to the api after
+     * completing it's database command.
+     * @override
+     */
+    getDoctorPatients(reqObjectID, callback){
+        Models.Patients.find({doctor:reqObjectID}, function(err,pat){
+            callback(err,pat);
+        });
+    }
+    /**
+     * Method to get patient's health by mongo's randomly generated hash Object ID.
+     * This method will get all the health records that have a reference to the patient's object id.
+     * @param {string} reqObjectID - The string of the objectid. This object id reference
+     * the doctors object id.
+     * @param {function} callback - The callback function. This is the function used
+     * in the api implementation so database code can return to the api after
+     * completing it's database command.
+     * @override
+     */
+    getPatientsHealth(reqObjectID, callback){
+        //may need to use next line
+        //reqObjectID = ObjectId(reqObjectID);
+        Models.Health.find({patient:reqObjectID}, function(err,hea){
+            callback(err,hea);
+        });
+    }
+    /**
+     * Method to create/save a patient object into the database.
+     * @param {object} reqPatObj - The object representing a patient.
+     * @param {function} callback - The callback function. This is the function used
+     * in the api implementation so database code can return to the api after
+     * completing it's database command.
+     * @override
+     */
+    createPatient(reqPatObj, callback){
+        reqPatObj.save(function(err, pat){
+            callback(err,pat);
+        });
+    }
+    /**
+     * Method to create/save a doctor object into the database.
+     * @param {object} reqDocObj - The object representing a doctor.
+     * @param {function} callback - The callback function. This is the function used
+     * in the api implementation so database code can return to the api after
+     * completing it's database command.
+     * @override
+     */
+    createDoctor(reqDocObj, callback){
+        reqDocObj.save(function(err, doc){
+            callback(err,doc);
+        });
+    }
+    /**
+     * Method to create/save a health record object into the database.
+     * @param {object} reqHeaObj - The object representing a health record.
+     * @param {function} callback - The callback function. This is the function used
+     * in the api implementation so database code can return to the api after
+     * completing it's database command.
+     * @override
+     */
+    createHealth(reqHeaObj, callback){
+        reqHeaObj.save(function(err, hea){
+            callback(err,hea);
+        });
+    }
+    /**
+     * Method to update a doctor object in the database.
+     * @param {string} reqObjectID - The string of the objectid. This object id reference
+     * the doctor's object id.
+     * @param {function} callback - The callback function. This is the function used
+     * in the api implementation so database code can return to the api after
+     * completing it's database command.
+     * @override
+     */
+    updateDoctor(reqObjectID, reqUpdate, callback){
+        //reqObjectID = ObjectId(reqObjectID)
+        Models.Doctors.findOneAndUpdate({_id: reqObjectID}, reqUpdate, function(err, doc) {
+            callback(err,doc);
+        });
+    }
+    /**
+     * Method to update a patient object in the database.
+     * @param {string} reqObjectID - The string of the objectid. This object id reference
+     * the patient's object id.
+     * @param {function} callback - The callback function. This is the function used
+     * in the api implementation so database code can return to the api after
+     * completing it's database command.
+     * @override
+     */
+    updatePatient(reqObjectID, reqUpdate, callback){
+        //reqObjectID = ObjectId(reqObjectID)
+        Models.Patients.findOneAndUpdate({_id: reqObjectID}, reqUpdate, function(err, pat) {
+            callback(err,pat);
+        });
+    }
+    /**
+     * Method to update a health record object in the database.
+     * @param {string} reqObjectID - The string of the objectid. This object id reference
+     * the health record object id.
+     * @param {function} callback - The callback function. This is the function used
+     * in the api implementation so database code can return to the api after
+     * completing it's database command.
+     * @override
+     */
+    updateHealth(reqObjectID, reqUpdate, callback){
+        //reqObjectID = ObjectId(reqObjectID)
+        Models.Health.findOneAndUpdate({_id: reqObjectID}, reqUpdate, function(err, hea) {
+            callback(err,hea);
+        });
+    }
+    /**
+     * Method to remove a doctor object from the database.
+     * @param {object} reqObjectID - The object representing a doctor.
+     * @param {function} callback - The callback function. This is the function used
+     * in the api implementation so database code can return to the api after
+     * completing it's database command.
+     * @override
+     */
+    removeDoctor(reqObjectID, callback){
+        //reqObjectID = ObjectId(reqObjectID)
+        Models.Doctors.findOneAndRemove({_id: reqObjectID}, function(err, doc){
+            callback(err,doc);
+        });
+    }
+    /**
+     * Method to remove a patient object from the database.
+     * @param {object} reqObjectID - The object representing a patient.
+     * @param {function} callback - The callback function. This is the function used
+     * in the api implementation so database code can return to the api after
+     * completing it's database command.
+     * @override
+     */
+    removePatient(reqObjectID, callback){
+        Models.Patients.findOneAndRemove({_id: reqObjectID}, function(err, pat){
+            callback(err, pat);
+        });
+    }
+    /**
+     * Method to remove a health object from the database.
+     * @param {object} reqObjectID - The object representing a health.
+     * @param {function} callback - The callback function. This is the function used
+     * in the api implementation so database code can return to the api after
+     * completing it's database command.
+     * @override
+     */
+    removeHealth(reqObjectID, callback){
+        //reqObjectID = ObjectId(reqObjectID)
+        Models.Health.findOneAndRemove({_id: reqObjectID}, function(err, hea){
+            callback(err, hea);
+        });
+    }
+}
+module.exports = mongoImpl;
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="databaseManager.html">databaseManager</a></li><li><a href="mongoImpl.html">mongoImpl</a></li><li><a href="Security.html">Security</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Fri Dec 11 2015 02:21:39 GMT-0600 (Central Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
