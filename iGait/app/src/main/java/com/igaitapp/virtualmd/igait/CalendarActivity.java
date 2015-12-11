@@ -200,7 +200,7 @@ public class CalendarActivity extends AppCompatActivity {
 
                 // If the gait health list isn't empty, check if the selected date is valid.
                 if (!gaitHealthList.isEmpty()) {
-                    // Get the first dand last date of the gait health list.
+                    // Get the first and last date of the gait health list.
                     firstDate = gaitHealthList.get(0).getStartTime();
                     lastDate = gaitHealthList.get(gaitHealthList.size() - 1).getStartTime();
 
