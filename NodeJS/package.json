@@ -15,7 +15,7 @@
     "jsonwebtoken": "^5.4.0",
     "mocha": "^2.3.4",
     "mongodb": "^2.0.43",
-    "mongoose": "^4.1.10",
+    "mongoose": "^5.9.5",
     "morgan": "^1.6.1",
     "should": "^7.1.1"
   }
